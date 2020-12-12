@@ -76,7 +76,7 @@ class _AlbumsCarouselState extends State<AlbumsCarousel> {
                             child: Image(
                               height: 120.0,
                               width: 120.0,
-                              image: CachedNetworkImageProvider(data.pic),
+                              image: CachedNetworkImageProvider(data.thumbnail),
                               fit: BoxFit.cover,
                             ),
                           ),
@@ -96,7 +96,7 @@ class _AlbumsCarouselState extends State<AlbumsCarousel> {
                             height: 10,
                           ),
                           Text(
-                            data.author,
+                            data.artistName,
                             style: TextStyle(
                               fontSize: 10.0,
                               color: Colors.grey,

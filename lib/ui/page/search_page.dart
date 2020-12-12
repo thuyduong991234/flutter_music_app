@@ -26,7 +26,7 @@ class _SearchPageState extends State<SearchPage> {
           ClipRRect(
             borderRadius: BorderRadius.circular(12.0),
             child: Container(
-                width: 50, height: 50, child: Image.network(data.pic)),
+                width: 50, height: 50, child: Image.network(data.link)),
           ),
           SizedBox(
             width: 20.0,
@@ -37,7 +37,7 @@ class _SearchPageState extends State<SearchPage> {
                 children: <Widget>[
                   Text(
                     data.title,
-                    style: data.url == null
+                    style: data.link == null
                         ? TextStyle(
                             fontSize: 12.0,
                             fontWeight: FontWeight.w600,
@@ -54,8 +54,8 @@ class _SearchPageState extends State<SearchPage> {
                     height: 10,
                   ),
                   Text(
-                    data.author,
-                    style: data.url == null
+                    data.artistName,
+                    style: data.link == null
                         ? TextStyle(
                             fontSize: 10.0,
                             color: Color(0xFFE0E0E0),
@@ -69,7 +69,7 @@ class _SearchPageState extends State<SearchPage> {
                   ),
                 ]),
           ),
-          data.url == null
+          data.link == null
               ? Icon(
                   Icons.favorite_border,
                   color: Color(0xFFE0E0E0),
@@ -131,7 +131,7 @@ class _SearchPageState extends State<SearchPage> {
                             Song data = model.list[index];
                             return GestureDetector(
                                 onTap: () {
-                                  if (null != data.url) {
+                                  if (null != data.link) {
                                     SongModel songModel = Provider.of(context);
                                     songModel.setSongs(model.list);
                                     songModel.setCurrentIndex(index);

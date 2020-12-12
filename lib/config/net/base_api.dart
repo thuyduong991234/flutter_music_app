@@ -1,7 +1,9 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'api.dart';
 
 final Http http = Http();
@@ -9,7 +11,7 @@ final Http http = Http();
 class Http extends BaseHttp {
   @override
   void init() {
-    options.baseUrl = 'https://music.liuzhijin.cn';
+    options.baseUrl = 'https://zingmp3.vn/api';
     interceptors..add(ApiInterceptor())
         /*// cookie持久化 异步
       ..add(CookieManager(
@@ -21,24 +23,38 @@ class Http extends BaseHttp {
 class ApiInterceptor extends InterceptorsWrapper {
   @override
   onRequest(RequestOptions options) async {
+    var storage = await SharedPreferences.getInstance();
+    Map<String, String> header = {'Cookie': storage.getString("headerCookie")};
+    options.headers = header;
+    debugPrint("co header");
     debugPrint('---api-request--->url--> ${options.baseUrl}${options.path}' +
         ' queryParameters: ${options.queryParameters}' +
-        ' data: ${options.data}');
+        ' data: ${options.data}' +
+        ' headers');
     return options;
   }
 
   @override
-  onResponse(Response response) {
+  onResponse(Response response) async {
+    debugPrint("header: " + response.headers["set-cookie"].toString());
+    if (response.headers["set-cookie"] != null) {
+      var codeCookie =
+          (response.headers["set-cookie"].toString().split(";"))[0];
+      debugPrint((codeCookie.replaceAll("[", "")).replaceAll("]", ""));
+      Cookie a = Cookie.fromSetCookieValue(
+          (codeCookie.replaceAll("[", "")).replaceAll("]", ""));
+      var storage = await SharedPreferences.getInstance();
+      await storage.setString("headerCookie", a.toString());
+      debugPrint(a.toString());
+    }
     debugPrint('---api-response--->resp----->${response.data}');
     ResponseData respData = ResponseData.fromJson(json.decode(response.data));
     if (respData.success) {
       response.data = respData.data;
       return http.resolve(response);
     } else {
-      if (respData.code == -1001) {
-        // 如果cookie过期,需要清除本地存储的登录信息
-        // StorageManager.localStorage.deleteItem(UserModel.keyUser);
-        throw const UnAuthorizedException(); // 需要登录
+      if (respData.msg != 'Success') {
+        return http.resolve({"err": -204});
       } else {
         throw NotSuccessException.fromRespData(respData);
       }
@@ -47,11 +63,13 @@ class ApiInterceptor extends InterceptorsWrapper {
 }
 
 class ResponseData extends BaseResponseData {
-  bool get success => 200 == code;
+  bool get success => "Success" == msg;
 
   ResponseData.fromJson(Map<String, dynamic> json) {
-    code = json['code'];
-    error = json['error'];
+    //code = json['err'];
+    error = json['err'].toString();
+    msg = json['msg'];
     data = json['data'];
+    debugPrint('vo roi ne');
   }
 }

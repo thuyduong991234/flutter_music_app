@@ -53,7 +53,7 @@ class FavoriteModel with ChangeNotifier {
   isCollect(Song newSong) {
     bool isCollect = false;
     for (int i = 0; i < _favoriteSong.length; i++) {
-      if (_favoriteSong[i].songid == newSong.songid) {
+      if (_favoriteSong[i].id == newSong.id) {
         isCollect = true;
         break;
       }

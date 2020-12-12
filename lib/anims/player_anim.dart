@@ -21,7 +21,8 @@ class RotatePlayer extends AnimatedWidget {
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             image: DecorationImage(
-              image: CachedNetworkImageProvider(songModel.currentSong.pic),
+              image:
+                  CachedNetworkImageProvider(songModel.currentSong.thumbnail),
             ),
           ),
         ),

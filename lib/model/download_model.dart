@@ -52,14 +52,15 @@ class DownloadModel with ChangeNotifier {
   }
 
   String getSongUrl(Song s) {
-    return 'http://music.163.com/song/media/outer/url?id=${s.songid}.mp3';
+    return 'http://music.163.com/song/media/outer/url?id=${s.id}.mp3';
   }
 
   Future downloadFile(Song s) async {
     final bytes = await readBytes(getSongUrl(s));
     final dir = await getApplicationDocumentsDirectory();
     setDirectoryPath(dir.path);
-    final file = File('${dir.path}/${s.songid}.mp3');
+    final file = File('${dir.path}/${s.id}.mp3');
+    print('path -----------------' + dir.path);
 
     if (await file.exists()) {
       return;
@@ -82,7 +83,7 @@ class DownloadModel with ChangeNotifier {
 
   Future removeFile(Song s) async {
     final dir = await getApplicationDocumentsDirectory();
-    final file = File('${dir.path}/${s.songid}.mp3');
+    final file = File('${dir.path}/${s.id}.mp3');
     setDirectoryPath(dir.path);
     if (await file.exists()) {
       await file.delete();
@@ -101,7 +102,7 @@ class DownloadModel with ChangeNotifier {
   isDownload(Song newSong) {
     bool isDownload = false;
     for (int i = 0; i < _downloadSong.length; i++) {
-      if (_downloadSong[i].songid == newSong.songid) {
+      if (_downloadSong[i].id == newSong.id) {
         isDownload = true;
         break;
       }

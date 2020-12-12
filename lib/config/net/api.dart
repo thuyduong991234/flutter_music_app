@@ -61,17 +61,18 @@ class HeaderInterceptor extends InterceptorsWrapper {
 
 /// 子类需要重写
 abstract class BaseResponseData {
-  int code = 0;
+  //int code = 0;
   String error;
+  String msg;
   dynamic data;
 
   bool get success;
 
-  BaseResponseData({this.code, this.error, this.data});
+  BaseResponseData({this.error, this.msg, this.data});
 
   @override
   String toString() {
-    return 'BaseRespData{code: $code, message: $error, data: $data}';
+    return 'BaseRespData{err: $error, message: $msg, data: $data}';
   }
 }
 

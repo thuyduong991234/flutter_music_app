@@ -36,7 +36,7 @@ class RotateRecord extends AnimatedWidget {
                 shape: BoxShape.circle,
                 image: DecorationImage(
                   image: CachedNetworkImageProvider(songModel.songs != null
-                      ? songModel.currentSong.pic
+                      ? songModel.currentSong.thumbnail
                       : ImageHelper.randomUrl()),
                 ),
               ),

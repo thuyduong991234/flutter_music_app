@@ -26,7 +26,8 @@ class _ForYouCarouselState extends State<ForYouCarousel> {
             child: Container(
                 width: 50,
                 height: 50,
-                child: Image(image: CachedNetworkImageProvider(data.pic))),
+                child:
+                    Image(image: CachedNetworkImageProvider(data.thumbnail))),
           ),
           SizedBox(
             width: 20.0,
@@ -37,7 +38,7 @@ class _ForYouCarouselState extends State<ForYouCarousel> {
                 children: <Widget>[
                   Text(
                     data.title,
-                    style: data.url == null
+                    style: data.link == null
                         ? TextStyle(
                             fontSize: 12.0,
                             fontWeight: FontWeight.w600,
@@ -54,8 +55,8 @@ class _ForYouCarouselState extends State<ForYouCarousel> {
                     height: 10,
                   ),
                   Text(
-                    data.author,
-                    style: data.url == null
+                    data.artistName,
+                    style: data.link == null
                         ? TextStyle(
                             fontSize: 10.0,
                             color: Colors.grey,
@@ -71,7 +72,7 @@ class _ForYouCarouselState extends State<ForYouCarousel> {
           ),
           IconButton(
               onPressed: () => favoriteModel.collect(data),
-              icon: data.url == null
+              icon: data.link == null
                   ? Icon(
                       Icons.favorite_border,
                       color: Colors.grey,
@@ -128,7 +129,7 @@ class _ForYouCarouselState extends State<ForYouCarousel> {
           Song data = widget.forYou[index];
           return GestureDetector(
             onTap: () {
-              if (null != data.url) {
+              if (null != data.link) {
                 SongModel songModel = Provider.of(context);
                 songModel.setSongs(new List<Song>.from(widget.forYou));
                 songModel.setCurrentIndex(index);

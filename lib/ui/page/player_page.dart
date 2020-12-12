@@ -46,7 +46,7 @@ class _PlayPageState extends State<PlayPage> with TickerProviderStateMixin {
   }
 
   String getSongUrl(Song s) {
-    return 'http://music.163.com/song/media/outer/url?id=${s.songid}.mp3';
+    return 'http://music.163.com/song/media/outer/url?id=${s.id}.mp3';
   }
 
   @override
@@ -147,7 +147,7 @@ class _PlayPageState extends State<PlayPage> with TickerProviderStateMixin {
                                 height:
                                     MediaQuery.of(context).size.height * 0.02),
                             Text(
-                              songModel.currentSong.author,
+                              songModel.currentSong.artistName,
                               style:
                                   TextStyle(color: Colors.grey, fontSize: 15.0),
                             ),

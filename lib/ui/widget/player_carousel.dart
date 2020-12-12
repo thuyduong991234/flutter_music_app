@@ -74,9 +74,9 @@ class PlayerState extends State<Player> {
         // set at least title to see the notification bar on ios.
         _audioPlayer.setNotification(
             title: _songData.currentSong.title,
-            artist: _songData.currentSong.author,
+            artist: _songData.currentSong.artistName,
             //albumTitle: 'Name or blank',
-            imageUrl: _songData.currentSong.pic,
+            imageUrl: _songData.currentSong.thumbnail,
             forwardSkipInterval: const Duration(seconds: 30), // default is 30s
             backwardSkipInterval: const Duration(seconds: 30), // default is 30s
             duration: duration,
@@ -132,13 +132,13 @@ class PlayerState extends State<Player> {
   }
 
   String getSongUrl(Song s) {
-    return 'http://music.163.com/song/media/outer/url?id=${s.songid}.mp3';
+    return 'http://music.163.com/song/media/outer/url?id=${s.id}.mp3';
   }
 
   void play(Song s) async {
     String url;
     if (_downloadData.isDownload(s)) {
-      url = _downloadData.getDirectoryPath + '/${s.songid}.mp3';
+      url = _downloadData.getDirectoryPath + '/${s.id}.mp3';
     } else {
       url = getSongUrl(s);
     }
@@ -168,7 +168,7 @@ class PlayerState extends State<Player> {
 
   void next() {
     Song data = _songData.nextSong;
-    while (data.url == null) {
+    while (data.link == null) {
       data = _songData.nextSong;
     }
     play(data);
@@ -176,7 +176,7 @@ class PlayerState extends State<Player> {
 
   void previous() {
     Song data = _songData.prevSong;
-    while (data.url == null) {
+    while (data.link == null) {
       data = _songData.prevSong;
     }
     play(data);

@@ -10,6 +10,7 @@ import 'package:flutter_music_app/ui/widget/for_you_carousel.dart';
 import 'package:flutter_music_app/ui/page/search_page.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:flutter_music_app/service/base_repository.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -28,6 +29,7 @@ class _HomePageState extends State<HomePage>
   @override
   void initState() {
     super.initState();
+    BaseRepository.fetchHomeList(null, null);
     controllerRecord = new AnimationController(
         duration: const Duration(milliseconds: 15000), vsync: this);
     animationRecord =

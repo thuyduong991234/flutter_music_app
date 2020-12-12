@@ -28,12 +28,13 @@ class _AlbumsPageState extends State<AlbumsPage> {
                   height: MediaQuery.of(context).size.width * 0.5,
                   child: ClipRRect(
                       borderRadius: BorderRadius.circular(30.0),
-                      child: Container(child: Image.network(widget.data.pic))),
+                      child: Container(
+                          child: Image.network(widget.data.thumbnail))),
                 )),
                 SizedBox(height: 20.0),
                 Center(
                   child: Text(
-                    widget.data.author,
+                    widget.data.artistName,
                     style: TextStyle(fontSize: 12.0),
                   ),
                 ),
@@ -92,7 +93,7 @@ class _AlbumsPageState extends State<AlbumsPage> {
                     ),
                   ],
                 ),
-                AlbumCarousel(input: widget.data.author),
+                AlbumCarousel(input: widget.data.artistName),
               ],
             ),
           ),

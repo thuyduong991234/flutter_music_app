@@ -44,7 +44,7 @@ class _AlbumCarouselState extends State<AlbumCarousel> {
                 children: <Widget>[
                   Text(
                     data.title,
-                    style: data.url == null
+                    style: data.link == null
                         ? TextStyle(
                             fontSize: 12.0,
                             fontWeight: FontWeight.w600,
@@ -61,8 +61,8 @@ class _AlbumCarouselState extends State<AlbumCarousel> {
                     height: 10,
                   ),
                   Text(
-                    data.author,
-                    style: data.url == null
+                    data.artistName,
+                    style: data.link == null
                         ? TextStyle(
                             fontSize: 10.0,
                             color: Color(0xFFE0E0E0),
@@ -78,7 +78,7 @@ class _AlbumCarouselState extends State<AlbumCarousel> {
           ),
           IconButton(
               onPressed: () => favoriteModel.collect(data),
-              icon: data.url == null
+              icon: data.link == null
                   ? Icon(
                       Icons.favorite_border,
                       color: Color(0xFFE0E0E0),
@@ -117,7 +117,7 @@ class _AlbumCarouselState extends State<AlbumCarousel> {
                 Song data = model.list[index];
                 return GestureDetector(
                   onTap: () {
-                    if (null != data.url) {
+                    if (null != data.link) {
                       SongModel songModel = Provider.of(context);
                       songModel.setSongs(model.list);
                       songModel.setCurrentIndex(index);

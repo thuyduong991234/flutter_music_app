@@ -12,7 +12,7 @@ class _ForYouCarouselState extends State<SongListCarousel> {
   Widget _buildSongItem(Song data) {
     FavoriteModel favoriteModel = Provider.of(context);
     SongModel songModel = Provider.of(context);
-    return data.songid == songModel.currentSong.songid
+    return data.id == songModel.currentSong.id
         ? Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: ClipRRect(
@@ -27,7 +27,7 @@ class _ForYouCarouselState extends State<SongListCarousel> {
                       child: Container(
                           width: 50,
                           height: 50,
-                          child: Image.network(data.pic)),
+                          child: Image.network(data.thumbnail)),
                     ),
                     SizedBox(
                       width: 20.0,
@@ -38,7 +38,7 @@ class _ForYouCarouselState extends State<SongListCarousel> {
                           children: <Widget>[
                             Text(
                               data.title,
-                              style: data.url == null
+                              style: data.link == null
                                   ? TextStyle(
                                       fontSize: 12.0,
                                       fontWeight: FontWeight.w600,
@@ -55,8 +55,8 @@ class _ForYouCarouselState extends State<SongListCarousel> {
                               height: 10,
                             ),
                             Text(
-                              data.author,
-                              style: data.url == null
+                              data.artistName,
+                              style: data.link == null
                                   ? TextStyle(
                                       fontSize: 10.0,
                                       color: Colors.grey,
@@ -88,7 +88,9 @@ class _ForYouCarouselState extends State<SongListCarousel> {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(12.0),
                   child: Container(
-                      width: 50, height: 50, child: Image.network(data.pic)),
+                      width: 50,
+                      height: 50,
+                      child: Image.network(data.thumbnail)),
                 ),
                 SizedBox(
                   width: 20.0,
@@ -99,7 +101,7 @@ class _ForYouCarouselState extends State<SongListCarousel> {
                       children: <Widget>[
                         Text(
                           data.title,
-                          style: data.url == null
+                          style: data.link == null
                               ? TextStyle(
                                   fontSize: 12.0,
                                   fontWeight: FontWeight.w600,
@@ -116,8 +118,8 @@ class _ForYouCarouselState extends State<SongListCarousel> {
                           height: 10,
                         ),
                         Text(
-                          data.author,
-                          style: data.url == null
+                          data.artistName,
+                          style: data.link == null
                               ? TextStyle(
                                   fontSize: 10.0,
                                   color: Colors.grey,
@@ -132,7 +134,7 @@ class _ForYouCarouselState extends State<SongListCarousel> {
                 ),
                 IconButton(
                     onPressed: () => favoriteModel.collect(data),
-                    icon: data.url == null
+                    icon: data.link == null
                         ? Icon(
                             Icons.favorite_border,
                             color: Color(0xFFE0E0E0),
@@ -164,7 +166,7 @@ class _ForYouCarouselState extends State<SongListCarousel> {
           Song data = songModel.songs[index];
           return GestureDetector(
             onTap: () {
-              if (null != data.url) {
+              if (null != data.link) {
                 songModel.setCurrentIndex(index);
                 songModel.setPlayNow(true);
                 Future.delayed(new Duration(milliseconds: 100), () {

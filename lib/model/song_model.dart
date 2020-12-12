@@ -11,7 +11,7 @@ class SongListModel extends ViewStateRefreshListModel<Song> {
 
   @override
   Future<List<Song>> loadData({int pageNum}) async {
-    return await BaseRepository.fetchSongList(input, pageNum);
+    return await BaseRepository.fetchHomeList('song_new', pageNum);
   }
 }
 
@@ -128,35 +128,41 @@ class SongModel with ChangeNotifier {
 }
 
 class Song {
-  String type;
-  String link;
-  int songid;
+  String id;
   String title;
-  String author;
-  String lrc;
-  String url;
-  String pic;
+  String artistName;
+  int rawID;
+  String link;
+  String thumbnail;
+  String lyric;
+  int listen;
+  int duration;
+  bool isAlbum;
 
   Song.fromJsonMap(Map<String, dynamic> map)
-      : type = map["type"],
-        link = map["link"],
-        songid = map["songid"],
+      : id = map["id"],
         title = map["title"],
-        author = map["author"],
-        lrc = map["lrc"],
-        url = map["url"],
-        pic = map["pic"];
+        artistName = map["artists_names"],
+        rawID = map["raw_id"],
+        link = map["link"],
+        thumbnail = map["thumbnail"],
+        lyric = map["lyric"],
+        listen = map["listen"],
+        duration = map["duration"],
+        isAlbum = map["isalbum"] != null ? true : false;
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['type'] = type;
-    data['link'] = link;
-    data['songid'] = songid;
+    data['id'] = id;
     data['title'] = title;
-    data['author'] = author;
-    data['lrc'] = lrc;
-    data['url'] = url;
-    data['pic'] = pic;
+    data['artists_names'] = artistName;
+    data['raw_id'] = rawID;
+    data['link'] = link;
+    data['thumbnail'] = thumbnail;
+    data['lyric'] = lyric;
+    data['listen'] = listen;
+    data['duration'] = duration;
+    data['isalbum'] = isAlbum;
     return data;
   }
 }

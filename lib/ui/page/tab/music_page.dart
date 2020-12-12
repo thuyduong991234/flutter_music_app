@@ -26,7 +26,8 @@ class _MusicPageState extends State<MusicPage>
     final dir = await getApplicationDocumentsDirectory();
     List<FileSystemEntity> files = dir.listSync();
     for (var file in files) {
-      print(file.path);
+      print('music page ----------------------------------------------: ' +
+          file.path);
     }
     setState(() {});
   }
@@ -44,7 +45,8 @@ class _MusicPageState extends State<MusicPage>
             child: Container(
                 width: 50,
                 height: 50,
-                child: Image(image: CachedNetworkImageProvider(data.pic))),
+                child:
+                    Image(image: CachedNetworkImageProvider(data.thumbnail))),
           ),
           SizedBox(
             width: 20.0,
@@ -55,7 +57,7 @@ class _MusicPageState extends State<MusicPage>
                 children: <Widget>[
                   Text(
                     data.title,
-                    style: data.url == null
+                    style: data.link == null
                         ? TextStyle(
                             fontSize: 12.0,
                             fontWeight: FontWeight.w600,
@@ -72,8 +74,8 @@ class _MusicPageState extends State<MusicPage>
                     height: 10,
                   ),
                   Text(
-                    data.author,
-                    style: data.url == null
+                    data.artistName,
+                    style: data.link == null
                         ? TextStyle(
                             fontSize: 10.0,
                             color: Color(0xFFE0E0E0),
@@ -130,7 +132,7 @@ class _MusicPageState extends State<MusicPage>
                         Song data = downloadModel.downloadSong[index];
                         return GestureDetector(
                           onTap: () {
-                            if (null != data.url) {
+                            if (null != data.link) {
                               SongModel songModel = Provider.of(context);
                               songModel.setSongs(new List<Song>.from(
                                   downloadModel.downloadSong));
