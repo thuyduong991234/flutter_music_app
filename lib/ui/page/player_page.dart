@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_music_app/anims/player_anim.dart';
 import 'package:flutter_music_app/model/download_model.dart';
 import 'package:flutter_music_app/model/favorite_model.dart';
+import 'package:flutter_music_app/ui/page/artist_page.dart';
 import 'package:flutter_music_app/ui/widget/app_bar.dart';
 import 'package:flutter_music_app/model/song_model.dart';
 import 'package:flutter_music_app/ui/widget/lyrics.dart';
@@ -125,9 +126,19 @@ class _PlayPageState extends State<PlayPage> with TickerProviderStateMixin {
                 ),
               ]),
           SizedBox(height: MediaQuery.of(context).size.height * 0.02),
-          Text(
-            songModel.currentSong.artistName,
-            style: TextStyle(color: Colors.grey, fontSize: 15.0),
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => ArtistPage(),
+                ),
+              );
+            },
+            child: Text(
+              songModel.currentSong.artistName,
+              style: TextStyle(color: Colors.grey, fontSize: 15.0),
+            ),
           ),
           SizedBox(height: MediaQuery.of(context).size.height * 0.01),
           Text(
