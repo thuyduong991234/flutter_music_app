@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_music_app/config/net/base_api.dart';
+import 'package:flutter_music_app/model/artist_model.dart';
 import 'package:flutter_music_app/model/song_model.dart';
 import 'package:http/http.dart' as htp;
 import 'package:html/parser.dart' as parser;
@@ -303,5 +304,35 @@ class BaseRepository {
         return counter;
       default:
     }
+  }
+
+  static Future fetchArtist(String alias) async {
+    var ctime = DateTime.now().millisecondsSinceEpoch;
+    String data = "ctime=" + ctime.toString() + "version=1.0.1";
+    var _sha256 = sha256.convert(utf8.encode(data));
+    var _sha512 = "/api/v2/artist/getDetail" + _sha256.toString();
+    var hmac =
+        new Hmac(sha512, utf8.encode("882QcNXV4tUZbvAsjmFOHqNC1LpcBRKW"));
+    var sig = hmac.convert(utf8.encode(_sha512));
+    var response = null;
+    response = await http.get('/v2/artist/getDetail?alias=' +
+        alias +
+        "&ctime=" +
+        ctime.toString() +
+        "&version=1.0.1" +
+        "&sig=" +
+        sig.toString() +
+        "&apiKey=kI44ARvPwaqL7v0KuDSM0rGORtdY1nnw");
+    if ((response.toString()).contains("-204")) {
+      response = await http.get('/v2/artist/getDetail?alias=' +
+          alias +
+          "&ctime=" +
+          ctime.toString() +
+          "&version=1.0.1" +
+          "&sig=" +
+          sig.toString() +
+          "&apiKey=kI44ARvPwaqL7v0KuDSM0rGORtdY1nnw");
+    }
+    return Artist.fromJsonMap(response.data);
   }
 }
