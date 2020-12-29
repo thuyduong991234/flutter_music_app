@@ -50,16 +50,19 @@ class _ForYouCarouselState extends State<SongLyricsCarousel>
   Widget build(BuildContext context) {
     songModel = Provider.of(context);
     //debugPrint("Lyric: " + songLyc);
-    var lyrics = LyricUtil.formatLyric(songModel.lyric);
+    var lyrics =
+        songModel.lyric != null ? LyricUtil.formatLyric(songModel.lyric) : null;
     //debugPrint("LYRIC: " + songModel.lyric);
     return Scaffold(
       body: Center(
-          child: LyricWidget(
-        size: Size(600, 600),
-        lyrics: lyrics,
-        vsync: this,
-        currentProgress: start.inMilliseconds.toDouble(),
-      )),
+          child: songModel.lyric != null
+              ? LyricWidget(
+                  size: Size(600, 600),
+                  lyrics: lyrics,
+                  vsync: this,
+                  currentProgress: start.inMilliseconds.toDouble(),
+                )
+              : Text("Chưa có lời bài hát!")),
     );
   }
 }

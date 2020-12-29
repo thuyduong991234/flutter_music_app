@@ -59,6 +59,63 @@ class BaseRepository {
             .forEach((item) => listAlbum.add(Song.fromJsonMap(item)));
         return listAlbum;
         break;
+      case 'top100':
+        List<Song> top100 = [];
+        response.data['top100']['items']
+            .forEach((item) => top100.add(Song.fromJsonMap(item)));
+        return top100;
+        break;
+      default:
+    }
+  }
+
+  static Future fetchHubHome(String input, int page) async {
+    var ctime = DateTime.now().millisecondsSinceEpoch;
+    String data = "ctime=" + ctime.toString() + "version=1.0.10";
+    var _sha256 = sha256.convert(utf8.encode(data));
+    var _sha512 = "/api/v2/hub/getHome" + _sha256.toString();
+    var hmac =
+        new Hmac(sha512, utf8.encode("882QcNXV4tUZbvAsjmFOHqNC1LpcBRKW"));
+    var sig = hmac.convert(utf8.encode(_sha512));
+    var response = null;
+    //Timer(Duration(seconds: 2), () async {
+    response = await http.get('/v2/hub/getHome?ctime=' +
+        ctime.toString() +
+        "&version=1.0.10" +
+        "&sig=" +
+        sig.toString() +
+        "&apiKey=kI44ARvPwaqL7v0KuDSM0rGORtdY1nnw");
+    //debugPrint(response.toString());
+    if ((response.toString()).contains("-204")) {
+      response = await http.get('/v2/hub/getHome?ctime=' +
+          ctime.toString() +
+          "&version=1.0.10" +
+          "&sig=" +
+          sig.toString() +
+          "&apiKey=kI44ARvPwaqL7v0KuDSM0rGORtdY1nnw");
+    }
+
+    //});
+
+    switch (input) {
+      case 'topic':
+        List<Song> topic = [];
+        response.data['topic']
+            .forEach((item) => topic.add(Song.fromJsonMap(item)));
+        return topic;
+        break;
+      case 'nations':
+        List<Song> nations = [];
+        response.data['nations']
+            .forEach((item) => nations.add(Song.fromJsonMap(item)));
+        return nations;
+        break;
+      case 'genre':
+        List<Song> genre = [];
+        response.data['genre']
+            .forEach((item) => genre.add(Song.fromJsonMap(item)));
+        return genre;
+        break;
       default:
     }
   }
@@ -170,12 +227,80 @@ class BaseRepository {
         List<Song> sections = [];
         //debugPrint("TRƯỚC SECTIONS ----------------" +
         //response.data['sections'][0]['items'].toString());
-        response.data['sections'][0]['items']
-            .forEach((item) => sections.add(Song.fromJsonMap(item)));
+        if (response.data['sections'] != null) {
+          response.data['sections'][0]['items']
+              .forEach((item) => sections.add(Song.fromJsonMap(item)));
+        }
         //debugPrint(
         //"SAU SECTIONS ----------------" + sections.length.toString());
         return sections;
         break;
+      default:
+    }
+  }
+
+  static Future fetchSearchAll(String q, String input) async {
+    var ctime = DateTime.now().millisecondsSinceEpoch;
+    String data = "ctime=" + ctime.toString() + "version=1.0.10";
+    var _sha256 = sha256.convert(utf8.encode(data));
+    var _sha512 = "/api/v2/search/multi" + _sha256.toString();
+    var hmac =
+        new Hmac(sha512, utf8.encode("882QcNXV4tUZbvAsjmFOHqNC1LpcBRKW"));
+    var sig = hmac.convert(utf8.encode(_sha512));
+    var response = null;
+    //Timer(Duration(seconds: 2), () async {
+    response = await http.get('/v2/search/multi?q=' +
+        q +
+        "&ctime=" +
+        ctime.toString() +
+        "&version=1.0.10" +
+        "&sig=" +
+        sig.toString() +
+        "&apiKey=kI44ARvPwaqL7v0KuDSM0rGORtdY1nnw");
+    if ((response.toString()).contains("-204")) {
+      debugPrint("Có vô IF");
+      response = await http.get('/v2/search/multi?q=' +
+          q +
+          "&ctime=" +
+          ctime.toString() +
+          "&version=1.0.10" +
+          "&sig=" +
+          sig.toString() +
+          "&apiKey=kI44ARvPwaqL7v0KuDSM0rGORtdY1nnw");
+    }
+    switch (input) {
+      case 'songs':
+        List<Song> songs = [];
+        response.data['songs']
+            .forEach((item) => songs.add(Song.fromJsonMap(item)));
+        //debugPrint("LENGTH______" + songs.length.toString());
+        return songs;
+        break;
+      case 'playlists':
+        List<Song> sections = [];
+        //debugPrint("TRƯỚC SECTIONS ----------------" +
+        //response.data['sections'][0]['items'].toString());
+        response.data['playlists']
+            .forEach((item) => sections.add(Song.fromJsonMap(item)));
+        debugPrint(
+            "SAU SECTIONS ----------------" + sections.length.toString());
+        return sections;
+        break;
+      case 'counter':
+        List<int> counter = [];
+        response.data['counter']['song'] != null
+            ? counter.add(response.data['counter']['song'])
+            : counter.add(0);
+        response.data['counter']['artist'] != null
+            ? counter.add(response.data['counter']['artist'])
+            : counter.add(0);
+        response.data['counter']['playlist'] != null
+            ? counter.add(response.data['counter']['playlist'])
+            : counter.add(0);
+        response.data['counter']['video'] != null
+            ? counter.add(response.data['counter']['video'])
+            : counter.add(0);
+        return counter;
       default:
     }
   }

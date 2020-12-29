@@ -154,6 +154,7 @@ class Song {
   String id;
   String title;
   String artistName;
+  String artistAlias;
   int rawID;
   String link;
   String thumbnail;
@@ -161,13 +162,14 @@ class Song {
   int listen;
   int duration;
   bool isAlbum;
+  bool hasLyric;
 
   Song.fromJsonMap(Map<String, dynamic> map)
       : id = map["id"] != null ? map["id"] : map["encodeId"],
         title = map["title"],
         artistName = map["artists_names"] != null
             ? map["artists_names"]
-            : map["artistsNames"],
+            : (map["artistsNames"] != null ? map["artistsNames"] : " "),
         rawID = map["raw_id"] != null ? map["raw_id"] : 0,
         link = map["link"],
         //link ="https://vnso-zn-15-tf-mp3-s1-zmp3.zadn.vn/a8130c96bbd1528f0bc0/3825616758110698709?authen=exp=1608794559~acl=/a8130c96bbd1528f0bc0/*~hmac=a484701b568e454e50abb3edde11531c&fs=MTYwODYyMTmUsIC1OTU5Mnx3ZWJWNnwxMDQ2MzUyMzM2fDE3MS4yNDmUsICdUngMTmUsICwLjExNw",
@@ -175,7 +177,12 @@ class Song {
         lyric = map["lyric"],
         listen = map["listen"],
         duration = map["duration"],
-        isAlbum = map["isalbum"] != null ? true : false;
+        isAlbum = map["isalbum"] != null
+            ? map["isalbum"]
+            : (map["isAlbum"] != null ? map["isAlbum"] : false),
+        hasLyric = map["has_lyric"] != null
+            ? map["has_lyric"]
+            : (map["hasLyric"] != null ? map["hasLyric"] : false);
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();

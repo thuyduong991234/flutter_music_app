@@ -82,6 +82,10 @@ class _HomePageState extends State<HomePage>
                 }
                 var albums = homeModel?.albums ?? [];
                 var forYou = homeModel?.forYou ?? [];
+                var top100 = homeModel?.top100 ?? [];
+                var genre = homeModel?.genre ?? [];
+                var topic = homeModel?.topic ?? [];
+                var nations = homeModel?.nations ?? [];
                 return Column(children: <Widget>[
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10.0),
@@ -143,8 +147,10 @@ class _HomePageState extends State<HomePage>
                         ),
                         AlbumsCarousel(albums),
                         ForYouCarousel(forYou, "song new", true),
-                        AlbumsCarousel(albums),
-                        ForYouCarousel(forYou, "song new", true),
+                        AlbumsCarousel(top100),
+                        AlbumsCarousel(genre),
+                        AlbumsCarousel(topic),
+                        AlbumsCarousel(nations),
                       ]),
                     ),
                   )

@@ -28,10 +28,10 @@ class ApiInterceptor extends InterceptorsWrapper {
     Map<String, String> header = {'Cookie': storage.getString("headerCookie")};
     options.headers = header;
     //debugPrint("co header");
-    /*debugPrint('---api-request--->url--> ${options.baseUrl}${options.path}' +
+    debugPrint('---api-request--->url--> ${options.baseUrl}${options.path}' +
         ' queryParameters: ${options.queryParameters}' +
         ' data: ${options.data}' +
-        ' headers');*/
+        ' headers');
     return options;
   }
 

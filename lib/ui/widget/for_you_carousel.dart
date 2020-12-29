@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_music_app/generated/i18n.dart';
 import 'package:flutter_music_app/model/favorite_model.dart';
 import 'package:flutter_music_app/model/song_model.dart';
+import 'package:flutter_music_app/ui/page/albums_page.dart';
 import 'package:flutter_music_app/ui/page/player_page.dart';
 import 'package:provider/provider.dart';
 
@@ -149,15 +150,26 @@ class _ForYouCarouselState extends State<ForYouCarousel> {
           Song data = widget.forYou[index];
           return GestureDetector(
             onTap: () {
-              if (null != data.link) {
-                SongModel songModel = Provider.of(context);
-                songModel.setSongs(new List<Song>.from(widget.forYou));
-                songModel.setCurrentIndex(index);
+              if (!data.isAlbum) {
+                if (null != data.link) {
+                  SongModel songModel = Provider.of(context);
+                  songModel.setSongs(new List<Song>.from(widget.forYou));
+                  songModel.setCurrentIndex(index);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => PlayPage(
+                        nowPlay: true,
+                      ),
+                    ),
+                  );
+                }
+              } else {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (_) => PlayPage(
-                      nowPlay: true,
+                    builder: (_) => AlbumsPage(
+                      data: data,
                     ),
                   ),
                 );

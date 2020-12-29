@@ -24,6 +24,9 @@ class _HistorySearchPageState extends State<HistorySearchPage>
   final _inputController = TextEditingController();
   final _commonTween = new Tween<double>(begin: 0.0, end: 1.0);
   bool isSearch = false;
+  List<Song> playlists = [];
+  List<Song> listSongs = [];
+  List<int> counter = [];
 
   @override
   bool get wantKeepAlive => true;
@@ -67,7 +70,7 @@ class _HistorySearchPageState extends State<HistorySearchPage>
         child: SafeArea(
           child: ProviderWidget<HomeModel>(
               onModelReady: (homeModel) async {
-                await homeModel.initData();
+                //await homeModel.initData();
               },
               model: HomeModel(),
               autoDispose: false,
@@ -103,10 +106,35 @@ class _HistorySearchPageState extends State<HistorySearchPage>
                                     isSearch = false;
                                   });
                                 },
-                                onSubmitted: (value) {
+                                onSubmitted: (value) async {
                                   if (value.isNotEmpty == true) {
                                     setState(() {
-                                      isSearch = true;
+                                      listSongs = [];
+                                      playlists = [];
+                                    });
+                                    var one =
+                                        await BaseRepository.fetchSearchAll(
+                                            value, "songs");
+                                    var two =
+                                        await BaseRepository.fetchSearchAll(
+                                            value, "playlists");
+                                    var three =
+                                        await BaseRepository.fetchSearchAll(
+                                            value, "counter");
+                                    setState(() {
+                                      listSongs = one;
+                                      playlists = two;
+                                      counter = three;
+                                      var flag = false;
+                                      counter.forEach((element) {
+                                        if (element != 0) {
+                                          flag = true;
+                                        }
+                                        if (flag)
+                                          isSearch = true;
+                                        else
+                                          isSearch = false;
+                                      });
                                     });
                                   }
                                 },
@@ -134,10 +162,57 @@ class _HistorySearchPageState extends State<HistorySearchPage>
                   ),
                   isSearch == true
                       ? Expanded(
-                          child: Text("HAHAHAHA"),
-                        )
+                          child: DefaultTabController(
+                              length: 5,
+                              child: Scaffold(
+                                appBar: AppBar(
+                                  //textTheme: Theme.of(context).appBarTheme.color,
+                                  backgroundColor: Colors.white,
+                                  //shadowColor: Theme.of(context).accentColor,
+                                  toolbarHeight: 50,
+                                  automaticallyImplyLeading: false,
+                                  bottom: TabBar(
+                                    isScrollable: true,
+                                    tabs: [
+                                      Tab(text: "Tất cả"),
+                                      Tab(text: "Bài hát"),
+                                      Tab(text: "Playlist"),
+                                      Tab(text: "MV"),
+                                      Tab(text: "Nghệ sĩ"),
+                                    ],
+                                    labelColor: Theme.of(context).accentColor,
+                                    indicatorColor:
+                                        Theme.of(context).accentColor,
+                                  ),
+                                ),
+                                body: TabBarView(
+                                  children: <Widget>[
+                                    Expanded(
+                                      child: SmartRefresher(
+                                        controller: homeModel.refreshController,
+                                        onRefresh: () async {
+                                          await homeModel.refresh();
+                                          homeModel.showErrorMessage(context);
+                                        },
+                                        child: ListView(children: <Widget>[
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          ForYouCarousel(
+                                              listSongs, "song new", true),
+                                          AlbumsCarousel(playlists),
+                                        ]),
+                                      ),
+                                    ),
+                                    ForYouCarousel(listSongs, "song new", true),
+                                    ForYouCarousel(playlists, "song new", true),
+                                    Text("4"),
+                                    Text("5"),
+                                  ],
+                                ),
+                              )))
                       : Expanded(
-                          child: Text("NÔNNOOO"),
+                          child: Center(child: Text("Đang tải...")),
                         )
                 ]);
               }),

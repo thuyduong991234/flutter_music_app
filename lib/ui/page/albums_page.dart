@@ -153,7 +153,9 @@ class _AlbumsPageState extends State<AlbumsPage> {
                               ],
                             ),
                             AlbumCarousel(input: widget.data.id),
-                            ForYouCarousel(sections, "take care", false),
+                            sections.length > 0
+                                ? ForYouCarousel(sections, "take care", false)
+                                : Text(""),
                           ],
                         ),
                       ),

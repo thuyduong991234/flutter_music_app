@@ -160,7 +160,7 @@ class PlayerState extends State<Player> {
     } else {
       debugPrint("2");
       url = await getSongUrl(s);
-      lyric = await getSongLyric(s);
+      if (s.hasLyric) lyric = await getSongLyric(s);
     }
     if (url == _songData.url) {
       debugPrint("3");
@@ -175,7 +175,10 @@ class PlayerState extends State<Player> {
         _songData.setPlaying(true);
       }
       _songData.setUrl(url);
-      _songData.setLyric(lyric);
+      if (s.hasLyric)
+        _songData.setLyric(lyric);
+      else
+        _songData.setLyric(null);
     }
   }
 
