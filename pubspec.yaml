@@ -43,6 +43,7 @@ dependencies:
   path_provider: ^1.1.0
   crypto: ^2.1.5
   flutter_lyric: ^1.0.0
+  firebase_core: "0.5.3"
 
 dev_dependencies:
   flutter_test:
