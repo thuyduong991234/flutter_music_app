@@ -1,3 +1,5 @@
+import 'dart:convert';
+import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_music_app/anims/player_anim.dart';
@@ -5,6 +7,7 @@ import 'package:flutter_music_app/model/download_model.dart';
 import 'package:flutter_music_app/model/favorite_model.dart';
 import 'package:flutter_music_app/ui/widget/app_bar.dart';
 import 'package:flutter_music_app/model/song_model.dart';
+import 'package:flutter_music_app/ui/widget/lyrics.dart';
 import 'package:flutter_music_app/ui/widget/player_carousel.dart';
 import 'package:flutter_music_app/ui/widget/song_list_carousel.dart';
 import 'package:provider/provider.dart';
@@ -45,10 +48,6 @@ class _PlayPageState extends State<PlayPage> with TickerProviderStateMixin {
     super.dispose();
   }
 
-  String getSongUrl(Song s) {
-    return 'http://music.163.com/song/media/outer/url?id=${s.id}.mp3';
-  }
-
   @override
   Widget build(BuildContext context) {
     SongModel songModel = Provider.of(context);
@@ -59,111 +58,100 @@ class _PlayPageState extends State<PlayPage> with TickerProviderStateMixin {
     } else {
       controllerPlayer.stop(canceled: false);
     }
+
+    List<Widget> pages = [
+      SongListCarousel(),
+      Column(
+        children: <Widget>[
+          AppBarCarousel(),
+          SizedBox(height: MediaQuery.of(context).size.height * 0.05),
+          RotatePlayer(animation: _commonTween.animate(controllerPlayer)),
+          SizedBox(height: MediaQuery.of(context).size.height * 0.03),
+          Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                IconButton(
+                  onPressed: () => songModel.setShowList(!songModel.showList),
+                  icon: Icon(
+                    Icons.timer,
+                    size: 25.0,
+                    color: Colors.grey,
+                  ),
+                ),
+                IconButton(
+                  onPressed: () => songModel.changeRepeat(),
+                  icon: songModel.isRepeat == true
+                      ? Icon(
+                          Icons.repeat,
+                          size: 25.0,
+                          color: Colors.grey,
+                        )
+                      : Icon(
+                          Icons.shuffle,
+                          size: 25.0,
+                          color: Colors.grey,
+                        ),
+                ),
+                IconButton(
+                  onPressed: () =>
+                      favouriteModel.collect(songModel.currentSong),
+                  icon: favouriteModel.isCollect(songModel.currentSong) == true
+                      ? Icon(
+                          Icons.favorite,
+                          size: 25.0,
+                          color: Theme.of(context).accentColor,
+                        )
+                      : Icon(
+                          Icons.favorite_border,
+                          size: 25.0,
+                          color: Colors.grey,
+                        ),
+                ),
+                IconButton(
+                  onPressed: () =>
+                      downloadModel.download(songModel.currentSong),
+                  icon: downloadModel.isDownload(songModel.currentSong)
+                      ? Icon(
+                          Icons.cloud_done,
+                          size: 25.0,
+                          color: Theme.of(context).accentColor,
+                        )
+                      : Icon(
+                          Icons.cloud_download,
+                          size: 25.0,
+                          color: Colors.grey,
+                        ),
+                ),
+              ]),
+          SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+          Text(
+            songModel.currentSong.artistName,
+            style: TextStyle(color: Colors.grey, fontSize: 15.0),
+          ),
+          SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+          Text(
+            songModel.currentSong.title,
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 20.0),
+          ),
+        ],
+      ),
+      SongLyricsCarousel(),
+    ];
+
     return Scaffold(
       body: SafeArea(
         child: Column(
           children: <Widget>[
             Expanded(
-              child: Column(
-                children: <Widget>[
-                  !songModel.showList
-                      ? Column(
-                          children: <Widget>[
-                            AppBarCarousel(),
-                            SizedBox(
-                                height:
-                                    MediaQuery.of(context).size.height * 0.05),
-                            RotatePlayer(
-                                animation:
-                                    _commonTween.animate(controllerPlayer)),
-                            SizedBox(
-                                height:
-                                    MediaQuery.of(context).size.height * 0.03),
-                            Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: <Widget>[
-                                  IconButton(
-                                    onPressed: () => songModel
-                                        .setShowList(!songModel.showList),
-                                    icon: Icon(
-                                      Icons.list,
-                                      size: 25.0,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                  IconButton(
-                                    onPressed: () => songModel.changeRepeat(),
-                                    icon: songModel.isRepeat == true
-                                        ? Icon(
-                                            Icons.repeat,
-                                            size: 25.0,
-                                            color: Colors.grey,
-                                          )
-                                        : Icon(
-                                            Icons.shuffle,
-                                            size: 25.0,
-                                            color: Colors.grey,
-                                          ),
-                                  ),
-                                  IconButton(
-                                    onPressed: () => favouriteModel
-                                        .collect(songModel.currentSong),
-                                    icon: favouriteModel.isCollect(
-                                                songModel.currentSong) ==
-                                            true
-                                        ? Icon(
-                                            Icons.favorite,
-                                            size: 25.0,
-                                            color:
-                                                Theme.of(context).accentColor,
-                                          )
-                                        : Icon(
-                                            Icons.favorite_border,
-                                            size: 25.0,
-                                            color: Colors.grey,
-                                          ),
-                                  ),
-                                  IconButton(
-                                    onPressed: () => downloadModel
-                                        .download(songModel.currentSong),
-                                    icon: downloadModel
-                                            .isDownload(songModel.currentSong)
-                                        ? Icon(
-                                            Icons.cloud_done,
-                                            size: 25.0,
-                                            color:
-                                                Theme.of(context).accentColor,
-                                          )
-                                        : Icon(
-                                            Icons.cloud_download,
-                                            size: 25.0,
-                                            color: Colors.grey,
-                                          ),
-                                  ),
-                                ]),
-                            SizedBox(
-                                height:
-                                    MediaQuery.of(context).size.height * 0.02),
-                            Text(
-                              songModel.currentSong.artistName,
-                              style:
-                                  TextStyle(color: Colors.grey, fontSize: 15.0),
-                            ),
-                            SizedBox(
-                                height:
-                                    MediaQuery.of(context).size.height * 0.01),
-                            Text(
-                              songModel.currentSong.title,
-                              style: TextStyle(fontSize: 20.0),
-                            ),
-                          ],
-                        )
-                      : SongListCarousel(),
-                ],
-              ),
-            ),
+                child: PageView(
+                    children: pages,
+                    scrollDirection: Axis.horizontal,
+                    physics: BouncingScrollPhysics(),
+                    controller: PageController(
+                      initialPage: 1,
+                    ))),
             Player(
               songData: songModel,
               downloadData: downloadModel,

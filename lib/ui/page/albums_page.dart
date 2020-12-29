@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_music_app/provider/provider_widget.dart';
+import 'package:flutter_music_app/provider/view_state_widget.dart';
+import 'package:flutter_music_app/ui/page/player_page.dart';
 import 'package:flutter_music_app/ui/widget/album_carousel.dart';
 import 'package:flutter_music_app/ui/widget/app_bar.dart';
 import 'package:flutter_music_app/model/song_model.dart';
+import 'package:flutter_music_app/ui/widget/for_you_carousel.dart';
+import 'package:provider/provider.dart';
 
 class AlbumsPage extends StatefulWidget {
   final Song data;
@@ -16,89 +21,144 @@ class _AlbumsPageState extends State<AlbumsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: SafeArea(
-      child: Column(
-        children: <Widget>[
-          AppBarCarousel(),
-          Expanded(
-            child: ListView(
-              children: <Widget>[
-                Center(
-                    child: Container(
-                  width: MediaQuery.of(context).size.width * 0.5,
-                  height: MediaQuery.of(context).size.width * 0.5,
-                  child: ClipRRect(
-                      borderRadius: BorderRadius.circular(30.0),
-                      child: Container(
-                          child: Image.network(widget.data.thumbnail))),
-                )),
-                SizedBox(height: 20.0),
-                Center(
-                  child: Text(
-                    widget.data.artistName,
-                    style: TextStyle(fontSize: 12.0),
-                  ),
-                ),
-                Row(
-                  children: <Widget>[
-                    Expanded(
-                      flex: 1,
-                      child: Container(
-                        height: 70,
-                        margin: EdgeInsets.only(
-                            top: 20, bottom: 20, left: 20, right: 10),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.black12, width: 1),
-                          borderRadius: BorderRadius.circular(20.0),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+            child: ProviderWidget<SongListModel>(
+                onModelReady: (model) async {
+                  await model.initData();
+                },
+                model: SongListModel(input: widget.data.id),
+                builder: (context, model, child) {
+                  if (model.busy) {
+                    return ViewStateBusyWidget();
+                  } else if (model.error && model.list.isEmpty) {
+                    return ViewStateErrorWidget(
+                        error: model.viewStateError, onPressed: model.initData);
+                  }
+                  var songs = model?.song ?? [];
+                  var sections = model?.sections ?? [];
+                  return Column(
+                    children: <Widget>[
+                      AppBarCarousel(),
+                      Expanded(
+                        child: ListView(
                           children: <Widget>[
-                            Icon(
-                              Icons.play_arrow,
-                              color: Theme.of(context).accentColor,
+                            Center(
+                                child: Container(
+                              width: MediaQuery.of(context).size.width * 0.5,
+                              height: MediaQuery.of(context).size.width * 0.5,
+                              child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(30.0),
+                                  child: Container(
+                                      child: Image.network(
+                                          widget.data.thumbnail))),
+                            )),
+                            SizedBox(height: 15.0),
+                            Center(
+                              child: Text(
+                                widget.data.title,
+                                style: TextStyle(
+                                    fontSize: 14.0,
+                                    fontWeight: FontWeight.bold),
+                              ),
                             ),
-                            SizedBox(
-                              width: 5,
+                            SizedBox(height: 10.0),
+                            Center(
+                              child: Text(
+                                widget.data.artistName,
+                                style: TextStyle(fontSize: 12.0),
+                              ),
                             ),
-                            Text(
-                              'Play',
-                              style: TextStyle(
-                                  color: Theme.of(context).accentColor),
+                            Row(
+                              children: <Widget>[
+                                Expanded(
+                                  flex: 1,
+                                  child: Container(
+                                    height: 70,
+                                    margin: EdgeInsets.only(
+                                        top: 20,
+                                        bottom: 20,
+                                        left: 20,
+                                        right: 10),
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                          color: Colors.black12, width: 1),
+                                      borderRadius: BorderRadius.circular(20.0),
+                                    ),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        if (null != songs[0].link) {
+                                          SongModel songModel =
+                                              Provider.of(context);
+                                          songModel.setSongs(songs);
+                                          songModel.setCurrentIndex(0);
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (_) => PlayPage(
+                                                nowPlay: true,
+                                              ),
+                                            ),
+                                          );
+                                        }
+                                      },
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: <Widget>[
+                                          Icon(
+                                            Icons.play_arrow,
+                                            color:
+                                                Theme.of(context).accentColor,
+                                          ),
+                                          SizedBox(
+                                            width: 5,
+                                          ),
+                                          Text(
+                                            'Play',
+                                            style: TextStyle(
+                                                color: Theme.of(context)
+                                                    .accentColor),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  flex: 1,
+                                  child: Container(
+                                    height: 70,
+                                    margin: EdgeInsets.only(
+                                        top: 20,
+                                        bottom: 20,
+                                        left: 10,
+                                        right: 20),
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                          color: Colors.black12, width: 1),
+                                      borderRadius: BorderRadius.circular(20.0),
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: <Widget>[
+                                        Icon(Icons.add),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                        Text('Add'),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
+                            AlbumCarousel(input: widget.data.id),
+                            ForYouCarousel(sections, "take care", false),
                           ],
                         ),
                       ),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: Container(
-                        height: 70,
-                        margin: EdgeInsets.only(
-                            top: 20, bottom: 20, left: 10, right: 20),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.black12, width: 1),
-                          borderRadius: BorderRadius.circular(20.0),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Icon(Icons.add),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Text('Add'),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                AlbumCarousel(input: widget.data.artistName),
-              ],
-            ),
-          ),
-        ],
-      ),
-    ));
+                    ],
+                  );
+                })));
   }
 }

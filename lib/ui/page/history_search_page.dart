@@ -4,7 +4,6 @@ import 'package:flutter_music_app/model/home_model.dart';
 import 'package:flutter_music_app/model/song_model.dart';
 import 'package:flutter_music_app/provider/provider_widget.dart';
 import 'package:flutter_music_app/provider/view_state_widget.dart';
-import 'package:flutter_music_app/ui/page/history_search_page.dart';
 import 'package:flutter_music_app/ui/widget/albums_carousel.dart';
 import 'package:flutter_music_app/anims/record_anim.dart';
 import 'package:flutter_music_app/ui/widget/for_you_carousel.dart';
@@ -13,24 +12,24 @@ import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:flutter_music_app/service/base_repository.dart';
 
-class HomePage extends StatefulWidget {
+class HistorySearchPage extends StatefulWidget {
   @override
-  _HomePageState createState() => _HomePageState();
+  _HistorySearchPageState createState() => _HistorySearchPageState();
 }
 
-class _HomePageState extends State<HomePage>
+class _HistorySearchPageState extends State<HistorySearchPage>
     with TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   AnimationController controllerRecord;
   Animation<double> animationRecord;
   final _inputController = TextEditingController();
   final _commonTween = new Tween<double>(begin: 0.0, end: 1.0);
+  bool isSearch = false;
 
   @override
   bool get wantKeepAlive => true;
   @override
   void initState() {
     super.initState();
-    BaseRepository.fetchHomeList(null, null);
     controllerRecord = new AnimationController(
         duration: const Duration(milliseconds: 15000), vsync: this);
     animationRecord =
@@ -80,8 +79,6 @@ class _HomePageState extends State<HomePage>
                       error: homeModel.viewStateError,
                       onPressed: homeModel.initData);
                 }
-                var albums = homeModel?.albums ?? [];
-                var forYou = homeModel?.forYou ?? [];
                 return Column(children: <Widget>[
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10.0),
@@ -96,18 +93,23 @@ class _HomePageState extends State<HomePage>
                                 borderRadius: BorderRadius.circular(30.0),
                               ),
                               child: TextField(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (_) => HistorySearchPage(),
-                                    ),
-                                  );
-                                },
                                 style: TextStyle(
                                   fontSize: 15.0,
                                   color: Colors.grey,
                                 ),
+                                controller: _inputController,
+                                onChanged: (value) {
+                                  setState(() {
+                                    isSearch = false;
+                                  });
+                                },
+                                onSubmitted: (value) {
+                                  if (value.isNotEmpty == true) {
+                                    setState(() {
+                                      isSearch = true;
+                                    });
+                                  }
+                                },
                                 decoration: InputDecoration(
                                     border: InputBorder.none,
                                     enabledBorder: InputBorder.none,
@@ -130,24 +132,13 @@ class _HomePageState extends State<HomePage>
                       ],
                     ),
                   ),
-                  Expanded(
-                    child: SmartRefresher(
-                      controller: homeModel.refreshController,
-                      onRefresh: () async {
-                        await homeModel.refresh();
-                        homeModel.showErrorMessage(context);
-                      },
-                      child: ListView(children: <Widget>[
-                        SizedBox(
-                          height: 10,
-                        ),
-                        AlbumsCarousel(albums),
-                        ForYouCarousel(forYou, "song new", true),
-                        AlbumsCarousel(albums),
-                        ForYouCarousel(forYou, "song new", true),
-                      ]),
-                    ),
-                  )
+                  isSearch == true
+                      ? Expanded(
+                          child: Text("HAHAHAHA"),
+                        )
+                      : Expanded(
+                          child: Text("NÔNNOOO"),
+                        )
                 ]);
               }),
         ),

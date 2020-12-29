@@ -82,9 +82,10 @@ class S implements WidgetsLocalizations {
   String get tabUser => "Me";
   String get theme => "Theme";
   String get toSignIn => "Sign In";
-  String get albums => "Albums";
+  String get albums => "Albums hot";
   String get viewAll => "View All";
-  String get forYou => "For you";
+  String get forYou => "Song new";
+  String get takeCare => "Recommend for you";
   String get toSignUp => "Sign Up";
   String get twoPwdDifferent => "The two passwords differ";
   String get unLike => "UnLike";

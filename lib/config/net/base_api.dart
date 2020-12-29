@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:isolate';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
@@ -26,36 +27,47 @@ class ApiInterceptor extends InterceptorsWrapper {
     var storage = await SharedPreferences.getInstance();
     Map<String, String> header = {'Cookie': storage.getString("headerCookie")};
     options.headers = header;
-    debugPrint("co header");
-    debugPrint('---api-request--->url--> ${options.baseUrl}${options.path}' +
+    //debugPrint("co header");
+    /*debugPrint('---api-request--->url--> ${options.baseUrl}${options.path}' +
         ' queryParameters: ${options.queryParameters}' +
         ' data: ${options.data}' +
-        ' headers');
+        ' headers');*/
     return options;
   }
 
   @override
   onResponse(Response response) async {
-    debugPrint("header: " + response.headers["set-cookie"].toString());
+    //debugPrint("header: " + response.headers["set-cookie"].toString());
     if (response.headers["set-cookie"] != null) {
       var codeCookie =
           (response.headers["set-cookie"].toString().split(";"))[0];
-      debugPrint((codeCookie.replaceAll("[", "")).replaceAll("]", ""));
+      //debugPrint((codeCookie.replaceAll("[", "")).replaceAll("]", ""));
       Cookie a = Cookie.fromSetCookieValue(
           (codeCookie.replaceAll("[", "")).replaceAll("]", ""));
       var storage = await SharedPreferences.getInstance();
       await storage.setString("headerCookie", a.toString());
-      debugPrint(a.toString());
+      //debugPrint(a.toString());
     }
+
+    try {
+      response.data = json.decode(response.data);
+    } catch (e) {
+      response.data = json.encode(response.data);
+      response.data = json.decode(response.data);
+    }
+
     debugPrint('---api-response--->resp----->${response.data}');
-    ResponseData respData = ResponseData.fromJson(json.decode(response.data));
+    ResponseData respData = ResponseData.fromJson(response.data);
     if (respData.success) {
       response.data = respData.data;
+      //debugPrint("If successs ------" + response.toString());
       return http.resolve(response);
     } else {
       if (respData.msg != 'Success') {
+        //debugPrint('vo roi ne');
         return http.resolve({"err": -204});
       } else {
+        //debugPrint('vo roi ne');
         throw NotSuccessException.fromRespData(respData);
       }
     }
@@ -70,6 +82,7 @@ class ResponseData extends BaseResponseData {
     error = json['err'].toString();
     msg = json['msg'];
     data = json['data'];
+    //debugPrint('err + ' + json['err'].toString());
     debugPrint('vo roi ne');
   }
 }

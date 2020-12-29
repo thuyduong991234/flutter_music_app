@@ -1,7 +1,14 @@
+//import 'dart:html';
+
+import 'dart:convert';
+
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_music_app/model/download_model.dart';
 import 'package:flutter_music_app/model/song_model.dart';
+import 'package:flutter_music_app/service/base_repository.dart';
+import 'dart:async';
+import 'package:http/http.dart' as http;
 
 class Player extends StatefulWidget {
   /// 播放列表
@@ -131,28 +138,44 @@ class PlayerState extends State<Player> {
     });
   }
 
-  String getSongUrl(Song s) {
-    return 'http://music.163.com/song/media/outer/url?id=${s.id}.mp3';
+  Future getSongUrl(Song s) async {
+    var url = await BaseRepository.fetchUrlMp3(s.id);
+    //debugPrint("--------url mp3: " + url.toString());
+    return url.toString();
+  }
+
+  Future getSongLyric(Song s) async {
+    var url = await BaseRepository.fetchLyrics(s.id);
+    var lyric = await http.read(url.toString());
+    var lyrics = utf8.decode((lyric.toString()).runes.toList());
+    debugPrint("HAHAHA " + lyrics.toString());
+    return lyrics.toString();
   }
 
   void play(Song s) async {
-    String url;
+    String url, lyric;
     if (_downloadData.isDownload(s)) {
+      debugPrint("1");
       url = _downloadData.getDirectoryPath + '/${s.id}.mp3';
     } else {
-      url = getSongUrl(s);
+      debugPrint("2");
+      url = await getSongUrl(s);
+      lyric = await getSongLyric(s);
     }
     if (url == _songData.url) {
+      debugPrint("3");
       int result = await _audioPlayer.setUrl(url);
       if (result == 1) {
         _songData.setPlaying(true);
       }
     } else {
+      debugPrint("URL 4_____" + url);
       int result = await _audioPlayer.play(url);
       if (result == 1) {
         _songData.setPlaying(true);
       }
       _songData.setUrl(url);
+      _songData.setLyric(lyric);
     }
   }
 
@@ -272,7 +295,7 @@ class PlayerState extends State<Player> {
               child: IconButton(
                 onPressed: () => _songData.setShowList(!_songData.showList),
                 icon: Icon(
-                  Icons.list,
+                  Icons.timer,
                   size: 25.0,
                   color: Colors.grey,
                 ),

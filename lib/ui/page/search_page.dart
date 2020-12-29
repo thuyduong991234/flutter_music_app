@@ -86,71 +86,65 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Column(
-          children: <Widget>[
-            AppBarCarousel(),
-            Container(
-                margin: EdgeInsets.only(bottom: 40),
-                alignment: Alignment.center,
-                child: Text(S.of(context).searchResult + widget.input)),
-            Expanded(
-              child: ProviderWidget<SongListModel>(
-                  onModelReady: (model) async {
-                    await model.initData();
+    return Column(
+      children: <Widget>[
+        Container(
+            margin: EdgeInsets.only(bottom: 40),
+            alignment: Alignment.center,
+            child: Text(S.of(context).searchResult + widget.input)),
+        Expanded(
+          child: ProviderWidget<SongListModel>(
+              onModelReady: (model) async {
+                await model.initData();
+              },
+              model: SongListModel(input: widget.input),
+              builder: (context, model, child) {
+                if (model.busy) {
+                  // return SkeletonList(
+                  //   builder: (context, index) => ArticleSkeletonItem(),
+                  // );
+                  return Center(child: Text('Đang tải...'));
+                } else if (model.error && model.list.isEmpty) {
+                  return ViewStateErrorWidget(
+                      error: model.viewStateError, onPressed: model.initData);
+                } else if (model.empty) {
+                  return ViewStateEmptyWidget(onPressed: model.initData);
+                }
+                return SmartRefresher(
+                  controller: model.refreshController,
+                  header: WaterDropHeader(),
+                  footer: RefresherFooter(),
+                  onRefresh: () async {
+                    await model.refresh();
                   },
-                  model: SongListModel(input: widget.input),
-                  builder: (context, model, child) {
-                    if (model.busy) {
-                      // return SkeletonList(
-                      //   builder: (context, index) => ArticleSkeletonItem(),
-                      // );
-                      return Center(child: Text('加载中...'));
-                    } else if (model.error && model.list.isEmpty) {
-                      return ViewStateErrorWidget(
-                          error: model.viewStateError,
-                          onPressed: model.initData);
-                    } else if (model.empty) {
-                      return ViewStateEmptyWidget(onPressed: model.initData);
-                    }
-                    return SmartRefresher(
-                      controller: model.refreshController,
-                      header: WaterDropHeader(),
-                      footer: RefresherFooter(),
-                      onRefresh: () async {
-                        await model.refresh();
-                      },
-                      onLoading: () async {
-                        await model.loadMore();
-                      },
-                      enablePullUp: true,
-                      child: ListView.builder(
-                          itemCount: model.list.length,
-                          itemBuilder: (context, index) {
-                            Song data = model.list[index];
-                            return GestureDetector(
-                                onTap: () {
-                                  if (null != data.link) {
-                                    SongModel songModel = Provider.of(context);
-                                    songModel.setSongs(model.list);
-                                    songModel.setCurrentIndex(index);
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (_) => PlayPage(nowPlay: true),
-                                      ),
-                                    );
-                                  }
-                                },
-                                child: _buildSongItem(data));
-                          }),
-                    );
-                  }),
-            ),
-          ],
+                  onLoading: () async {
+                    await model.loadMore();
+                  },
+                  enablePullUp: true,
+                  child: ListView.builder(
+                      itemCount: model.list.length,
+                      itemBuilder: (context, index) {
+                        Song data = model.list[index];
+                        return GestureDetector(
+                            onTap: () {
+                              if (null != data.link) {
+                                SongModel songModel = Provider.of(context);
+                                songModel.setSongs(model.list);
+                                songModel.setCurrentIndex(index);
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => PlayPage(nowPlay: true),
+                                  ),
+                                );
+                              }
+                            },
+                            child: _buildSongItem(data));
+                      }),
+                );
+              }),
         ),
-      ),
+      ],
     );
   }
 }

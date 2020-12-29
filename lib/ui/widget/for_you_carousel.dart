@@ -8,8 +8,10 @@ import 'package:provider/provider.dart';
 
 class ForYouCarousel extends StatefulWidget {
   final List<Song> forYou;
+  final String title;
+  final bool viewAll;
 
-  ForYouCarousel(this.forYou);
+  ForYouCarousel(this.forYou, this.title, this.viewAll);
   @override
   _ForYouCarouselState createState() => _ForYouCarouselState();
 }
@@ -101,22 +103,40 @@ class _ForYouCarouselState extends State<ForYouCarousel> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Text(S.of(context).forYou,
-                style: TextStyle(
-                    fontSize: 22.0,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 1.2)),
-            GestureDetector(
-              onTap: () => {
-                print('View All'),
-              },
-              child: Text(S.of(context).viewAll,
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 12.0,
-                    fontWeight: FontWeight.w600,
-                  )),
-            ),
+            widget.title == "song new"
+                ? Text(S.of(context).forYou,
+                    style: TextStyle(
+                        fontSize: 22.0,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1.2))
+                : Text(S.of(context).takeCare,
+                    style: TextStyle(
+                        fontSize: 22.0,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1.2)),
+            widget.viewAll == true
+                ? GestureDetector(
+                    onTap: () => {
+                      print('View All'),
+                    },
+                    child: Text(S.of(context).viewAll,
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 12.0,
+                          fontWeight: FontWeight.w600,
+                        )),
+                  )
+                : GestureDetector(
+                    onTap: () => {
+                      print('View All'),
+                    },
+                    child: Text("",
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 12.0,
+                          fontWeight: FontWeight.w600,
+                        )),
+                  ),
           ],
         ),
       ),

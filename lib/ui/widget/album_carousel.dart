@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_music_app/model/favorite_model.dart';
 import 'package:flutter_music_app/model/song_model.dart';
 import 'package:flutter_music_app/provider/provider_widget.dart';
+import 'package:flutter_music_app/provider/view_state_widget.dart';
 import 'package:flutter_music_app/ui/page/player_page.dart';
 import 'package:provider/provider.dart';
 
@@ -107,19 +108,26 @@ class _AlbumCarouselState extends State<AlbumCarousel> {
         },
         model: SongListModel(input: widget.input),
         builder: (context, model, child) {
+          if (model.busy) {
+            return ViewStateBusyWidget();
+          } else if (model.error && model.list.isEmpty) {
+            return ViewStateErrorWidget(
+                error: model.viewStateError, onPressed: model.initData);
+          }
+          var songs = model?.song ?? [];
           return Container(
             child: ListView.builder(
               shrinkWrap: true, //解决无限高度问题
               physics: new NeverScrollableScrollPhysics(),
               scrollDirection: Axis.vertical,
-              itemCount: model.list.length,
+              itemCount: songs.length,
               itemBuilder: (BuildContext context, int index) {
-                Song data = model.list[index];
+                Song data = songs[index];
                 return GestureDetector(
                   onTap: () {
                     if (null != data.link) {
                       SongModel songModel = Provider.of(context);
-                      songModel.setSongs(model.list);
+                      songModel.setSongs(model.song);
                       songModel.setCurrentIndex(index);
                       Navigator.push(
                         context,

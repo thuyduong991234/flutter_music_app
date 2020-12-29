@@ -5,21 +5,44 @@ import 'package:flutter_music_app/provider/view_state_refresh_list_model.dart';
 import 'package:flutter_music_app/service/base_repository.dart';
 
 class SongListModel extends ViewStateRefreshListModel<Song> {
+  List<Song> _song;
+  List<Song> _sections;
   final String input;
 
   SongListModel({this.input});
 
+  List<Song> get song => _song;
+
+  List<Song> get sections => _sections;
   @override
   Future<List<Song>> loadData({int pageNum}) async {
-    return await BaseRepository.fetchHomeList('song_new', pageNum);
+    List<Future> futures = [];
+    futures.add(BaseRepository.fetchAlbums(input, 'song', pageNum));
+    futures.add(BaseRepository.fetchAlbums(input, 'sections', pageNum));
+
+    var result = await Future.wait(futures);
+    _song = result[0];
+    _sections = result[1];
+    return result[1];
   }
 }
 
 class SongModel with ChangeNotifier {
+  String _lyric;
   String _url;
   String get url => _url;
+  String get lyric => _lyric;
   setUrl(String url) {
+    //debugPrint("duration + " + data.duration.toString());
     _url = url;
+    //debugPrint("link + " + _url);
+    notifyListeners();
+  }
+
+  setLyric(String lyric) {
+    //debugPrint("duration + " + data.duration.toString());
+    _lyric = lyric;
+    //debugPrint("link + " + _url);
     notifyListeners();
   }
 
@@ -140,11 +163,14 @@ class Song {
   bool isAlbum;
 
   Song.fromJsonMap(Map<String, dynamic> map)
-      : id = map["id"],
+      : id = map["id"] != null ? map["id"] : map["encodeId"],
         title = map["title"],
-        artistName = map["artists_names"],
-        rawID = map["raw_id"],
+        artistName = map["artists_names"] != null
+            ? map["artists_names"]
+            : map["artistsNames"],
+        rawID = map["raw_id"] != null ? map["raw_id"] : 0,
         link = map["link"],
+        //link ="https://vnso-zn-15-tf-mp3-s1-zmp3.zadn.vn/a8130c96bbd1528f0bc0/3825616758110698709?authen=exp=1608794559~acl=/a8130c96bbd1528f0bc0/*~hmac=a484701b568e454e50abb3edde11531c&fs=MTYwODYyMTmUsIC1OTU5Mnx3ZWJWNnwxMDQ2MzUyMzM2fDE3MS4yNDmUsICdUngMTmUsICwLjExNw",
         thumbnail = map["thumbnail"],
         lyric = map["lyric"],
         listen = map["listen"],
@@ -157,6 +183,7 @@ class Song {
     data['title'] = title;
     data['artists_names'] = artistName;
     data['raw_id'] = rawID;
+    //data['link'] ="https://vnso-zn-15-tf-mp3-s1-zmp3.zadn.vn/a8130c96bbd1528f0bc0/3825616758110698709?authen=exp=1608794559~acl=/a8130c96bbd1528f0bc0/*~hmac=a484701b568e454e50abb3edde11531c&fs=MTYwODYyMTmUsIC1OTU5Mnx3ZWJWNnwxMDQ2MzUyMzM2fDE3MS4yNDmUsICdUngMTmUsICwLjExNw";
     data['link'] = link;
     data['thumbnail'] = thumbnail;
     data['lyric'] = lyric;
