@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 
 class AppBarCarousel extends StatelessWidget {
+  final String title;
+  AppBarCarousel({this.title});
+
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10.0),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           IconButton(
             icon: Icon(
@@ -18,14 +21,13 @@ class AppBarCarousel extends StatelessWidget {
               Navigator.pop(context),
             },
           ),
-          IconButton(
-            icon: Icon(
-              Icons.more_vert,
-              size: 25.0,
-              color: Colors.grey,
+          Text(
+            title != null ? title : "",
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 16.0,
             ),
-            onPressed: () => {},
-          ),
+          )
         ],
       ),
     );

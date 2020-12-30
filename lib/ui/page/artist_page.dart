@@ -6,9 +6,9 @@ import 'package:flutter_music_app/service/base_repository.dart';
 import 'package:flutter_music_app/ui/widget/app_bar.dart';
 
 class ArtistPage extends StatefulWidget {
-  final String artisAlias;
+  final String artistAlias;
 
-  ArtistPage({this.artisAlias});
+  ArtistPage({this.artistAlias});
 
   @override
   _ArtistPageState createState() => _ArtistPageState();
@@ -24,7 +24,7 @@ class _ArtistPageState extends State<ArtistPage> {
   }
 
   void fetchArtist() async {
-    var artist = await BaseRepository.fetchArtist("sontungmtp");
+    var artist = await BaseRepository.fetchArtist(widget.artistAlias);
     setState(() {
       data = artist;
     });

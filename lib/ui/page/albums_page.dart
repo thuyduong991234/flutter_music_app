@@ -1,22 +1,75 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_music_app/model/artist_model.dart';
 import 'package:flutter_music_app/provider/provider_widget.dart';
 import 'package:flutter_music_app/provider/view_state_widget.dart';
+import 'package:flutter_music_app/ui/page/artist_page.dart';
 import 'package:flutter_music_app/ui/page/player_page.dart';
 import 'package:flutter_music_app/ui/widget/album_carousel.dart';
 import 'package:flutter_music_app/ui/widget/app_bar.dart';
 import 'package:flutter_music_app/model/song_model.dart';
+import 'package:flutter_music_app/ui/widget/circle_artist_carousel.dart';
 import 'package:flutter_music_app/ui/widget/for_you_carousel.dart';
 import 'package:provider/provider.dart';
 
 class AlbumsPage extends StatefulWidget {
   final Song data;
+  final bool isAlbum;
 
-  AlbumsPage({this.data});
+  AlbumsPage({this.data, this.isAlbum});
   @override
   _AlbumsPageState createState() => _AlbumsPageState();
 }
 
 class _AlbumsPageState extends State<AlbumsPage> {
+  Widget buildTextArtistName(List<Artist> artists) {
+    List<Widget> list = new List<Widget>();
+    if (artists == null) {
+      return new Expanded(child: Text("data"));
+    }
+    for (var i = 0; i < artists.length; i++) {
+      String re = (artists[i].link.split("/")).last;
+      if (i == artists.length - 1) {
+        list.add(new GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => ArtistPage(artistAlias: re),
+              ),
+            );
+          },
+          child: Text(
+            artists[i].name,
+            style: TextStyle(color: Colors.grey, fontSize: 15.0),
+          ),
+        ));
+      } else {
+        list.add(new GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => ArtistPage(artistAlias: re),
+              ),
+            );
+          },
+          child: Text(
+            artists[i].name + ", ",
+            style: TextStyle(color: Colors.grey, fontSize: 15.0),
+          ),
+        ));
+      }
+    }
+
+    return new Wrap(
+      children: list,
+      crossAxisAlignment: WrapCrossAlignment.center,
+      alignment: WrapAlignment.center,
+      spacing: 5.0,
+      runSpacing: 10.0,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,7 +78,8 @@ class _AlbumsPageState extends State<AlbumsPage> {
                 onModelReady: (model) async {
                   await model.initData();
                 },
-                model: SongListModel(input: widget.data.id),
+                model: SongListModel(
+                    input: widget.data.id, isAlbum: widget.data.isAlbum),
                 builder: (context, model, child) {
                   if (model.busy) {
                     return ViewStateBusyWidget();
@@ -35,6 +89,7 @@ class _AlbumsPageState extends State<AlbumsPage> {
                   }
                   var songs = model?.song ?? [];
                   var sections = model?.sections ?? [];
+                  var participants = model?.artists ?? [];
                   return Column(
                     children: <Widget>[
                       AppBarCarousel(),
@@ -62,10 +117,7 @@ class _AlbumsPageState extends State<AlbumsPage> {
                             ),
                             SizedBox(height: 10.0),
                             Center(
-                              child: Text(
-                                widget.data.artistName,
-                                style: TextStyle(fontSize: 12.0),
-                              ),
+                              child: buildTextArtistName(widget.data.artists),
                             ),
                             Row(
                               children: <Widget>[
@@ -152,10 +204,17 @@ class _AlbumsPageState extends State<AlbumsPage> {
                                 ),
                               ],
                             ),
-                            AlbumCarousel(input: widget.data.id),
+                            AlbumCarousel(
+                              input: widget.data.id,
+                              isAlbum: widget.data.isAlbum,
+                            ),
                             sections.length > 0
-                                ? ForYouCarousel(sections, "take care", false)
+                                ? ForYouCarousel(
+                                    sections, "take care", false, false, null)
                                 : Text(""),
+                            participants.length > 0
+                                ? CircleArtistsCarousel(participants)
+                                : Text("")
                           ],
                         ),
                       ),

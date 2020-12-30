@@ -1,22 +1,22 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_music_app/generated/i18n.dart';
+import 'package:flutter_music_app/model/artist_model.dart';
 import 'package:flutter_music_app/model/song_model.dart';
 import 'package:flutter_music_app/ui/page/albums_page.dart';
-import 'package:flutter_music_app/ui/widget/playlist_carousel.dart';
+import 'package:flutter_music_app/ui/page/artist_page.dart';
 
-class AlbumsCarousel extends StatefulWidget {
-  final List<Song> alubums;
-  final bool isSearch;
-  final bool isPlaylist;
-  final Function(int) callback;
+class CircleArtistsCarousel extends StatefulWidget {
+  final List<Artist> artists;
 
-  AlbumsCarousel(this.alubums, this.isSearch, this.isPlaylist, this.callback);
+  CircleArtistsCarousel(this.artists);
   @override
-  _AlbumsCarouselState createState() => _AlbumsCarouselState();
+  _CircleArtistsCarouselState createState() => _CircleArtistsCarouselState();
 }
 
-class _AlbumsCarouselState extends State<AlbumsCarousel> {
+class _CircleArtistsCarouselState extends State<CircleArtistsCarousel> {
+  String alias;
+
   @override
   Widget build(BuildContext context) {
     return Column(children: <Widget>[
@@ -25,14 +25,14 @@ class _AlbumsCarouselState extends State<AlbumsCarousel> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Text(S.of(context).albums,
+            Text(S.of(context).artists,
                 style: TextStyle(
                     fontSize: 22.0,
                     fontWeight: FontWeight.bold,
                     letterSpacing: 1.2)),
             GestureDetector(
               onTap: () => {
-                if (widget.isSearch) {widget.callback(2)}
+                print('View All'),
               },
               child: Text(S.of(context).viewAll,
                   style: TextStyle(
@@ -51,32 +51,23 @@ class _AlbumsCarouselState extends State<AlbumsCarousel> {
             child: ListView.builder(
               shrinkWrap: true,
               scrollDirection: Axis.horizontal,
-              itemCount: widget.alubums.length,
+              itemCount: widget.artists.length,
               itemBuilder: (BuildContext context, int index) {
-                Song data = widget.alubums[index];
-                data.isAlbum = true;
+                Artist data = widget.artists[index];
                 return GestureDetector(
                   onTap: () => {
-                    widget.isPlaylist == false
-                        ? Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => AlbumsPage(
-                                data: data,
-                              ),
-                            ),
-                          )
-                        : Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => PlaylistsCarousel(
-                                  id: data.id, title: data.title),
-                            ),
-                          ),
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => ArtistPage(
+                          artistAlias: (data.link.split("/")).last,
+                        ),
+                      ),
+                    ),
                   },
                   child: Container(
                     width: 140,
-                    margin: index == widget.alubums.length - 1
+                    margin: index == widget.artists.length - 1
                         ? EdgeInsets.only(right: 20.0)
                         : EdgeInsets.only(right: 0.0),
                     child: Padding(
@@ -85,7 +76,7 @@ class _AlbumsCarouselState extends State<AlbumsCarousel> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           ClipRRect(
-                            borderRadius: BorderRadius.circular(20.0),
+                            borderRadius: BorderRadius.circular(90.0),
                             child: Image(
                               height: 120.0,
                               width: 120.0,
@@ -96,26 +87,30 @@ class _AlbumsCarouselState extends State<AlbumsCarousel> {
                           SizedBox(
                             height: 10,
                           ),
-                          Text(
-                            data.title,
-                            style: TextStyle(
-                              fontSize: 12.0,
-                              fontWeight: FontWeight.w600,
+                          Center(
+                            child: Text(
+                              data.name,
+                              style: TextStyle(
+                                fontSize: 12.0,
+                                fontWeight: FontWeight.w600,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
                           ),
                           SizedBox(
                             height: 10,
                           ),
-                          Text(
-                            data.artistName,
-                            style: TextStyle(
-                              fontSize: 10.0,
-                              color: Colors.grey,
+                          Center(
+                            child: Text(
+                              data.follow.toString() + " quan tâm",
+                              style: TextStyle(
+                                fontSize: 10.0,
+                                color: Colors.grey,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
                           ),
                         ],
                       ),

@@ -5,14 +5,18 @@ import 'package:flutter_music_app/model/favorite_model.dart';
 import 'package:flutter_music_app/model/song_model.dart';
 import 'package:flutter_music_app/ui/page/albums_page.dart';
 import 'package:flutter_music_app/ui/page/player_page.dart';
+import 'package:flutter_music_app/ui/widget/song_carousel.dart';
 import 'package:provider/provider.dart';
 
 class ForYouCarousel extends StatefulWidget {
   final List<Song> forYou;
   final String title;
   final bool viewAll;
+  final bool isSearch;
+  final Function(int) callback;
 
-  ForYouCarousel(this.forYou, this.title, this.viewAll);
+  ForYouCarousel(
+      this.forYou, this.title, this.viewAll, this.isSearch, this.callback);
   @override
   _ForYouCarouselState createState() => _ForYouCarouselState();
 }
@@ -118,7 +122,18 @@ class _ForYouCarouselState extends State<ForYouCarousel> {
             widget.viewAll == true
                 ? GestureDetector(
                     onTap: () => {
-                      print('View All'),
+                      if (widget.isSearch)
+                        {widget.callback(1)}
+                      else
+                        {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) =>
+                                  SongCarousel(title: "Mới phát hành"),
+                            ),
+                          )
+                        }
                     },
                     child: Text(S.of(context).viewAll,
                         style: TextStyle(
@@ -128,9 +143,7 @@ class _ForYouCarouselState extends State<ForYouCarousel> {
                         )),
                   )
                 : GestureDetector(
-                    onTap: () => {
-                      print('View All'),
-                    },
+                    onTap: () => {},
                     child: Text("",
                         style: TextStyle(
                           color: Colors.grey,

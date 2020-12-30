@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_music_app/anims/player_anim.dart';
+import 'package:flutter_music_app/model/artist_model.dart';
 import 'package:flutter_music_app/model/download_model.dart';
 import 'package:flutter_music_app/model/favorite_model.dart';
 import 'package:flutter_music_app/ui/page/artist_page.dart';
@@ -47,6 +48,53 @@ class _PlayPageState extends State<PlayPage> with TickerProviderStateMixin {
   void dispose() {
     controllerPlayer.dispose();
     super.dispose();
+  }
+
+  Widget buildTextArtistName(List<Artist> artists) {
+    List<Widget> list = new List<Widget>();
+    if (artists == null) {
+      return new Expanded(child: Text("data"));
+    }
+    for (var i = 0; i < artists.length; i++) {
+      String re = (artists[i].link.split("/")).last;
+      if (i == artists.length - 1) {
+        list.add(new GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => ArtistPage(artistAlias: re),
+              ),
+            );
+          },
+          child: Text(
+            artists[i].name,
+            style: TextStyle(color: Colors.grey, fontSize: 15.0),
+          ),
+        ));
+      } else {
+        list.add(new GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => ArtistPage(artistAlias: re),
+              ),
+            );
+          },
+          child: Text(
+            artists[i].name + ", ",
+            style: TextStyle(color: Colors.grey, fontSize: 15.0),
+          ),
+        ));
+      }
+    }
+
+    return new Row(
+      children: list,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
+    );
   }
 
   @override
@@ -126,20 +174,7 @@ class _PlayPageState extends State<PlayPage> with TickerProviderStateMixin {
                 ),
               ]),
           SizedBox(height: MediaQuery.of(context).size.height * 0.02),
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => ArtistPage(),
-                ),
-              );
-            },
-            child: Text(
-              songModel.currentSong.artistName,
-              style: TextStyle(color: Colors.grey, fontSize: 15.0),
-            ),
-          ),
+          buildTextArtistName(songModel.currentSong.artists),
           SizedBox(height: MediaQuery.of(context).size.height * 0.01),
           Text(
             songModel.currentSong.title,

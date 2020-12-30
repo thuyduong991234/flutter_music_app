@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_music_app/generated/i18n.dart';
+import 'package:flutter_music_app/model/artist_model.dart';
 import 'package:flutter_music_app/model/home_model.dart';
 import 'package:flutter_music_app/model/song_model.dart';
 import 'package:flutter_music_app/provider/provider_widget.dart';
@@ -8,6 +9,9 @@ import 'package:flutter_music_app/ui/widget/albums_carousel.dart';
 import 'package:flutter_music_app/anims/record_anim.dart';
 import 'package:flutter_music_app/ui/widget/for_you_carousel.dart';
 import 'package:flutter_music_app/ui/page/search_page.dart';
+import 'package:flutter_music_app/ui/widget/list_artists_carousel.dart';
+import 'package:flutter_music_app/ui/widget/list_song_carousel.dart';
+import 'package:flutter_music_app/ui/widget/search_artist_carousel.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:flutter_music_app/service/base_repository.dart';
@@ -27,12 +31,16 @@ class _HistorySearchPageState extends State<HistorySearchPage>
   List<Song> playlists = [];
   List<Song> listSongs = [];
   List<int> counter = [];
+  List<Artist> artists = [];
+  TabController tabController;
+  String q;
 
   @override
   bool get wantKeepAlive => true;
   @override
   void initState() {
     super.initState();
+    tabController = new TabController(length: 5, vsync: this);
     controllerRecord = new AnimationController(
         duration: const Duration(milliseconds: 15000), vsync: this);
     animationRecord =
@@ -51,6 +59,10 @@ class _HistorySearchPageState extends State<HistorySearchPage>
     _inputController.dispose();
     controllerRecord.dispose();
     super.dispose();
+  }
+
+  changeTabBarView(int index) {
+    tabController.animateTo(index);
   }
 
   @override
@@ -109,8 +121,10 @@ class _HistorySearchPageState extends State<HistorySearchPage>
                                 onSubmitted: (value) async {
                                   if (value.isNotEmpty == true) {
                                     setState(() {
+                                      q = value;
                                       listSongs = [];
                                       playlists = [];
+                                      artists = [];
                                     });
                                     var one =
                                         await BaseRepository.fetchSearchAll(
@@ -121,9 +135,13 @@ class _HistorySearchPageState extends State<HistorySearchPage>
                                     var three =
                                         await BaseRepository.fetchSearchAll(
                                             value, "counter");
+                                    var four =
+                                        await BaseRepository.fetchSearchAll(
+                                            value, "artists");
                                     setState(() {
                                       listSongs = one;
                                       playlists = two;
+                                      artists = four;
                                       counter = three;
                                       var flag = false;
                                       counter.forEach((element) {
@@ -163,7 +181,7 @@ class _HistorySearchPageState extends State<HistorySearchPage>
                   isSearch == true
                       ? Expanded(
                           child: DefaultTabController(
-                              length: 5,
+                              length: tabController.length,
                               child: Scaffold(
                                 appBar: AppBar(
                                   //textTheme: Theme.of(context).appBarTheme.color,
@@ -172,6 +190,7 @@ class _HistorySearchPageState extends State<HistorySearchPage>
                                   toolbarHeight: 50,
                                   automaticallyImplyLeading: false,
                                   bottom: TabBar(
+                                    controller: tabController,
                                     isScrollable: true,
                                     tabs: [
                                       Tab(text: "Tất cả"),
@@ -186,6 +205,7 @@ class _HistorySearchPageState extends State<HistorySearchPage>
                                   ),
                                 ),
                                 body: TabBarView(
+                                  controller: tabController,
                                   children: <Widget>[
                                     Expanded(
                                       child: SmartRefresher(
@@ -198,16 +218,32 @@ class _HistorySearchPageState extends State<HistorySearchPage>
                                           SizedBox(
                                             height: 10,
                                           ),
-                                          ForYouCarousel(
-                                              listSongs, "song new", true),
-                                          AlbumsCarousel(playlists),
+                                          ForYouCarousel(listSongs, "song new",
+                                              true, true, changeTabBarView),
+                                          SizedBox(
+                                            height: 40,
+                                          ),
+                                          AlbumsCarousel(playlists, true, false,
+                                              changeTabBarView),
+                                          ListArtistsCarousel(
+                                              artists, true, changeTabBarView),
                                         ]),
                                       ),
                                     ),
-                                    ForYouCarousel(listSongs, "song new", true),
-                                    ForYouCarousel(playlists, "song new", true),
+                                    Expanded(
+                                        child: ListSongCarousel(
+                                      input: q,
+                                      type: "song",
+                                      isAlbum: false,
+                                    )),
+                                    Expanded(
+                                        child: ListSongCarousel(
+                                            input: q,
+                                            type: "playlist",
+                                            isAlbum: true)),
                                     Text("4"),
-                                    Text("5"),
+                                    Expanded(
+                                        child: SearchArtistCarousel(input: q)),
                                   ],
                                 ),
                               )))

@@ -1,29 +1,91 @@
 import 'dart:math';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_music_app/model/artist_model.dart';
 import 'package:flutter_music_app/provider/view_state_refresh_list_model.dart';
 import 'package:flutter_music_app/service/base_repository.dart';
 
 class SongListModel extends ViewStateRefreshListModel<Song> {
   List<Song> _song;
   List<Song> _sections;
-  final String input;
+  List<Artist> _artists;
 
-  SongListModel({this.input});
+  final String input;
+  final bool isAlbum;
+
+  SongListModel({this.input, this.isAlbum});
 
   List<Song> get song => _song;
+
+  List<Song> get sections => _sections;
+
+  List<Artist> get artists => _artists;
+
+  @override
+  Future<List<Song>> loadData({int pageNum}) async {
+    //debugPrint("IS ALBUM " + isAlbum.toString());
+    List<Future> futures = [];
+    futures.add(BaseRepository.fetchAlbums(input, 'song', pageNum));
+    futures.add(BaseRepository.fetchAlbums(input, 'sections', pageNum));
+    if (!isAlbum) futures.add(BaseRepository.fetchParticipants(input));
+
+    var result = await Future.wait(futures);
+    _song = result[0];
+    _sections = result[1];
+    _artists = isAlbum == false ? result[2] : [];
+    return result[1];
+  }
+}
+
+class PlaylistModel extends ViewStateRefreshListModel<Song> {
+  List<Song> _sections;
+  final String input;
+
+  PlaylistModel({this.input});
 
   List<Song> get sections => _sections;
   @override
   Future<List<Song>> loadData({int pageNum}) async {
     List<Future> futures = [];
-    futures.add(BaseRepository.fetchAlbums(input, 'song', pageNum));
-    futures.add(BaseRepository.fetchAlbums(input, 'sections', pageNum));
+    futures.add(BaseRepository.fetchPlaylists(input));
 
     var result = await Future.wait(futures);
-    _song = result[0];
-    _sections = result[1];
-    return result[1];
+    _sections = result[0];
+    return result[0];
+  }
+}
+
+class ListSongModel extends ViewStateRefreshListModel<Song> {
+  List<Song> _songs;
+  final String input;
+  final String type;
+
+  ListSongModel({this.input, this.type});
+
+  List<Song> get songs => _songs;
+  @override
+  Future<List<Song>> loadData({int pageNum}) async {
+    List<Future> futures = [];
+    futures.add(BaseRepository.fetchSearchType(input, type, pageNum));
+
+    var result = await Future.wait(futures);
+    _songs = result[0];
+    return result[0];
+  }
+}
+
+class NewSongModel extends ViewStateRefreshListModel<Song> {
+  List<Song> _songs;
+
+  List<Song> get songs => _songs;
+  @override
+  Future<List<Song>> loadData({int pageNum}) async {
+    List<Future> futures = [];
+    futures.add(BaseRepository.fetchNewReleaseChart());
+
+    var result = await Future.wait(futures);
+    _songs = result[0];
+    return result[0];
   }
 }
 
@@ -150,11 +212,10 @@ class SongModel with ChangeNotifier {
   }
 }
 
-class Song {
+class Song with ChangeNotifier {
   String id;
   String title;
   String artistName;
-  String artistAlias;
   int rawID;
   String link;
   String thumbnail;
@@ -163,26 +224,55 @@ class Song {
   int duration;
   bool isAlbum;
   bool hasLyric;
+  List<Artist> artists;
+  /*List<Artist> get artists => _artists;
+  setArtists(List<Artist> artists) {
+    _artists = artists;
+    notifyListeners();
+  }*/
 
-  Song.fromJsonMap(Map<String, dynamic> map)
-      : id = map["id"] != null ? map["id"] : map["encodeId"],
-        title = map["title"],
-        artistName = map["artists_names"] != null
-            ? map["artists_names"]
-            : (map["artistsNames"] != null ? map["artistsNames"] : " "),
-        rawID = map["raw_id"] != null ? map["raw_id"] : 0,
-        link = map["link"],
-        //link ="https://vnso-zn-15-tf-mp3-s1-zmp3.zadn.vn/a8130c96bbd1528f0bc0/3825616758110698709?authen=exp=1608794559~acl=/a8130c96bbd1528f0bc0/*~hmac=a484701b568e454e50abb3edde11531c&fs=MTYwODYyMTmUsIC1OTU5Mnx3ZWJWNnwxMDQ2MzUyMzM2fDE3MS4yNDmUsICdUngMTmUsICwLjExNw",
-        thumbnail = map["thumbnail"],
-        lyric = map["lyric"],
-        listen = map["listen"],
-        duration = map["duration"],
-        isAlbum = map["isalbum"] != null
-            ? map["isalbum"]
-            : (map["isAlbum"] != null ? map["isAlbum"] : false),
-        hasLyric = map["has_lyric"] != null
-            ? map["has_lyric"]
-            : (map["hasLyric"] != null ? map["hasLyric"] : false);
+  Song({
+    this.id,
+    this.title,
+    this.artistName,
+    this.rawID,
+    this.link,
+    this.thumbnail,
+    this.lyric,
+    this.listen,
+    this.duration,
+    this.isAlbum,
+    this.hasLyric,
+    this.artists,
+  });
+
+  factory Song.fromJsonMap(Map<String, dynamic> map) {
+    List<Artist> re = [];
+    if (map["artists"] != null) {
+      map["artists"].forEach((item) => re.add(Artist.fromJsonMap(item)));
+    }
+    return Song(
+      id: map["id"] != null ? map["id"] : map["encodeId"],
+      title: map["title"],
+      artistName: map["artists_names"] != null
+          ? map["artists_names"]
+          : (map["artistsNames"] != null ? map["artistsNames"] : " "),
+      rawID: map["raw_id"] != null ? map["raw_id"] : 0,
+      link: map["link"] != null ? map["link"] : null,
+      //link ="https://vnso-zn-15-tf-mp3-s1-zmp3.zadn.vn/a8130c96bbd1528f0bc0/3825616758110698709?authen=exp=1608794559~acl=/a8130c96bbd1528f0bc0/*~hmac=a484701b568e454e50abb3edde11531c&fs=MTYwODYyMTmUsIC1OTU5Mnx3ZWJWNnwxMDQ2MzUyMzM2fDE3MS4yNDmUsICdUngMTmUsICwLjExNw",
+      thumbnail: map["thumbnail"] != null ? map["thumbnail"] : null,
+      lyric: map["lyric"] != null ? map["lyric"] : null,
+      listen: map["listen"] != null ? map["listen"] : null,
+      duration: map["duration"] != null ? map["duration"] : null,
+      isAlbum: map["isalbum"] != null
+          ? map["isalbum"]
+          : (map["isAlbum"] != null ? map["isAlbum"] : false),
+      hasLyric: map["has_lyric"] != null
+          ? map["has_lyric"]
+          : (map["hasLyric"] != null ? map["hasLyric"] : false),
+      artists: re,
+    );
+  }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();

@@ -66,6 +66,12 @@ class BaseRepository {
             .forEach((item) => top100.add(Song.fromJsonMap(item)));
         return top100;
         break;
+      case 'spotlight':
+        List<Artist> spotlight = [];
+        response.data['spotlight']
+            .forEach((item) => spotlight.add(Artist.fromJsonMap(item)));
+        return spotlight;
+        break;
       default:
     }
   }
@@ -240,6 +246,117 @@ class BaseRepository {
     }
   }
 
+  static Future fetchParticipants(String id) async {
+    var ctime = DateTime.now().millisecondsSinceEpoch;
+    String data = "ctime=" + ctime.toString() + "id=" + id + "version=1.0.10";
+    var _sha256 = sha256.convert(utf8.encode(data));
+    var _sha512 = "/api/v2/playlist/getSectionBottom" + _sha256.toString();
+    var hmac =
+        new Hmac(sha512, utf8.encode("882QcNXV4tUZbvAsjmFOHqNC1LpcBRKW"));
+    var sig = hmac.convert(utf8.encode(_sha512));
+    var response = null;
+    //Timer(Duration(seconds: 2), () async {
+    response = await http.get('/v2/playlist/getSectionBottom?id=' +
+        id +
+        "&ctime=" +
+        ctime.toString() +
+        "&version=1.0.10" +
+        "&sig=" +
+        sig.toString() +
+        "&apiKey=kI44ARvPwaqL7v0KuDSM0rGORtdY1nnw");
+    if ((response.toString()).contains("-204")) {
+      debugPrint("Có vô IF");
+      response = await http.get('/v2/playlist/getSectionBottom?id=' +
+          id +
+          "&ctime=" +
+          ctime.toString() +
+          "&version=1.0.10" +
+          "&sig=" +
+          sig.toString() +
+          "&apiKey=kI44ARvPwaqL7v0KuDSM0rGORtdY1nnw");
+    }
+    List<Artist> participants = [];
+    response.data[0]['items']
+        .forEach((item) => participants.add(Artist.fromJsonMap(item)));
+    //debugPrint("LENGTH______" + songs.length.toString());
+    return participants;
+  }
+
+  static Future fetchPlaylists(String id) async {
+    var ctime = DateTime.now().millisecondsSinceEpoch;
+    String data = "ctime=" + ctime.toString() + "id=" + id + "version=1.0.10";
+    var _sha256 = sha256.convert(utf8.encode(data));
+    var _sha512 = "/api/v2/hub/getDetail" + _sha256.toString();
+    var hmac =
+        new Hmac(sha512, utf8.encode("882QcNXV4tUZbvAsjmFOHqNC1LpcBRKW"));
+    var sig = hmac.convert(utf8.encode(_sha512));
+    var response = null;
+    //Timer(Duration(seconds: 2), () async {
+    response = await http.get('/v2/hub/getDetail?id=' +
+        id +
+        "&ctime=" +
+        ctime.toString() +
+        "&version=1.0.10" +
+        "&sig=" +
+        sig.toString() +
+        "&apiKey=kI44ARvPwaqL7v0KuDSM0rGORtdY1nnw");
+    if ((response.toString()).contains("-204")) {
+      debugPrint("Có vô IF");
+      response = await http.get('/v2/hub/getDetail?id=' +
+          id +
+          "&ctime=" +
+          ctime.toString() +
+          "&version=1.0.10" +
+          "&sig=" +
+          sig.toString() +
+          "&apiKey=kI44ARvPwaqL7v0KuDSM0rGORtdY1nnw");
+    }
+
+    List<Song> sections = [];
+    if (response.data['sections'] != null) {
+      response.data['sections'][0]['items']
+          .forEach((item) => sections.add(Song.fromJsonMap(item)));
+    }
+    //debugPrint(
+    //"SAU SECTIONS ----------------" + sections.length.toString());
+    return sections;
+  }
+
+  static Future fetchNewReleaseChart() async {
+    var ctime = DateTime.now().millisecondsSinceEpoch;
+    String data = "ctime=" + ctime.toString() + "version=1.0.13";
+    var _sha256 = sha256.convert(utf8.encode(data));
+    var _sha512 = "/api/v2/chart/getNewReleaseChart" + _sha256.toString();
+    var hmac =
+        new Hmac(sha512, utf8.encode("882QcNXV4tUZbvAsjmFOHqNC1LpcBRKW"));
+    var sig = hmac.convert(utf8.encode(_sha512));
+    var response = null;
+    //Timer(Duration(seconds: 2), () async {
+    response = await http.get('/v2/chart/getNewReleaseChart?' +
+        "&ctime=" +
+        ctime.toString() +
+        "&version=1.0.13" +
+        "&sig=" +
+        sig.toString() +
+        "&apiKey=kI44ARvPwaqL7v0KuDSM0rGORtdY1nnw");
+    if ((response.toString()).contains("-204")) {
+      debugPrint("Có vô IF");
+      response = await http.get('/v2/chart/getNewReleaseChart?' +
+          "&ctime=" +
+          ctime.toString() +
+          "&version=1.0.13" +
+          "&sig=" +
+          sig.toString() +
+          "&apiKey=kI44ARvPwaqL7v0KuDSM0rGORtdY1nnw");
+    }
+
+    List<Song> songs = [];
+    response.data['items'].forEach((item) => songs.add(Song.fromJsonMap(item)));
+    //debugPrint(
+    //"SAU SECTIONS ----------------" + sections.length.toString());
+    return songs;
+  }
+
   static Future fetchSearchAll(String q, String input) async {
     var ctime = DateTime.now().millisecondsSinceEpoch;
     String data = "ctime=" + ctime.toString() + "version=1.0.10";
@@ -287,6 +404,12 @@ class BaseRepository {
             "SAU SECTIONS ----------------" + sections.length.toString());
         return sections;
         break;
+      case 'artists':
+        List<Artist> artists = [];
+        response.data['artists']
+            .forEach((item) => artists.add(Artist.fromJsonMap(item)));
+        return artists;
+        break;
       case 'counter':
         List<int> counter = [];
         response.data['counter']['song'] != null
@@ -302,6 +425,77 @@ class BaseRepository {
             ? counter.add(response.data['counter']['video'])
             : counter.add(0);
         return counter;
+      default:
+    }
+  }
+
+  static Future fetchSearchType(String q, String type, int pageNum) async {
+    var ctime = DateTime.now().millisecondsSinceEpoch;
+    String data = "count=18ctime=" +
+        ctime.toString() +
+        "page=" +
+        pageNum.toString() +
+        "type=" +
+        type +
+        "version=1.0.13";
+    var _sha256 = sha256.convert(utf8.encode(data));
+    var _sha512 = "/api/v2/search" + _sha256.toString();
+    var hmac =
+        new Hmac(sha512, utf8.encode("882QcNXV4tUZbvAsjmFOHqNC1LpcBRKW"));
+    var sig = hmac.convert(utf8.encode(_sha512));
+    var response = null;
+    //Timer(Duration(seconds: 2), () async {
+    response = await http.get('/v2/search?q=' +
+        q +
+        "&type=" +
+        type +
+        "&page=" +
+        pageNum.toString() +
+        "&count=18"
+            "&ctime=" +
+        ctime.toString() +
+        "&version=1.0.13" +
+        "&sig=" +
+        sig.toString() +
+        "&apiKey=kI44ARvPwaqL7v0KuDSM0rGORtdY1nnw");
+    if ((response.toString()).contains("-204")) {
+      debugPrint("Có vô IF");
+      response = await http.get('/v2/search?q=' +
+          q +
+          "&type=" +
+          type +
+          "&page=" +
+          pageNum.toString() +
+          "&count=18"
+              "&ctime=" +
+          ctime.toString() +
+          "&version=1.0.13" +
+          "&sig=" +
+          sig.toString() +
+          "&apiKey=kI44ARvPwaqL7v0KuDSM0rGORtdY1nnw");
+    }
+    switch (type) {
+      case 'song':
+        List<Song> songs = [];
+        response.data['items']
+            .forEach((item) => songs.add(Song.fromJsonMap(item)));
+        //debugPrint("LENGTH______" + songs.length.toString());
+        return songs;
+        break;
+      case 'playlist':
+        List<Song> sections = [];
+        //debugPrint("TRƯỚC SECTIONS ----------------" +
+        //response.data['sections'][0]['items'].toString());
+        response.data['items']
+            .forEach((item) => sections.add(Song.fromJsonMap(item)));
+        return sections;
+        break;
+      case 'artist':
+        List<Artist> artists = [];
+        response.data['items']
+            .forEach((item) => artists.add(Artist.fromJsonMap(item)));
+        return artists;
+        break;
       default:
     }
   }

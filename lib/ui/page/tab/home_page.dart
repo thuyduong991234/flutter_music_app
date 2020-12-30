@@ -7,6 +7,7 @@ import 'package:flutter_music_app/provider/view_state_widget.dart';
 import 'package:flutter_music_app/ui/page/history_search_page.dart';
 import 'package:flutter_music_app/ui/widget/albums_carousel.dart';
 import 'package:flutter_music_app/anims/record_anim.dart';
+import 'package:flutter_music_app/ui/widget/circle_artist_carousel.dart';
 import 'package:flutter_music_app/ui/widget/for_you_carousel.dart';
 import 'package:flutter_music_app/ui/page/search_page.dart';
 import 'package:provider/provider.dart';
@@ -86,6 +87,7 @@ class _HomePageState extends State<HomePage>
                 var genre = homeModel?.genre ?? [];
                 var topic = homeModel?.topic ?? [];
                 var nations = homeModel?.nations ?? [];
+                var spotlight = homeModel?.spotlight ?? [];
                 return Column(children: <Widget>[
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10.0),
@@ -145,12 +147,16 @@ class _HomePageState extends State<HomePage>
                         SizedBox(
                           height: 10,
                         ),
-                        AlbumsCarousel(albums),
-                        ForYouCarousel(forYou, "song new", true),
-                        AlbumsCarousel(top100),
-                        AlbumsCarousel(genre),
-                        AlbumsCarousel(topic),
-                        AlbumsCarousel(nations),
+                        AlbumsCarousel(albums, false, false, null),
+                        ForYouCarousel(forYou, "song new", true, false, null),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        AlbumsCarousel(top100, false, false, null),
+                        AlbumsCarousel(genre, false, true, null),
+                        AlbumsCarousel(topic, false, true, null),
+                        AlbumsCarousel(nations, false, true, null),
+                        CircleArtistsCarousel(spotlight),
                       ]),
                     ),
                   )

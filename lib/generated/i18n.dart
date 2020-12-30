@@ -83,6 +83,7 @@ class S implements WidgetsLocalizations {
   String get theme => "Theme";
   String get toSignIn => "Sign In";
   String get albums => "Albums hot";
+  String get artists => "Artists";
   String get viewAll => "View All";
   String get forYou => "Song new";
   String get takeCare => "Recommend for you";
