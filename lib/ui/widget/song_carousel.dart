@@ -13,8 +13,10 @@ import 'app_bar.dart';
 
 class SongCarousel extends StatefulWidget {
   final String title;
+  final int type;
+  final String parent;
 
-  SongCarousel({this.title});
+  SongCarousel({this.title, this.type = 1, this.parent});
   @override
   _SongCarouselState createState() => _SongCarouselState();
 }
@@ -106,7 +108,7 @@ class _SongCarouselState extends State<SongCarousel> {
                 onModelReady: (model) async {
                   await model.initData();
                 },
-                model: NewSongModel(),
+                model: NewSongModel(type: widget.type, parentId: widget.parent),
                 builder: (context, model, child) {
                   if (model.busy) {
                     return ViewStateBusyWidget();

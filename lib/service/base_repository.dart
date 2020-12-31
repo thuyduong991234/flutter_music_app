@@ -15,6 +15,7 @@ class BaseRepository {
   /// 获取音乐列表
   static String api_key = "38e8643fb0dc04e8d65b99994d3dafff";
   static String secret_key = "10a01dcf33762d3a204cb96429918ff6";
+
   static Future fetchSongList(String input, int page) async {
     var response = [];
     return response.map<Song>((item) => Song.fromJsonMap(item)).toList();
@@ -528,5 +529,61 @@ class BaseRepository {
           "&apiKey=kI44ARvPwaqL7v0KuDSM0rGORtdY1nnw");
     }
     return Artist.fromJsonMap(response.data);
+  }
+
+  static Future fetchListSong(String parentId, String type, int pageNum) async {
+    var ctime = DateTime.now().millisecondsSinceEpoch;
+    String data = "count=15ctime=" +
+        ctime.toString() +
+        "id=" +
+        parentId +
+        "page=" +
+        pageNum.toString() +
+        "type=" +
+        type +
+        "version=1.0.13";
+    var _sha256 = sha256.convert(utf8.encode(data));
+    var _sha512 = "/api/v2/song/getList" + _sha256.toString();
+    var hmac =
+        new Hmac(sha512, utf8.encode("882QcNXV4tUZbvAsjmFOHqNC1LpcBRKW"));
+    var sig = hmac.convert(utf8.encode(_sha512));
+    var response = null;
+    response = await http.get('/v2/song/getList?id=' +
+        parentId +
+        "&type=" +
+        type +
+        "&page=" +
+        pageNum.toString() +
+        "&count=" +
+        15.toString() +
+        "&sort=new&sectionId=aSong" +
+        "&ctime=" +
+        ctime.toString() +
+        "&version=1.0.13" +
+        "&sig=" +
+        sig.toString() +
+        "&apiKey=kI44ARvPwaqL7v0KuDSM0rGORtdY1nnw");
+    if ((response.toString()).contains("-204")) {
+      response = await http.get('/v2/song/getList?id=' +
+          parentId +
+          "&type=" +
+          type +
+          "&page=" +
+          pageNum.toString() +
+          "&count=" +
+          15.toString() +
+          "&sort=new&sectionId=aSong" +
+          "&ctime=" +
+          ctime.toString() +
+          "&version=1.0.13" +
+          "&sig=" +
+          sig.toString() +
+          "&apiKey=kI44ARvPwaqL7v0KuDSM0rGORtdY1nnw");
+    }
+
+    List<Song> songs = [];
+    response.data['items'].forEach((item) => songs.add(Song.fromJsonMap(item)));
+
+    return songs;
   }
 }
