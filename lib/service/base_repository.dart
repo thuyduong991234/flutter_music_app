@@ -322,6 +322,107 @@ class BaseRepository {
     return sections;
   }
 
+  static Future fetchTop100(String input) async {
+    var ctime = DateTime.now().millisecondsSinceEpoch;
+    String data = "ctime=" + ctime.toString() + "version=1.0.13";
+    var _sha256 = sha256.convert(utf8.encode(data));
+    var _sha512 = "/api/v2/top100" + _sha256.toString();
+    var hmac =
+        new Hmac(sha512, utf8.encode("882QcNXV4tUZbvAsjmFOHqNC1LpcBRKW"));
+    var sig = hmac.convert(utf8.encode(_sha512));
+    var response = null;
+    //Timer(Duration(seconds: 2), () async {
+    response = await http.get('/v2/top100?ctime=' +
+        ctime.toString() +
+        "&version=1.0.13" +
+        "&sig=" +
+        sig.toString() +
+        "&apiKey=kI44ARvPwaqL7v0KuDSM0rGORtdY1nnw");
+    if ((response.toString()).contains("-204")) {
+      debugPrint("Có vô IF");
+      response = await http.get('/v2/top100?ctime=' +
+          ctime.toString() +
+          "&version=1.0.13" +
+          "&sig=" +
+          sig.toString() +
+          "&apiKey=kI44ARvPwaqL7v0KuDSM0rGORtdY1nnw");
+    }
+
+    List<Song> top100 = [];
+    switch (input) {
+      case 'top':
+        response.data[0]['items']
+            .forEach((item) => top100.add(Song.fromJsonMap(item)));
+        //debugPrint("LENGTH______" + songs.length.toString());
+        return top100;
+        break;
+      case 'VietNam':
+        response.data[1]['items']
+            .forEach((item) => top100.add(Song.fromJsonMap(item)));
+        return top100;
+        break;
+      case 'AuMy':
+        response.data[2]['items']
+            .forEach((item) => top100.add(Song.fromJsonMap(item)));
+        return top100;
+        break;
+      case 'ChauA':
+        response.data[3]['items']
+            .forEach((item) => top100.add(Song.fromJsonMap(item)));
+        return top100;
+        break;
+      case 'HoaTau':
+        response.data[4]['items']
+            .forEach((item) => top100.add(Song.fromJsonMap(item)));
+        return top100;
+        break;
+      default:
+    }
+  }
+
+  static Future fetchChart(String week, String year, String id) async {
+    var ctime = DateTime.now().millisecondsSinceEpoch;
+    String data = "ctime=" + ctime.toString() + "id=" + id + "version=1.0.13";
+    var _sha256 = sha256.convert(utf8.encode(data));
+    var _sha512 = "/api/v2/chart/getWeekChart" + _sha256.toString();
+    var hmac =
+        new Hmac(sha512, utf8.encode("882QcNXV4tUZbvAsjmFOHqNC1LpcBRKW"));
+    var sig = hmac.convert(utf8.encode(_sha512));
+    var response = null;
+    //Timer(Duration(seconds: 2), () async {
+    response = await http.get('/v2/chart/getWeekChart?id=' +
+        id +
+        '&week=' +
+        week +
+        '&year=' +
+        year +
+        '&ctime=' +
+        ctime.toString() +
+        "&version=1.0.13" +
+        "&sig=" +
+        sig.toString() +
+        "&apiKey=kI44ARvPwaqL7v0KuDSM0rGORtdY1nnw");
+    if ((response.toString()).contains("-204")) {
+      debugPrint("Có vô IF");
+      response = await http.get('/v2/chart/getWeekChart?id=' +
+          id +
+          '&week=' +
+          week +
+          '&year=' +
+          year +
+          '&ctime=' +
+          ctime.toString() +
+          "&version=1.0.13" +
+          "&sig=" +
+          sig.toString() +
+          "&apiKey=kI44ARvPwaqL7v0KuDSM0rGORtdY1nnw");
+    }
+
+    List<Song> songs = [];
+    response.data['items'].forEach((item) => songs.add(Song.fromJsonMap(item)));
+    return songs;
+  }
+
   static Future fetchNewReleaseChart() async {
     var ctime = DateTime.now().millisecondsSinceEpoch;
     String data = "ctime=" + ctime.toString() + "version=1.0.13";

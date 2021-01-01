@@ -9,7 +9,7 @@ import 'package:flutter_music_app/provider/provider_widget.dart';
 import 'package:flutter_music_app/ui/page/tab/favorite_page.dart';
 import 'package:flutter_music_app/ui/page/tab/home_page.dart';
 import 'package:flutter_music_app/ui/page/tab/mine_page.dart';
-import 'package:flutter_music_app/ui/page/tab/music_page.dart';
+import 'package:flutter_music_app/ui/page/tab/chart_page.dart';
 import 'package:provider/provider.dart';
 
 class TabNavigator extends StatefulWidget {
@@ -23,7 +23,7 @@ class _TabNavigatorState extends State<TabNavigator> {
 
   List<Widget> pages = <Widget>[
     HomePage(),
-    MusicPage(),
+    ChartPage(),
     FavoritePage(),
     MinePage()
   ];

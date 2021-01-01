@@ -55,6 +55,68 @@ class PlaylistModel extends ViewStateRefreshListModel<Song> {
   }
 }
 
+class ChartModel extends ViewStateRefreshListModel<Song> {
+  List<Song> _chartVN;
+  List<Song> _chartUSUK;
+  List<Song> _chartKPOP;
+
+  String week;
+  String year;
+
+  ChartModel({this.week, this.year});
+
+  List<Song> get chartVN => _chartVN;
+  List<Song> get chartUSUK => _chartUSUK;
+  List<Song> get chartKPOP => _chartKPOP;
+
+  @override
+  Future<List<Song>> loadData({int pageNum}) async {
+    List<Future> futures = [];
+    futures.add(BaseRepository.fetchChart(week, year, "IWZ9Z08I"));
+    futures.add(BaseRepository.fetchChart(week, year, "IWZ9Z0BW"));
+    futures.add(BaseRepository.fetchChart(week, year, "IWZ9Z0BO"));
+
+    var result = await Future.wait(futures);
+    _chartVN = result[0];
+    _chartUSUK = result[1];
+    _chartKPOP = result[2];
+    return result[0];
+  }
+}
+
+class Top100Model extends ViewStateRefreshListModel<Song> {
+  List<Song> _top;
+  List<Song> _listVN;
+  List<Song> _listAuMy;
+  List<Song> _listChauA;
+  List<Song> _listHoaTau;
+
+  List<Song> get top => _top;
+  List<Song> get listVN => _listVN;
+  List<Song> get listAuMy => _listAuMy;
+  List<Song> get listChauA => _listChauA;
+  List<Song> get listHoaTau => _listHoaTau;
+
+  @override
+  Future<List<Song>> loadData({int pageNum}) async {
+    List<Future> futures = [];
+    futures.add(BaseRepository.fetchTop100("top"));
+    futures.add(BaseRepository.fetchTop100("VietNam"));
+    futures.add(BaseRepository.fetchTop100("AuMy"));
+    futures.add(BaseRepository.fetchTop100("ChauA"));
+    futures.add(BaseRepository.fetchTop100("HoaTau"));
+
+    var result = await Future.wait(futures);
+    _top = result[0];
+    _listVN = result[1];
+    _listAuMy = result[2];
+    _listChauA = result[3];
+    _listHoaTau = result[4];
+
+    return result[0];
+  }
+}
+
 class ListSongModel extends ViewStateRefreshListModel<Song> {
   List<Song> _songs;
   final String input;
@@ -219,6 +281,7 @@ class Song with ChangeNotifier {
   int rawID;
   String link;
   String thumbnail;
+  String thumbnailM;
   String lyric;
   int listen;
   int duration;
@@ -231,20 +294,20 @@ class Song with ChangeNotifier {
     notifyListeners();
   }*/
 
-  Song({
-    this.id,
-    this.title,
-    this.artistName,
-    this.rawID,
-    this.link,
-    this.thumbnail,
-    this.lyric,
-    this.listen,
-    this.duration,
-    this.isAlbum,
-    this.hasLyric,
-    this.artists,
-  });
+  Song(
+      {this.id,
+      this.title,
+      this.artistName,
+      this.rawID,
+      this.link,
+      this.thumbnail,
+      this.lyric,
+      this.listen,
+      this.duration,
+      this.isAlbum,
+      this.hasLyric,
+      this.artists,
+      this.thumbnailM});
 
   factory Song.fromJsonMap(Map<String, dynamic> map) {
     List<Artist> re = [];
@@ -261,6 +324,9 @@ class Song with ChangeNotifier {
       link: map["link"] != null ? map["link"] : null,
       //link ="https://vnso-zn-15-tf-mp3-s1-zmp3.zadn.vn/a8130c96bbd1528f0bc0/3825616758110698709?authen=exp=1608794559~acl=/a8130c96bbd1528f0bc0/*~hmac=a484701b568e454e50abb3edde11531c&fs=MTYwODYyMTmUsIC1OTU5Mnx3ZWJWNnwxMDQ2MzUyMzM2fDE3MS4yNDmUsICdUngMTmUsICwLjExNw",
       thumbnail: map["thumbnail"] != null ? map["thumbnail"] : null,
+      thumbnailM: map["thumbnail_medium"] != null
+          ? map["thumbnail_medium"]
+          : (map["thumbnailM"] != null ? map["thumbnailM"] : null),
       lyric: map["lyric"] != null ? map["lyric"] : null,
       listen: map["listen"] != null ? map["listen"] : null,
       duration: map["duration"] != null ? map["duration"] : null,

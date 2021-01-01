@@ -28,14 +28,15 @@ class Player extends StatefulWidget {
   /// 是否是本地资源
   final bool isLocal;
 
-  Player(
-      {@required this.songData,
-      @required this.downloadData,
-      this.nowPlay,
-      this.key,
-      this.volume: 1.0,
-      this.color: Colors.white,
-      this.isLocal: false});
+  Player({
+    @required this.songData,
+    @required this.downloadData,
+    this.nowPlay,
+    this.key,
+    this.volume: 1.0,
+    this.color: Colors.white,
+    this.isLocal: false,
+  });
 
   @override
   State<StatefulWidget> createState() => PlayerState();

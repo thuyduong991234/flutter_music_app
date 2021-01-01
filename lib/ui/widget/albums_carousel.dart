@@ -3,15 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_music_app/generated/i18n.dart';
 import 'package:flutter_music_app/model/song_model.dart';
 import 'package:flutter_music_app/ui/page/albums_page.dart';
+import 'package:flutter_music_app/ui/widget/all_top100_carousel.dart';
 import 'package:flutter_music_app/ui/widget/playlist_carousel.dart';
 
 class AlbumsCarousel extends StatefulWidget {
   final List<Song> alubums;
   final bool isSearch;
   final bool isPlaylist;
+  final bool isTop100;
   final Function(int) callback;
 
-  AlbumsCarousel(this.alubums, this.isSearch, this.isPlaylist, this.callback);
+  AlbumsCarousel(this.alubums, this.isSearch, this.isPlaylist, this.isTop100,
+      this.callback);
   @override
   _AlbumsCarouselState createState() => _AlbumsCarouselState();
 }
@@ -32,7 +35,17 @@ class _AlbumsCarouselState extends State<AlbumsCarousel> {
                     letterSpacing: 1.2)),
             GestureDetector(
               onTap: () => {
-                if (widget.isSearch) {widget.callback(2)}
+                if (widget.isSearch)
+                  {widget.callback(2)}
+                else if (widget.isTop100)
+                  {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => AllTop100Carousel(title: "Top 100"),
+                      ),
+                    ),
+                  }
               },
               child: Text(S.of(context).viewAll,
                   style: TextStyle(

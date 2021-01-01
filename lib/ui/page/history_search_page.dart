@@ -224,7 +224,7 @@ class _HistorySearchPageState extends State<HistorySearchPage>
                                             height: 40,
                                           ),
                                           AlbumsCarousel(playlists, true, false,
-                                              changeTabBarView),
+                                              false, changeTabBarView),
                                           ListArtistsCarousel(
                                               artists, true, changeTabBarView),
                                         ]),
