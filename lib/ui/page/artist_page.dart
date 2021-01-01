@@ -1,9 +1,13 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_music_app/model/artist_model.dart';
-import 'package:flutter_music_app/provider/provider_widget.dart';
 import 'package:flutter_music_app/service/base_repository.dart';
+import 'package:flutter_music_app/ui/widget/albums_carousel.dart';
 import 'package:flutter_music_app/ui/widget/app_bar.dart';
+import 'package:flutter_music_app/ui/widget/list_artists_carousel.dart';
+import 'package:flutter_music_app/ui/widget/short_song_carousel.dart';
 
 class ArtistPage extends StatefulWidget {
   final String artistAlias;
@@ -48,10 +52,18 @@ class _ArtistPageState extends State<ArtistPage> {
                         backgroundImage: NetworkImage(this.data.thumbnail))),
               ),
               Center(
-                child: Text(this.data.name),
-              )
+                child: Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Text(this.data.name,
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                ),
+              ),
+              ShortSongCarousel(this.data.songs, "Top bài hát", true, false,
+                  null, this.data.id),
+              AlbumsCarousel(this.data.albums, false, true, null),
+              ListArtistsCarousel(this.data.relatedArtists, true, null)
             ],
-          ))
+          )),
         ]),
       ));
     }

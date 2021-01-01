@@ -9,6 +9,7 @@ class ListArtistModel extends ViewStateRefreshListModel<Artist> {
   ListArtistModel({this.input});
 
   List<Artist> get artists => _artists;
+
   @override
   Future<List<Artist>> loadData({int pageNum}) async {
     List<Future> futures = [];
@@ -36,17 +37,62 @@ class Artist {
   List<Song> topSongs;
   List<Song> songs;
   List<Song> albums;
-  List<Artist> canLikes;
+  List<Artist> relatedArtists;
 
-  Artist.fromJsonMap(Map<String, dynamic> map)
-      : id = map["id"] != null ? map["id"] : null,
-        name = map["name"] != null ? map["name"] : null,
-        realName = map["realname"] != null ? map["realname"] : null,
-        birthday = map["birthday"] != null ? map["birthday"] : null,
-        national = map["national"] != null ? map["national"] : null,
-        cover = map["cover"] != null ? map["cover"] : null,
-        thumbnail = map["thumbnail"] != null ? map["thumbnail"] : null,
-        biography = map["biography"] != null ? map["biography"] : null,
-        follow = map["follow"] != null ? map["follow"] : null,
-        link = map["link"] != null ? map["link"] : null;
+  Artist(
+      {this.id,
+      this.name,
+      this.realName,
+      this.birthday,
+      this.national,
+      this.follow,
+      this.cover,
+      this.thumbnail,
+      this.biography,
+      this.link,
+      this.singles,
+      this.topSongs,
+      this.songs,
+      this.albums,
+      this.relatedArtists});
+
+  factory Artist.fromJsonMap(Map<String, dynamic> map) {
+    List<Song> songs = [];
+    List<Song> albums = [];
+    List<Artist> artists = [];
+    if (map["sections"] != null) {
+      //get correct list for each section by sectionType
+      map["sections"].forEach((section) {
+        switch(section["sectionType"]) {
+          case "song":
+            section["items"].forEach((song) => songs.add(Song.fromJsonMap(song)));
+            break;
+          case "playlist":
+            section["items"].forEach((album) => albums.add(Song.fromJsonMap(album)));
+            break;
+          case "artist":
+            section["items"].forEach((artist) => artists.add(Artist.fromJsonMap(artist)));
+            break;
+          default:
+            break;
+        }
+      });
+    }
+
+    return Artist(
+        id: map["id"] ?? null,
+        name: map["name"] ?? null,
+        realName: map["realName"] ?? null,
+        birthday: map["birthday"] ?? null,
+        national: map["national"] ?? null,
+        follow: map["follow"] ?? null,
+        cover: map["cover"] ?? null,
+        thumbnail: map["thumbnail"] ?? null,
+        biography: map["biography"] ?? null,
+        link: map["link"] ?? null,
+        singles: [],
+        songs: songs.take(3).toList(),
+        albums: albums,
+        relatedArtists: artists);
+  }
 }

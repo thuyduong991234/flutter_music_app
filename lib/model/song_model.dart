@@ -44,6 +44,7 @@ class PlaylistModel extends ViewStateRefreshListModel<Song> {
   PlaylistModel({this.input});
 
   List<Song> get sections => _sections;
+
   @override
   Future<List<Song>> loadData({int pageNum}) async {
     List<Future> futures = [];
@@ -125,6 +126,7 @@ class ListSongModel extends ViewStateRefreshListModel<Song> {
   ListSongModel({this.input, this.type});
 
   List<Song> get songs => _songs;
+
   @override
   Future<List<Song>> loadData({int pageNum}) async {
     List<Future> futures = [];
@@ -138,12 +140,20 @@ class ListSongModel extends ViewStateRefreshListModel<Song> {
 
 class NewSongModel extends ViewStateRefreshListModel<Song> {
   List<Song> _songs;
+  int type;
+  String parentId;
 
   List<Song> get songs => _songs;
+
+  NewSongModel({this.type, this.parentId});
+
   @override
   Future<List<Song>> loadData({int pageNum}) async {
     List<Future> futures = [];
-    futures.add(BaseRepository.fetchNewReleaseChart());
+    debugPrint("TYPE = " + this.type.toString() + "PAR = " + this.parentId);
+    if (this.type == 1)
+      futures.add(BaseRepository.fetchNewReleaseChart());
+    else if (this.type == 2) futures.add(BaseRepository.fetchListSong(this.parentId, "artist", 1));
 
     var result = await Future.wait(futures);
     _songs = result[0];
@@ -154,8 +164,11 @@ class NewSongModel extends ViewStateRefreshListModel<Song> {
 class SongModel with ChangeNotifier {
   String _lyric;
   String _url;
+
   String get url => _url;
+
   String get lyric => _lyric;
+
   setUrl(String url) {
     //debugPrint("duration + " + data.duration.toString());
     _url = url;
@@ -171,26 +184,33 @@ class SongModel with ChangeNotifier {
   }
 
   AudioPlayer _audioPlayer = AudioPlayer();
+
   AudioPlayer get audioPlayer => _audioPlayer;
 
   List<Song> _songs;
 
   bool _isPlaying = false;
+
   bool get isPlaying => _isPlaying;
+
   setPlaying(bool isPlaying) {
     _isPlaying = isPlaying;
     notifyListeners();
   }
 
   bool _isRepeat = true;
+
   bool get isRepeat => _isRepeat;
+
   changeRepeat() {
     _isRepeat = !_isRepeat;
     notifyListeners();
   }
 
   bool _showList = false;
+
   bool get showList => _showList;
+
   setShowList(bool showList) {
     _showList = showList;
     notifyListeners();
@@ -199,6 +219,7 @@ class SongModel with ChangeNotifier {
   int _currentSongIndex = 0;
 
   List<Song> get songs => _songs;
+
   setSongs(List<Song> songs) {
     _songs = songs;
     notifyListeners();
@@ -210,6 +231,7 @@ class SongModel with ChangeNotifier {
   }
 
   int get length => _songs.length;
+
   int get songNumber => _currentSongIndex + 1;
 
   setCurrentIndex(int index) {
@@ -219,7 +241,9 @@ class SongModel with ChangeNotifier {
 
   /// 在播放列表界面点击后立刻播放
   bool _playNow = false;
+
   bool get playNow => _playNow;
+
   setPlayNow(bool playNow) {
     _playNow = playNow;
     notifyListeners();
@@ -260,14 +284,18 @@ class SongModel with ChangeNotifier {
   }
 
   Duration _position;
+
   Duration get position => _position;
+
   void setPosition(Duration position) {
     _position = position;
     notifyListeners();
   }
 
   Duration _duration;
+
   Duration get duration => _duration;
+
   void setDuration(Duration duration) {
     _duration = duration;
     notifyListeners();
@@ -288,6 +316,7 @@ class Song with ChangeNotifier {
   bool isAlbum;
   bool hasLyric;
   List<Artist> artists;
+
   /*List<Artist> get artists => _artists;
   setArtists(List<Artist> artists) {
     _artists = artists;
