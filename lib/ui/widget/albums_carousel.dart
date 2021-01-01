@@ -63,6 +63,7 @@ class _AlbumsCarouselState extends State<AlbumsCarousel> {
                             MaterialPageRoute(
                               builder: (_) => AlbumsPage(
                                 data: data,
+                                isAlbum: true,
                               ),
                             ),
                           )

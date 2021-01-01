@@ -5,6 +5,7 @@ import 'package:flutter_music_app/model/favorite_model.dart';
 import 'package:flutter_music_app/model/song_model.dart';
 import 'package:flutter_music_app/ui/page/albums_page.dart';
 import 'package:flutter_music_app/ui/page/player_page.dart';
+import 'package:flutter_music_app/ui/widget/add_to_playlist.dart';
 import 'package:flutter_music_app/ui/widget/song_carousel.dart';
 import 'package:provider/provider.dart';
 
@@ -78,24 +79,7 @@ class _ShortSongCarouselState extends State<ShortSongCarousel> {
                   ),
                 ]),
           ),
-          IconButton(
-              onPressed: () => favoriteModel.collect(data),
-              icon: data.link == null
-                  ? Icon(
-                Icons.favorite_border,
-                color: Colors.grey,
-                size: 20.0,
-              )
-                  : favoriteModel.isCollect(data)
-                  ? Icon(
-                Icons.favorite,
-                color: Theme.of(context).accentColor,
-                size: 20.0,
-              )
-                  : Icon(
-                Icons.favorite_border,
-                size: 20.0,
-              ))
+          AddPlayList(data, favoriteModel)
         ],
       ),
     );

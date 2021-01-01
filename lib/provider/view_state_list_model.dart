@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 import 'view_state_model.dart';
 
 /// 基于
@@ -21,7 +23,7 @@ abstract class ViewStateListModel<T> extends ViewStateModel {
       } else {
         onCompleted(data);
         list.clear();
-        list.addAll(data);
+        list = List.from(data);
         setIdle();
       }
     } catch (e, s) {
