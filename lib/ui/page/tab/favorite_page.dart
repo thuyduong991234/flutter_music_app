@@ -23,6 +23,7 @@ class _FavoritePageState extends State<FavoritePage>
 
   Widget _buildSongItem(Song data, {bool isDownload = false}) {
     FavoriteModel favoriteModel = Provider.of(context);
+    DownloadModel downloadModel = Provider.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
       child: Row(
@@ -95,6 +96,14 @@ class _FavoritePageState extends State<FavoritePage>
                             Icons.favorite_border,
                             size: 20.0,
                           ))
+          else
+            IconButton(
+                onPressed: () => downloadModel.removeFile(data),
+                icon: Icon(
+                  Icons.delete_outline,
+                  color: Theme.of(context).accentColor,
+                  size: 20.0,
+                ))
         ],
       ),
     );

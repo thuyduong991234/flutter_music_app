@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_music_app/model/download_model.dart';
 import 'package:flutter_music_app/model/favorite_model.dart';
 import 'package:flutter_music_app/model/song_model.dart';
+import 'package:provider/provider.dart';
 
 class AddPlayList extends StatefulWidget {
   final Song song;
@@ -16,6 +18,7 @@ class _AddPlayListState extends State<AddPlayList> {
   final playlistController = TextEditingController();
 
   _showFavoriteAddOption() {
+    DownloadModel downloadModel = Provider.of(context);
     showModalBottomSheet(
         context: context,
         builder: (_) => Padding(
@@ -26,8 +29,6 @@ class _AddPlayListState extends State<AddPlayList> {
                   widget.favoriteModel.isCollect(widget.song)
                       ? ListTile(
                           onTap: () {
-                            debugPrint("ADD THU VIEN = " +
-                                widget.song.hasLyric.toString());
                             Navigator.of(context).pop();
                             widget.favoriteModel.collect(widget.song);
                             final message = SnackBar(
@@ -59,7 +60,20 @@ class _AddPlayListState extends State<AddPlayList> {
                     },
                     leading: Icon(Icons.music_note),
                     title: Text("Thêm vào danh sách phát"),
-                  )
+                  ),
+                  if (downloadModel.isDownload(widget.song) == false)
+                    ListTile(
+                      onTap: () {
+                        downloadModel.download(widget.song);
+                        Navigator.of(context).pop();
+                        final message = SnackBar(
+                            content: Text("Đã thêm vào hàng chờ tải về!"),
+                            duration: const Duration(milliseconds: 500));
+                        Scaffold.of(context).showSnackBar(message);
+                      },
+                      leading: Icon(Icons.cloud_download),
+                      title: Text("Tải về"),
+                    )
                 ],
               ),
             ));
