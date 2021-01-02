@@ -28,14 +28,18 @@ class Player extends StatefulWidget {
   /// 是否是本地资源
   final bool isLocal;
 
-  Player(
-      {@required this.songData,
-      @required this.downloadData,
-      this.nowPlay,
-      this.key,
-      this.volume: 1.0,
-      this.color: Colors.white,
-      this.isLocal: false});
+  final bool isOffline;
+
+  Player({
+    @required this.songData,
+    @required this.downloadData,
+    this.nowPlay,
+    this.key,
+    this.volume: 1.0,
+    this.color: Colors.white,
+    this.isLocal: false,
+    this.isOffline: false,
+  });
 
   @override
   State<StatefulWidget> createState() => PlayerState();
@@ -107,7 +111,6 @@ class PlayerState extends State<Player> {
       // });
       next();
     });
-
     _audioPlayer.onSeekComplete.listen((finished) {
       _isSeeking = false;
     });
@@ -155,17 +158,25 @@ class PlayerState extends State<Player> {
   void play(Song s) async {
     String url, lyric;
     if (_downloadData.isDownload(s)) {
-      debugPrint("1");
+      debugPrint("1" + s.id);
       url = _downloadData.getDirectoryPath + '/${s.id}.mp3';
+      if(!widget.isOffline)
+        {
+          debugPrint("12" + s.hasLyric.toString());
+          if (s.hasLyric) lyric = await getSongLyric(s);
+        }
+
     } else {
       debugPrint("2");
       url = await getSongUrl(s);
       if (s.hasLyric) lyric = await getSongLyric(s);
     }
-    if (url == _songData.url) {
+    if (lyric == _songData.lyric && !widget.isOffline) {
       debugPrint("3");
-      int result = await _audioPlayer.setUrl(url);
-      if (result == 1) {
+      //int result = await _audioPlayer.setUrl(url);
+      int result1 = await _audioPlayer.resume();
+      if (result1 == 1) {
+        debugPrint("3.1");
         _songData.setPlaying(true);
       }
     } else {
@@ -215,7 +226,6 @@ class PlayerState extends State<Player> {
     String format = "$minute" + ":" + ((second < 10) ? "0$second" : "$second");
     return format;
   }
-
   @override
   Widget build(BuildContext context) {
     if (_songData.playNow) {
@@ -269,9 +279,9 @@ class PlayerState extends State<Player> {
             _audioPlayer.seek(_position);
           },
           value: (_position != null &&
-                  _duration != null &&
-                  _position.inSeconds > 0 &&
-                  _position.inSeconds < _duration.inSeconds)
+              _duration != null &&
+              _position.inSeconds > 0 &&
+              _position.inSeconds < _duration.inSeconds)
               ? _position.inSeconds / _duration.inSeconds
               : 0.0,
           activeColor: Theme.of(context).accentColor,
@@ -317,20 +327,20 @@ class PlayerState extends State<Player> {
             ),
             ClipOval(
                 child: Container(
-              color: Theme.of(context).accentColor.withAlpha(30),
-              width: 70.0,
-              height: 70.0,
-              child: IconButton(
-                onPressed: () {
-                  _songData.isPlaying ? pause() : resume();
-                },
-                icon: Icon(
-                  _songData.isPlaying ? Icons.pause : Icons.play_arrow,
-                  size: 30.0,
-                  color: Theme.of(context).accentColor,
-                ),
-              ),
-            )),
+                  color: Theme.of(context).accentColor.withAlpha(30),
+                  width: 70.0,
+                  height: 70.0,
+                  child: IconButton(
+                    onPressed: () {
+                      _songData.isPlaying ? pause() : resume();
+                    },
+                    icon: Icon(
+                      _songData.isPlaying ? Icons.pause : Icons.play_arrow,
+                      size: 30.0,
+                      color: Theme.of(context).accentColor,
+                    ),
+                  ),
+                )),
             IconButton(
               onPressed: () => next(),
               icon: Icon(
@@ -348,15 +358,15 @@ class PlayerState extends State<Player> {
                 onPressed: () => _songData.changeRepeat(),
                 icon: _songData.isRepeat == true
                     ? Icon(
-                        Icons.repeat,
-                        size: 25.0,
-                        color: Colors.grey,
-                      )
+                  Icons.repeat,
+                  size: 25.0,
+                  color: Colors.grey,
+                )
                     : Icon(
-                        Icons.shuffle,
-                        size: 25.0,
-                        color: Colors.grey,
-                      ),
+                  Icons.shuffle,
+                  size: 25.0,
+                  color: Colors.grey,
+                ),
               ),
             ),
           ],
@@ -365,7 +375,7 @@ class PlayerState extends State<Player> {
     ];
   }
 
-  // void _onComplete() {
-  //   setState(() => _songData.setPlayState(PlayState.stopped));
-  // }
+// void _onComplete() {
+//   setState(() => _songData.setPlayState(PlayState.stopped));
+// }
 }

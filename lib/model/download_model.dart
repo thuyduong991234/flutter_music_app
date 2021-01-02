@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_music_app/config/storage_manager.dart';
 import 'package:flutter_music_app/model/song_model.dart';
 import 'package:flutter_music_app/provider/view_state_list_model.dart';
+import 'package:flutter_music_app/service/base_repository.dart';
 import 'package:http/http.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:path_provider/path_provider.dart';
@@ -44,6 +45,7 @@ class DownloadModel with ChangeNotifier {
   }
 
   download(Song song) {
+    debugPrint("d3: download");
     if (_downloadSong.contains(song)) {
       removeFile(song);
     } else {
@@ -51,12 +53,16 @@ class DownloadModel with ChangeNotifier {
     }
   }
 
-  String getSongUrl(Song s) {
-    return 'http://music.163.com/song/media/outer/url?id=${s.id}.mp3';
+  Future<String> getSongUrl(Song s) async {
+    var url = await BaseRepository.fetchUrlMp3(s.id);
+    return url.toString();
   }
 
   Future downloadFile(Song s) async {
-    final bytes = await readBytes(getSongUrl(s));
+    debugPrint("d3: begin download");
+    String url = await getSongUrl(s);
+    final bytes = await readBytes(url);
+    debugPrint("after download");
     final dir = await getApplicationDocumentsDirectory();
     setDirectoryPath(dir.path);
     final file = File('${dir.path}/${s.id}.mp3');

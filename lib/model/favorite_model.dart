@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_music_app/model/song_model.dart';
 import 'package:flutter_music_app/provider/view_state_list_model.dart';
@@ -23,7 +24,7 @@ class FavoriteListModel extends ViewStateListModel<Song> {
       return Song.fromJsonMap(item);
     }).toList();
     Map<String, List<dynamic>> playlist;
-    if(localStorage.getItem(kPlaylist) != null) {
+    if (localStorage.getItem(kPlaylist) != null) {
       playlist = Map.from(localStorage.getItem(kPlaylist));
     } else {
       playlist = Map<String, List<dynamic>>();
@@ -35,9 +36,11 @@ class FavoriteListModel extends ViewStateListModel<Song> {
   }
 }
 
-class PlaylistSongModel extends ViewStateListModel<dynamic> {
+class PlaylistSongModel extends ViewStateRefreshListModel<dynamic> {
   String name;
+
   List<dynamic> _songs;
+
   List<dynamic> get songs => _songs;
 
   PlaylistSongModel({this.name});
@@ -48,7 +51,7 @@ class PlaylistSongModel extends ViewStateListModel<dynamic> {
     await localStorage.ready;
 
     Map<String, List<dynamic>> playlist;
-    if(localStorage.getItem(kPlaylist) != null) {
+    if (localStorage.getItem(kPlaylist) != null) {
       playlist = Map.from(localStorage.getItem(kPlaylist));
     } else {
       playlist = Map<String, List<dynamic>>();
@@ -58,7 +61,6 @@ class PlaylistSongModel extends ViewStateListModel<dynamic> {
     _songs = List.from(map);
     return _songs;
   }
-
 }
 
 class FavoriteModel with ChangeNotifier {
@@ -93,8 +95,10 @@ class FavoriteModel with ChangeNotifier {
     if (!_playlists.containsKey(name)) {
       _playlists[name] = [];
     }
-    if (_playlists[name].contains(song)) {
-      _playlists[name].remove(song);
+    Song deletion = isCollect2(song, _playlists[name]);
+
+    if(deletion != null) {
+      _playlists[name] = remove2(deletion, _playlists[name]);
     } else {
       _playlists[name].add(song);
     }
@@ -119,5 +123,36 @@ class FavoriteModel with ChangeNotifier {
       }
     }
     return isCollect;
+  }
+
+  Song isCollect2(Song newSong, List<dynamic> data) {
+    Song result;
+
+    for (int i = 0; i < data.length; i++) {
+      var compare = data[i] is Song ? data[i].id : data[i]["id"];
+      if(compare == newSong.id) {
+        result = newSong;
+      }
+    }
+
+    return result;
+  }
+
+  remove2(Song newSong, List<dynamic> data) {
+    for (int i = 0; i < data.length; i++) {
+      var compare = data[i] is Song ? data[i].id : data[i]["id"];
+      if(compare == newSong.id) {
+        data.removeAt(i);
+      }
+    }
+
+    return data;
+  }
+
+  removePlaylist(String name) {
+    _playlists.removeWhere((key, value) => key == name);
+
+    saveData();
+    notifyListeners();
   }
 }
