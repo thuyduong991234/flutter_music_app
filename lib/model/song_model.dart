@@ -91,7 +91,8 @@ class NewSongModel extends ViewStateRefreshListModel<Song> {
     debugPrint("TYPE = " + this.type.toString() + "PAR = " + this.parentId);
     if (this.type == 1)
       futures.add(BaseRepository.fetchNewReleaseChart());
-    else if (this.type == 2) futures.add(BaseRepository.fetchListSong(this.parentId, "artist", 1));
+    else if (this.type == 2)
+      futures.add(BaseRepository.fetchListSong(this.parentId, "artist", 1));
 
     var result = await Future.wait(futures);
     _songs = result[0];
@@ -142,6 +143,11 @@ class SongModel with ChangeNotifier {
 
   changeRepeat() {
     _isRepeat = !_isRepeat;
+    notifyListeners();
+  }
+
+  setRepeat(bool isRepeat) {
+    _isRepeat = isRepeat;
     notifyListeners();
   }
 
@@ -237,6 +243,22 @@ class SongModel with ChangeNotifier {
   void setDuration(Duration duration) {
     _duration = duration;
     notifyListeners();
+  }
+}
+
+class SongCollection {
+  static cast(List<dynamic> data) {
+    List<Song> songs = [];
+
+    data.forEach((element) {
+      if (element is Song) {
+        songs.add(element);
+      } else {
+        songs.add(Song.fromJsonMap(element));
+      }
+    });
+
+    return songs;
   }
 }
 

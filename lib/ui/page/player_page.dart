@@ -16,8 +16,9 @@ import 'package:provider/provider.dart';
 
 class PlayPage extends StatefulWidget {
   final bool nowPlay;
+  final bool isOffline;
 
-  PlayPage({this.nowPlay});
+  PlayPage({this.nowPlay, this.isOffline = false});
 
   @override
   _PlayPageState createState() => _PlayPageState();
@@ -199,10 +200,10 @@ class _PlayPageState extends State<PlayPage> with TickerProviderStateMixin {
                       initialPage: 1,
                     ))),
             Player(
-              songData: songModel,
-              downloadData: downloadModel,
-              nowPlay: widget.nowPlay,
-            ),
+                songData: songModel,
+                downloadData: downloadModel,
+                nowPlay: widget.nowPlay,
+                isOffline: widget.isOffline),
           ],
         ),
       ),
