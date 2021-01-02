@@ -7,6 +7,7 @@ import 'package:flutter_music_app/provider/provider_widget.dart';
 import 'package:flutter_music_app/provider/view_state_widget.dart';
 import 'package:flutter_music_app/ui/page/artist_page.dart';
 import 'package:flutter_music_app/ui/page/player_page.dart';
+import 'package:flutter_music_app/ui/widget/add_to_playlist.dart';
 import 'package:flutter_music_app/ui/widget/album_carousel.dart';
 import 'package:flutter_music_app/ui/widget/app_bar.dart';
 import 'package:flutter_music_app/model/song_model.dart';
@@ -100,24 +101,7 @@ class _ChartPageState extends State<ChartPage> {
                   ),
                 ]),
           ),
-          IconButton(
-              onPressed: () => favoriteModel.collect(data),
-              icon: data.link == null
-                  ? Icon(
-                      Icons.favorite_border,
-                      color: Color(0xFFE0E0E0),
-                      size: 20.0,
-                    )
-                  : favoriteModel.isCollect(data)
-                      ? Icon(
-                          Icons.favorite,
-                          color: Theme.of(context).accentColor,
-                          size: 20.0,
-                        )
-                      : Icon(
-                          Icons.favorite_border,
-                          size: 20.0,
-                        ))
+          AddPlayList(data, favoriteModel)
         ],
       ),
     );

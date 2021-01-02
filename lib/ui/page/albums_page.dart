@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_music_app/model/artist_model.dart';
 import 'package:flutter_music_app/model/favorite_model.dart';
@@ -18,7 +20,8 @@ class AlbumsPage extends StatefulWidget {
   final bool isPlaylist;
   final String data2;
 
-  AlbumsPage({this.data, this.isAlbum = false, this.isPlaylist = false, this.data2});
+  AlbumsPage(
+      {this.data, this.isAlbum = false, this.isPlaylist = false, this.data2});
 
   @override
   _AlbumsPageState createState() => _AlbumsPageState();
@@ -125,92 +128,57 @@ class _AlbumsPageState extends State<AlbumsPage> {
                               Center(
                                 child: buildTextArtistName(widget.data.artists),
                               ),
-                              Row(
-                                children: <Widget>[
-                                  Expanded(
-                                    flex: 1,
-                                    child: Container(
-                                      height: 70,
-                                      margin: EdgeInsets.only(
-                                          top: 20,
-                                          bottom: 20,
-                                          left: 20,
-                                          right: 10),
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                            color: Colors.black12, width: 1),
-                                        borderRadius:
-                                            BorderRadius.circular(20.0),
-                                      ),
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          if (null != songs[0].link) {
-                                            SongModel songModel =
-                                                Provider.of(context);
-                                            songModel.setSongs(songs);
-                                            songModel.setCurrentIndex(0);
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (_) => PlayPage(
-                                                  nowPlay: true,
-                                                ),
-                                              ),
-                                            );
-                                          }
-                                        },
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: <Widget>[
-                                            Icon(
-                                              Icons.play_arrow,
-                                              color:
-                                                  Theme.of(context).accentColor,
-                                            ),
-                                            SizedBox(
-                                              width: 5,
-                                            ),
-                                            Text(
-                                              'Play',
-                                              style: TextStyle(
-                                                  color: Theme.of(context)
-                                                      .accentColor),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
+                              Center(
+                                child: Container(
+                                  height: 50,
+                                  margin: EdgeInsets.only(
+                                      top: 20, bottom: 20, left: 90, right: 90),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                        color: Colors.black12, width: 1),
+                                    borderRadius: BorderRadius.circular(40.0),
                                   ),
-                                  Expanded(
-                                    flex: 1,
-                                    child: Container(
-                                      height: 70,
-                                      margin: EdgeInsets.only(
-                                          top: 20,
-                                          bottom: 20,
-                                          left: 10,
-                                          right: 20),
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                            color: Colors.black12, width: 1),
-                                        borderRadius:
-                                            BorderRadius.circular(20.0),
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: <Widget>[
-                                          Icon(Icons.add),
-                                          SizedBox(
-                                            width: 5,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      if (null != songs[0].link) {
+                                        SongModel songModel =
+                                            Provider.of(context);
+                                        Random r = new Random();
+                                        songModel.setSongs(songs);
+                                        songModel.setCurrentIndex(
+                                            r.nextInt(songs.length));
+                                        songModel.setRepeat(false);
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (_) => PlayPage(
+                                              nowPlay: true,
+                                            ),
                                           ),
-                                          Text('Add'),
-                                        ],
-                                      ),
+                                        );
+                                      }
+                                    },
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: <Widget>[
+                                        Icon(
+                                          Icons.play_arrow,
+                                          color: Theme.of(context).accentColor,
+                                        ),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                        Text(
+                                          'Play',
+                                          style: TextStyle(
+                                              color: Theme.of(context)
+                                                  .accentColor),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                ],
+                                ),
                               ),
                               AlbumCarousel(
                                 input: widget.data.id,

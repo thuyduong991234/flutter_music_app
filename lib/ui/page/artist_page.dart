@@ -6,6 +6,7 @@ import 'package:flutter_music_app/model/artist_model.dart';
 import 'package:flutter_music_app/service/base_repository.dart';
 import 'package:flutter_music_app/ui/widget/albums_carousel.dart';
 import 'package:flutter_music_app/ui/widget/app_bar.dart';
+import 'package:flutter_music_app/ui/widget/circle_artist_carousel.dart';
 import 'package:flutter_music_app/ui/widget/list_artists_carousel.dart';
 import 'package:flutter_music_app/ui/widget/short_song_carousel.dart';
 
@@ -53,15 +54,60 @@ class _ArtistPageState extends State<ArtistPage> {
               ),
               Center(
                 child: Padding(
-                  padding: EdgeInsets.all(16.0),
+                  padding: EdgeInsets.all(10.0),
                   child: Text(this.data.name,
-                      style: TextStyle(fontWeight: FontWeight.bold)),
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 16.0)),
+                ),
+              ),
+              Center(
+                child: Text(
+                  data.follow.toString() + " quan tâm",
+                  style: TextStyle(
+                    fontSize: 14.0,
+                    color: Colors.grey,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Center(
+                child: Container(
+                  height: 30,
+                  margin: EdgeInsets.only(
+                      top: 5.0, bottom: 5.0, left: 120.0, right: 120.0),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black12, width: 1),
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  child: GestureDetector(
+                    onTap: () {},
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Icon(Icons.person_add,
+                            color: Theme.of(context).accentColor, size: 20),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Text(
+                          'Quan tâm',
+                          style: TextStyle(
+                              fontSize: 14.0,
+                              color: Theme.of(context).accentColor),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
               ShortSongCarousel(this.data.songs, "Top bài hát", true, false,
                   null, this.data.id),
-              AlbumsCarousel(this.data.albums, false, true, null),
-              ListArtistsCarousel(this.data.relatedArtists, true, null)
+              AlbumsCarousel(this.data.albums, false, false, false, null),
+              CircleArtistsCarousel(this.data.relatedArtists)
             ],
           )),
         ]),

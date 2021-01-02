@@ -47,7 +47,7 @@ class _CircleArtistsCarouselState extends State<CircleArtistsCarousel> {
       Column(
         children: <Widget>[
           Container(
-            height: 185,
+            height: 250,
             child: ListView.builder(
               shrinkWrap: true,
               scrollDirection: Axis.horizontal,
@@ -110,6 +110,41 @@ class _CircleArtistsCarouselState extends State<CircleArtistsCarousel> {
                               ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Center(
+                            child: Container(
+                              height: 30,
+                              margin: EdgeInsets.only(
+                                  top: 5.0, bottom: 5.0, left: 5.0, right: 5.0),
+                              decoration: BoxDecoration(
+                                border:
+                                    Border.all(color: Colors.black12, width: 1),
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              child: GestureDetector(
+                                onTap: () {},
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Icon(Icons.person_add,
+                                        color: Theme.of(context).accentColor,
+                                        size: 20),
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    Text(
+                                      'Quan tâm',
+                                      style: TextStyle(
+                                          fontSize: 12.0,
+                                          color: Theme.of(context).accentColor),
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
                           ),
                         ],

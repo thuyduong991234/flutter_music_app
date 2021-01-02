@@ -66,7 +66,10 @@ class _PlaylistsCarouselState extends State<PlaylistsCarousel> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (_) => AlbumsPage(data: data),
+                                    builder: (_) => AlbumsPage(
+                                      data: data,
+                                      isAlbum: true,
+                                    ),
                                   ),
                                 ),
                               },

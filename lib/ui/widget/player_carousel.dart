@@ -14,6 +14,7 @@ class Player extends StatefulWidget {
   /// 播放列表
   final SongModel songData;
   final DownloadModel downloadData;
+  final Duration timer;
 
   //是否立即播放
   final bool nowPlay;
@@ -28,15 +29,15 @@ class Player extends StatefulWidget {
   /// 是否是本地资源
   final bool isLocal;
 
-  Player({
-    @required this.songData,
-    @required this.downloadData,
-    this.nowPlay,
-    this.key,
-    this.volume: 1.0,
-    this.color: Colors.white,
-    this.isLocal: false,
-  });
+  Player(
+      {@required this.songData,
+      @required this.downloadData,
+      this.nowPlay,
+      this.key,
+      this.volume: 1.0,
+      this.color: Colors.white,
+      this.isLocal: false,
+      this.timer});
 
   @override
   State<StatefulWidget> createState() => PlayerState();
@@ -149,7 +150,6 @@ class PlayerState extends State<Player> {
     var url = await BaseRepository.fetchLyrics(s.id);
     var lyric = await http.read(url.toString());
     var lyrics = utf8.decode((lyric.toString()).runes.toList());
-    debugPrint("HAHAHA " + lyrics.toString());
     return lyrics.toString();
   }
 
@@ -163,10 +163,12 @@ class PlayerState extends State<Player> {
       url = await getSongUrl(s);
       if (s.hasLyric) lyric = await getSongLyric(s);
     }
-    if (url == _songData.url) {
+    if (lyric == _songData.lyric) {
       debugPrint("3");
-      int result = await _audioPlayer.setUrl(url);
-      if (result == 1) {
+      //int result = await _audioPlayer.setUrl(url);
+      int result1 = await _audioPlayer.resume();
+      if (result1 == 1) {
+        debugPrint("3.1");
         _songData.setPlaying(true);
       }
     } else {
@@ -294,17 +296,6 @@ class PlayerState extends State<Player> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           mainAxisSize: MainAxisSize.max,
           children: <Widget>[
-            Visibility(
-              visible: _songData.showList,
-              child: IconButton(
-                onPressed: () => _songData.setShowList(!_songData.showList),
-                icon: Icon(
-                  Icons.timer,
-                  size: 25.0,
-                  color: Colors.grey,
-                ),
-              ),
-            ),
             IconButton(
               onPressed: () => previous(),
               icon: Icon(
@@ -341,23 +332,6 @@ class PlayerState extends State<Player> {
                 color: Theme.of(context).brightness == Brightness.dark
                     ? Theme.of(context).accentColor
                     : Color(0xFF787878),
-              ),
-            ),
-            Visibility(
-              visible: _songData.showList,
-              child: IconButton(
-                onPressed: () => _songData.changeRepeat(),
-                icon: _songData.isRepeat == true
-                    ? Icon(
-                        Icons.repeat,
-                        size: 25.0,
-                        color: Colors.grey,
-                      )
-                    : Icon(
-                        Icons.shuffle,
-                        size: 25.0,
-                        color: Colors.grey,
-                      ),
               ),
             ),
           ],

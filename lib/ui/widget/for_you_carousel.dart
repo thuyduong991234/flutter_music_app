@@ -8,6 +8,8 @@ import 'package:flutter_music_app/ui/page/player_page.dart';
 import 'package:flutter_music_app/ui/widget/song_carousel.dart';
 import 'package:provider/provider.dart';
 
+import 'add_to_playlist.dart';
+
 class ForYouCarousel extends StatefulWidget {
   final List<Song> forYou;
   final String title;
@@ -77,24 +79,7 @@ class _ForYouCarouselState extends State<ForYouCarousel> {
                   ),
                 ]),
           ),
-          IconButton(
-              onPressed: () => favoriteModel.collect(data),
-              icon: data.link == null
-                  ? Icon(
-                      Icons.favorite_border,
-                      color: Colors.grey,
-                      size: 20.0,
-                    )
-                  : favoriteModel.isCollect(data)
-                      ? Icon(
-                          Icons.favorite,
-                          color: Theme.of(context).accentColor,
-                          size: 20.0,
-                        )
-                      : Icon(
-                          Icons.favorite_border,
-                          size: 20.0,
-                        ))
+          AddPlayList(data, favoriteModel)
         ],
       ),
     );

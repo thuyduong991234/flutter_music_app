@@ -3,6 +3,8 @@ import 'package:flutter_music_app/model/favorite_model.dart';
 import 'package:flutter_music_app/model/song_model.dart';
 import 'package:provider/provider.dart';
 
+import 'add_to_playlist.dart';
+
 class SongListCarousel extends StatefulWidget {
   @override
   _ForYouCarouselState createState() => _ForYouCarouselState();
@@ -132,24 +134,7 @@ class _ForYouCarouselState extends State<SongListCarousel> {
                         ),
                       ]),
                 ),
-                IconButton(
-                    onPressed: () => favoriteModel.collect(data),
-                    icon: data.link == null
-                        ? Icon(
-                            Icons.favorite_border,
-                            color: Color(0xFFE0E0E0),
-                            size: 20.0,
-                          )
-                        : favoriteModel.isCollect(data)
-                            ? Icon(
-                                Icons.favorite,
-                                color: Theme.of(context).accentColor,
-                                size: 20.0,
-                              )
-                            : Icon(
-                                Icons.favorite_border,
-                                size: 20.0,
-                              ))
+                AddPlayList(data, favoriteModel)
               ],
             ),
           );

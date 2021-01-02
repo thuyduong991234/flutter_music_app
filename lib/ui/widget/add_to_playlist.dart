@@ -18,37 +18,36 @@ class _AddPlayListState extends State<AddPlayList> {
   _showFavoriteAddOption() {
     showModalBottomSheet(
         context: context,
-        builder: (_) =>
-            Padding(
+        builder: (_) => Padding(
               padding:
-              const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                  const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
               child: Wrap(
                 children: <Widget>[
                   widget.favoriteModel.isCollect(widget.song)
                       ? ListTile(
-                    onTap: () {
-                      Navigator.of(context).pop();
-                      widget.favoriteModel.collect(widget.song);
-                      final message = SnackBar(
-                          content: Text("Đã xóa khỏi thư viện!"),
-                          duration: const Duration(milliseconds: 500));
-                      Scaffold.of(context).showSnackBar(message);
-                    },
-                    leading: Icon(Icons.favorite_border),
-                    title: Text("Xóa khỏi thư viện"),
-                  )
+                          onTap: () {
+                            Navigator.of(context).pop();
+                            widget.favoriteModel.collect(widget.song);
+                            final message = SnackBar(
+                                content: Text("Đã xóa khỏi thư viện!"),
+                                duration: const Duration(milliseconds: 500));
+                            Scaffold.of(context).showSnackBar(message);
+                          },
+                          leading: Icon(Icons.favorite_border),
+                          title: Text("Xóa khỏi thư viện"),
+                        )
                       : ListTile(
-                    onTap: () {
-                      Navigator.of(context).pop();
-                      widget.favoriteModel.collect(widget.song);
-                      final message = SnackBar(
-                          content: Text("Đã thêm vào thư viện!"),
-                          duration: const Duration(milliseconds: 500));
-                      Scaffold.of(context).showSnackBar(message);
-                    },
-                    leading: Icon(Icons.favorite_border),
-                    title: Text("Thêm vào thư viện"),
-                  ),
+                          onTap: () {
+                            Navigator.of(context).pop();
+                            widget.favoriteModel.collect(widget.song);
+                            final message = SnackBar(
+                                content: Text("Đã thêm vào thư viện!"),
+                                duration: const Duration(milliseconds: 500));
+                            Scaffold.of(context).showSnackBar(message);
+                          },
+                          leading: Icon(Icons.favorite_border),
+                          title: Text("Thêm vào thư viện"),
+                        ),
                   ListTile(
                     onTap: () {
                       Navigator.of(context).pop();
@@ -65,10 +64,9 @@ class _AddPlayListState extends State<AddPlayList> {
   _showPlayListAddOption() {
     showModalBottomSheet(
         context: context,
-        builder: (_) =>
-            Padding(
+        builder: (_) => Padding(
               padding:
-              const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                  const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
               child: Wrap(
                 children: <Widget>[
                   ListTile(
@@ -81,50 +79,60 @@ class _AddPlayListState extends State<AddPlayList> {
                           builder: (BuildContext context) {
                             String _playlist = "";
                             return StatefulBuilder(
-                                builder: (BuildContext context, setState) => AlertDialog(
-                                  title: Text("Tạo danh sách phát"),
-                                  content: Wrap(
-                                    children: <Widget>[
-                                      TextFormField(
-                                          onChanged: (text) {
-                                            setState(() {
-                                              _playlist = text;
-                                            });
-                                          },
-                                          controller: playlistController,
-                                          decoration: InputDecoration(
-                                              hintText: "Danh sách #1"))
-                                    ],
-                                  ),
-                                  actions: [
-                                    TextButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                        child: Text("Bỏ qua")),
-                                    TextButton(
-                                        onPressed: _playlist.isNotEmpty
-                                            ? () {
-                                          widget.favoriteModel.collect2(
-                                              playlistController.text,
-                                              widget.song);
-                                          Navigator.of(context).pop();
-                                          final message = SnackBar(
-                                              content: Text(
-                                                  "Đã tạo danh sách phát " +
-                                                      playlistController
-                                                          .text +
-                                                      "!"),
-                                              duration: const Duration(
-                                                  milliseconds: 500));
-                                          Scaffold.of(context)
-                                              .showSnackBar(message);
-                                        }
-                                            : null,
-                                        child: Text("Đồng ý"))
-                                  ],
-                                )
-                            ) ;
+                                builder: (BuildContext context, setState) =>
+                                    AlertDialog(
+                                      title: Text("Tạo danh sách phát"),
+                                      content: Wrap(
+                                        children: <Widget>[
+                                          TextFormField(
+                                              onChanged: (text) {
+                                                setState(() {
+                                                  _playlist = text;
+                                                });
+                                              },
+                                              controller: playlistController,
+                                              decoration: InputDecoration(
+                                                  hintText: "Danh sách #1"))
+                                        ],
+                                      ),
+                                      actions: [
+                                        MaterialButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Text("Bỏ qua",
+                                                style: TextStyle(
+                                                    color: Theme.of(context)
+                                                        .accentColor))),
+                                        MaterialButton(
+                                            onPressed: _playlist.isNotEmpty
+                                                ? () {
+                                                    widget.favoriteModel
+                                                        .collect2(
+                                                            playlistController
+                                                                .text,
+                                                            widget.song);
+                                                    Navigator.of(context).pop();
+                                                    final message = SnackBar(
+                                                        content: Text(
+                                                            "Đã tạo danh sách phát " +
+                                                                playlistController
+                                                                    .text +
+                                                                "!"),
+                                                        duration:
+                                                            const Duration(
+                                                                milliseconds:
+                                                                    500));
+                                                    Scaffold.of(context)
+                                                        .showSnackBar(message);
+                                                  }
+                                                : null,
+                                            child: Text("Đồng ý",
+                                                style: TextStyle(
+                                                    color: Theme.of(context)
+                                                        .accentColor)))
+                                      ],
+                                    ));
                           });
                     },
                   ),
@@ -158,21 +166,20 @@ class _AddPlayListState extends State<AddPlayList> {
         onPressed: () => _showFavoriteAddOption(),
         icon: widget.song.link == null
             ? Icon(
-          Icons.favorite_border,
-          color: Colors.grey,
-          size: 20.0,
-        )
+                Icons.favorite_border,
+                color: Colors.grey,
+                size: 20.0,
+              )
             : widget.favoriteModel.isCollect(widget.song)
-            ? Icon(
-          Icons.favorite,
-          color: Theme
-              .of(context)
-              .accentColor,
-          size: 20.0,
-        )
-            : Icon(
-          Icons.favorite_border,
-          size: 20.0,
-        ));
+                ? Icon(
+                    Icons.favorite,
+                    color: Theme.of(context).accentColor,
+                    size: 20.0,
+                  )
+                : Icon(
+                    Icons.favorite_border,
+                    color: Colors.grey,
+                    size: 20.0,
+                  ));
   }
 }
