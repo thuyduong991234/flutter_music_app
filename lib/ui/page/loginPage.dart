@@ -85,7 +85,9 @@ class _LoginPageState extends State<LoginPage> {
           LoginFirebase fb = Provider.of(context);
           fb.initData(email, pwd);
           String result = await fb.login();
+          debugPrint("NAME + " + pwd);
           if (result == "ok") {
+            debugPrint("NAME OK+ " + fb.email);
             Navigator.push(
                 context, MaterialPageRoute(builder: (context) => InfoPage()));
           }

@@ -24,7 +24,7 @@ class _MinePageState extends State<MinePage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    LoginFirebase user = Provider.of(context);
+    LoginFirebase fb = Provider.of(context);
     return Scaffold(
         body: SafeArea(
       child: Column(
@@ -43,7 +43,12 @@ class _MinePageState extends State<MinePage>
               ),
               Padding(
                 padding: const EdgeInsets.all(20.0),
-                child: Text(user.email != null ? user.email : "",
+                child: Text(
+                    fb.user != null
+                        ? (fb.user.user.displayName != null
+                            ? fb.user.user.displayName
+                            : "")
+                        : "",
                     style: TextStyle(
                         fontSize: 22.0,
                         fontWeight: FontWeight.bold,

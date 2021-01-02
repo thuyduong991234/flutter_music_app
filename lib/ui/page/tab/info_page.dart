@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_music_app/model/login_model.dart';
 import 'package:flutter_music_app/model/song_model.dart';
+import 'package:flutter_music_app/ui/page/tab/mine_page.dart';
 import 'package:flutter_music_app/ui/widget/bezierContainer.dart';
 import 'package:provider/provider.dart';
 
@@ -98,12 +99,24 @@ class _InfoPageState extends State<InfoPage> {
                       MaterialButton(
                           onPressed: () async {
                             LoginFirebase fb = Provider.of(context);
-                            fb.initData(email, pwd);
-                            String result = await fb.login();
-                            if (result == "ok") {
-                              Navigator.of(context).pop();
+                            var ret = await fb.reauth(pass);
+                            if (ret == "ok") {
+                              debugPrint("PASS = " + ret);
+                              var ret1 = await fb.update(
+                                  email: this.email,
+                                  pwd: this.pwd,
+                                  name: this.name);
+                              if (ret1 != "ok") {
+                                setState(() {
+                                  err = ret1;
+                                });
+                              } else {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => MinePage()));
+                              }
                             }
-                            err = result;
                           },
                           child: Text("ĐỒNG Ý",
                               style: TextStyle(
@@ -186,18 +199,7 @@ class _InfoPageState extends State<InfoPage> {
   Widget _submitButton() {
     return GestureDetector(
         onTap: () async {
-          LoginFirebase fb = Provider.of(context);
           _showEnterPassword();
-          print("pass " + this.name);
-          String ret = await fb.update(
-              email: this.email, pwd: this.pwd, name: this.name);
-          if (ret != "ok") {
-            setState(() {
-              err = ret;
-            });
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => InfoPage()));
-          }
         },
         child: Container(
           width: MediaQuery.of(context).size.width,
