@@ -102,6 +102,7 @@ class _HomePageState extends State<HomePage>
                                 borderRadius: BorderRadius.circular(30.0),
                               ),
                               child: TextField(
+                                readOnly: true,
                                 onTap: () {
                                   Navigator.push(
                                     context,
@@ -120,7 +121,7 @@ class _HomePageState extends State<HomePage>
                                     focusedBorder: InputBorder.none,
                                     prefixIcon: Icon(
                                       Icons.search,
-                                      color: Colors.grey,
+                                      color: Theme.of(context).accentColor,
                                     ),
                                     hintText: songModel.songs != null
                                         ? songModel.currentSong.title

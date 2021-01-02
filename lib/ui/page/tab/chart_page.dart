@@ -1,30 +1,38 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_music_app/model/artist_model.dart';
 import 'package:flutter_music_app/model/favorite_model.dart';
 import 'package:flutter_music_app/provider/provider_widget.dart';
 import 'package:flutter_music_app/provider/view_state_widget.dart';
-import 'package:flutter_music_app/ui/page/artist_page.dart';
 import 'package:flutter_music_app/ui/page/player_page.dart';
 import 'package:flutter_music_app/ui/widget/add_to_playlist.dart';
-import 'package:flutter_music_app/ui/widget/album_carousel.dart';
-import 'package:flutter_music_app/ui/widget/app_bar.dart';
 import 'package:flutter_music_app/model/song_model.dart';
-import 'package:flutter_music_app/ui/widget/circle_artist_carousel.dart';
-import 'package:flutter_music_app/ui/widget/for_you_carousel.dart';
 import 'package:provider/provider.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class ChartPage extends StatefulWidget {
   @override
   _ChartPageState createState() => _ChartPageState();
 }
 
-class _ChartPageState extends State<ChartPage> {
+class _ChartPageState extends State<ChartPage>
+    with TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   var top = 0.0;
   int week = 52;
   int year = 2020;
+
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   Widget _buildSongItem(Song data, int index) {
     FavoriteModel favoriteModel = Provider.of(context);
     return Padding(
@@ -109,6 +117,7 @@ class _ChartPageState extends State<ChartPage> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
         body: GestureDetector(
             onTap: () {

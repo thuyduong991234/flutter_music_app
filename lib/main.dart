@@ -15,8 +15,9 @@ import 'package:firebase_core/firebase_core.dart';
 void main() async {
   Provider.debugCheckInvalidValueType = null;
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
   await StorageManager.init();
+  var x = await Firebase.initializeApp();
+  print("XXXX + " + x.toString());
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]).then((_) {
     runApp(MyApp());

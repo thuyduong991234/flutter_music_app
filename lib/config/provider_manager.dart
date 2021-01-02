@@ -1,6 +1,7 @@
 import 'package:flutter_music_app/model/download_model.dart';
 import 'package:flutter_music_app/model/favorite_model.dart';
 import 'package:flutter_music_app/model/local_view_model.dart';
+import 'package:flutter_music_app/model/login_model.dart';
 import 'package:flutter_music_app/model/song_model.dart';
 import 'package:flutter_music_app/model/theme_model.dart';
 import 'package:provider/provider.dart';
@@ -26,7 +27,10 @@ List<SingleChildCloneableWidget> independentServices = [
   ),
   ChangeNotifierProvider<SongModel>(
     create: (context) => SongModel(),
-  )
+  ),
+  ChangeNotifierProvider<LoginFirebase>(
+    create: (context) => LoginFirebase(),
+  ),
 ];
 
 List<SingleChildCloneableWidget> uiConsumableProviders = [

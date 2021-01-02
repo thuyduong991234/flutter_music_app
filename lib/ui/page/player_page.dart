@@ -11,6 +11,7 @@ import 'package:flutter_music_app/ui/page/artist_page.dart';
 import 'package:flutter_music_app/ui/widget/add_to_playlist.dart';
 import 'package:flutter_music_app/ui/widget/app_bar.dart';
 import 'package:flutter_music_app/model/song_model.dart';
+import 'package:flutter_music_app/ui/widget/comment_carousel.dart';
 import 'package:flutter_music_app/ui/widget/lyrics.dart';
 import 'package:flutter_music_app/ui/widget/player_carousel.dart';
 import 'package:flutter_music_app/ui/widget/song_list_carousel.dart';
@@ -32,8 +33,6 @@ class _PlayPageState extends State<PlayPage> with TickerProviderStateMixin {
   AnimationController controllerPlayer;
   Animation<double> animationPlayer;
   final _commonTween = new Tween<double>(begin: 0.0, end: 1.0);
-  Duration timer = Duration(minutes: 0);
-  bool isSwitched = false;
   enumTimer _timer = enumTimer.ZERO;
 
   @override
@@ -60,20 +59,25 @@ class _PlayPageState extends State<PlayPage> with TickerProviderStateMixin {
 
   setTimerCountDown() {
     final cron = Cron();
+    SongModel songs = Provider.of(context);
+    debugPrint("SONG TIMER2 = " + songs.timer.inMinutes.toString());
     cron.schedule(Schedule.parse('*/1 * * * *'), () async {
-      if (timer.inMinutes <= 0) {
-        SongModel songs = Provider.of(context);
+      songs.setTimer(songs.timer - Duration(minutes: 1));
+      debugPrint("SONG TIMER = " + songs.timer.inMinutes.toString());
+      if (songs.timer.inMinutes < 0 && songs.timer.inMinutes != -2) {
+        debugPrint("SONG TIMER <= " + songs.timer.inMinutes.toString());
+        songs.setTimer(Duration(minutes: -1));
         songs.pause();
-        isSwitched = false;
         await cron.close();
-      } else {
-        timer = timer - Duration(minutes: 1);
-        debugPrint("TIMER = " + timer.inMinutes.toString());
+      } else if (songs.timer.inMinutes == -2) {
+        songs.setTimer(Duration(minutes: -1));
+        await cron.close();
       }
     });
   }
 
   _showTimerOption() {
+    SongModel songModel = Provider.of(context);
     showModalBottomSheet(
         context: context,
         builder: (BuildContext context) {
@@ -100,22 +104,27 @@ class _PlayPageState extends State<PlayPage> with TickerProviderStateMixin {
                                 Container(
                                     padding: EdgeInsets.only(top: 12),
                                     child: Text(
-                                      timer.inHours.toString() +
-                                          " : " +
-                                          timer.inMinutes.toString() +
-                                          "'",
+                                      songModel.timer.inMinutes < 0
+                                          ? "0 : 0'"
+                                          : songModel.timer.inHours.toString() +
+                                              " : " +
+                                              songModel.timer.inMinutes
+                                                  .toString() +
+                                              "'",
                                       style: TextStyle(
                                           fontSize: 18.0,
                                           color: Theme.of(context).accentColor),
                                     )),
                                 Switch(
-                                  value: isSwitched,
+                                  value: songModel.timer.inMinutes > 0
+                                      ? true
+                                      : false,
                                   activeColor: Theme.of(context).accentColor,
                                   onChanged: (value) {
                                     setState(() {
-                                      isSwitched = value;
-                                      if (isSwitched == false) {
-                                        timer = Duration(minutes: 0);
+                                      if (value == false) {
+                                        songModel
+                                            .setTimer(Duration(minutes: -1));
                                       }
                                     });
                                   },
@@ -133,8 +142,8 @@ class _PlayPageState extends State<PlayPage> with TickerProviderStateMixin {
                                     onChanged: (enumTimer value) {
                                       setState(() {
                                         _timer = enumTimer.ZERO;
-                                        timer = Duration(minutes: 15);
-                                        isSwitched = true;
+                                        songModel
+                                            .setTimer(Duration(minutes: 15));
                                         setTimerCountDown();
                                       });
 
@@ -147,8 +156,8 @@ class _PlayPageState extends State<PlayPage> with TickerProviderStateMixin {
                                     onChanged: (enumTimer value) {
                                       setState(() {
                                         _timer = enumTimer.ZERO;
-                                        timer = Duration(minutes: 30);
-                                        isSwitched = true;
+                                        songModel
+                                            .setTimer(Duration(minutes: 30));
                                         setTimerCountDown();
                                       });
                                       Navigator.of(context).pop();
@@ -160,8 +169,8 @@ class _PlayPageState extends State<PlayPage> with TickerProviderStateMixin {
                                     onChanged: (enumTimer value) {
                                       setState(() {
                                         _timer = enumTimer.ZERO;
-                                        timer = Duration(minutes: 60);
-                                        isSwitched = true;
+                                        songModel
+                                            .setTimer(Duration(minutes: 60));
                                         setTimerCountDown();
                                       });
                                       Navigator.of(context).pop();
@@ -173,8 +182,8 @@ class _PlayPageState extends State<PlayPage> with TickerProviderStateMixin {
                                     onChanged: (enumTimer value) {
                                       setState(() {
                                         _timer = enumTimer.ZERO;
-                                        timer = Duration(minutes: 120);
-                                        isSwitched = true;
+                                        songModel
+                                            .setTimer(Duration(minutes: 120));
                                         setTimerCountDown();
                                       });
                                       Navigator.of(context).pop();
@@ -233,6 +242,7 @@ class _PlayPageState extends State<PlayPage> with TickerProviderStateMixin {
   }
 
   _showEnterTimer() {
+    SongModel songModel = Provider.of(context);
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -255,12 +265,31 @@ class _PlayPageState extends State<PlayPage> with TickerProviderStateMixin {
                                           fontSize: 18.0,
                                           fontWeight: FontWeight.w600),
                                     )),
+                                Container(
+                                    padding: EdgeInsets.only(top: 12),
+                                    child: Text(
+                                      songModel.timer.inMinutes < 0
+                                          ? "0 : 0'"
+                                          : songModel.timer.inHours.toString() +
+                                              " : " +
+                                              songModel.timer.inMinutes
+                                                  .toString() +
+                                              "'",
+                                      style: TextStyle(
+                                          fontSize: 18.0,
+                                          color: Theme.of(context).accentColor),
+                                    )),
                                 Switch(
-                                  value: isSwitched,
+                                  value: songModel.timer.inMinutes > 0
+                                      ? true
+                                      : false,
                                   activeColor: Theme.of(context).accentColor,
                                   onChanged: (value) {
                                     setState(() {
-                                      isSwitched = value;
+                                      if (value == false) {
+                                        songModel
+                                            .setTimer(Duration(minutes: -1));
+                                      }
                                     });
                                   },
                                 )
@@ -280,10 +309,7 @@ class _PlayPageState extends State<PlayPage> with TickerProviderStateMixin {
                                 Container(
                                   padding: EdgeInsets.only(top: 5),
                                   child: GestureDetector(
-                                      onTap: () {
-                                        Navigator.of(context).pop();
-                                        _showEnterTimer();
-                                      },
+                                      onTap: () {},
                                       child: Text("Nhập số phút",
                                           style: TextStyle(fontSize: 14))),
                                 ),
@@ -303,8 +329,7 @@ class _PlayPageState extends State<PlayPage> with TickerProviderStateMixin {
                       MaterialButton(
                           onPressed: () {
                             setState(() {
-                              timer = Duration(minutes: _minutes);
-                              isSwitched = true;
+                              songModel.setTimer(Duration(minutes: _minutes));
                               setTimerCountDown();
                             });
                             Navigator.of(context).pop();
@@ -322,6 +347,7 @@ class _PlayPageState extends State<PlayPage> with TickerProviderStateMixin {
     if (artists == null) {
       return new Expanded(child: Text("data"));
     }
+
     for (var i = 0; i < artists.length; i++) {
       String re = (artists[i].link.split("/")).last;
       if (i == artists.length - 1) {
@@ -391,7 +417,7 @@ class _PlayPageState extends State<PlayPage> with TickerProviderStateMixin {
                   children: <Widget>[
                     IconButton(
                       onPressed: () => _showTimerOption(),
-                      icon: isSwitched == false
+                      icon: songModel.timer.inMinutes < 0
                           ? Icon(
                               Icons.timer,
                               size: 25.0,
@@ -433,6 +459,7 @@ class _PlayPageState extends State<PlayPage> with TickerProviderStateMixin {
                               color: Colors.grey,
                             ),
                     ),
+                    CommentCarousel()
                   ]),
               SizedBox(height: MediaQuery.of(context).size.height * 0.02),
               buildTextArtistName(songModel.currentSong.artists),

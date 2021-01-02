@@ -151,7 +151,6 @@ class PlayerState extends State<Player> {
     var url = await BaseRepository.fetchLyrics(s.id);
     var lyric = await http.read(url.toString());
     var lyrics = utf8.decode((lyric.toString()).runes.toList());
-    debugPrint("HAHAHA " + lyrics.toString());
     return lyrics.toString();
   }
 

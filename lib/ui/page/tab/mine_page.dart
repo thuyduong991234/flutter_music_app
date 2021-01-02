@@ -4,7 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_music_app/generated/i18n.dart';
 import 'package:flutter_music_app/model/local_view_model.dart';
+import 'package:flutter_music_app/model/login_model.dart';
 import 'package:flutter_music_app/model/theme_model.dart';
+import 'package:flutter_music_app/ui/page/loginPage.dart';
+import 'package:flutter_music_app/ui/page/tab/info_page.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
 
@@ -21,18 +24,32 @@ class _MinePageState extends State<MinePage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
+    LoginFirebase user = Provider.of(context);
     return Scaffold(
         body: SafeArea(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Text(S.of(context).tabUser,
-                style: TextStyle(
-                    fontSize: 22.0,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 1.2)),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Text(S.of(context).tabUser,
+                    style: TextStyle(
+                        fontSize: 22.0,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1.2)),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Text(user.email != null ? user.email : "",
+                    style: TextStyle(
+                        fontSize: 22.0,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1.2)),
+              )
+            ],
           ),
           Expanded(
             child: CustomScrollView(
@@ -95,6 +112,54 @@ class UserListWidget extends StatelessWidget {
                   localModel.switchLocale();
                 }),
           ),
+          ListTile(
+              title: Text("Info"),
+              onTap: () {},
+              leading: Icon(
+                Icons.face,
+                color: iconColor,
+              ),
+              trailing: Container(
+                child: MaterialButton(
+                  padding: EdgeInsets.only(left: 70),
+                  child: Icon(
+                    Icons.navigate_next,
+                    color: Colors.grey[700],
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => InfoPage(),
+                      ),
+                    );
+                  },
+                ),
+              )),
+          ListTile(
+              title: Text("Login"),
+              onTap: () {},
+              leading: Icon(
+                Icons.person,
+                color: iconColor,
+              ),
+              trailing: Container(
+                child: MaterialButton(
+                  padding: EdgeInsets.only(left: 70),
+                  child: Icon(
+                    Icons.navigate_next,
+                    color: Colors.grey[700],
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => LoginPage(),
+                      ),
+                    );
+                  },
+                ),
+              )),
         ]),
       ),
     );

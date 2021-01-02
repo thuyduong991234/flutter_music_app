@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_music_app/anims/record_anim.dart';
 import 'package:flutter_music_app/generated/i18n.dart';
 import 'package:flutter_music_app/model/download_model.dart';
 import 'package:flutter_music_app/model/favorite_model.dart';
@@ -7,6 +8,7 @@ import 'package:flutter_music_app/model/song_model.dart';
 import 'package:flutter_music_app/ui/page/albums_page.dart';
 import 'package:provider/provider.dart';
 
+import '../history_search_page.dart';
 import '../player_page.dart';
 
 class FavoritePage extends StatefulWidget {
@@ -17,9 +19,35 @@ class FavoritePage extends StatefulWidget {
 class _FavoritePageState extends State<FavoritePage>
     with TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   TabController _tab;
+  AnimationController controllerRecord;
+  Animation<double> animationRecord;
+  final _commonTween = new Tween<double>(begin: 0.0, end: 1.0);
 
   @override
   bool get wantKeepAlive => true;
+
+  @override
+  void initState() {
+    super.initState();
+    _tab = new TabController(length: 3, vsync: this);
+    controllerRecord = new AnimationController(
+        duration: const Duration(milliseconds: 15000), vsync: this);
+    animationRecord =
+        new CurvedAnimation(parent: controllerRecord, curve: Curves.linear);
+    animationRecord.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        controllerRecord.repeat();
+      } else if (status == AnimationStatus.dismissed) {
+        controllerRecord.forward();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    controllerRecord.dispose();
+    super.dispose();
+  }
 
   Widget _buildSongItem(Song data, {bool isDownload = false}) {
     FavoriteModel favoriteModel = Provider.of(context);
@@ -110,16 +138,16 @@ class _FavoritePageState extends State<FavoritePage>
   }
 
   @override
-  void initState() {
-    super.initState();
-    _tab = new TabController(length: 3, vsync: this);
-  }
-
-  @override
   Widget build(BuildContext context) {
     super.build(context);
     FavoriteModel favoriteModel = Provider.of(context);
     DownloadModel downloadModel = Provider.of(context);
+    SongModel songModel = Provider.of(context);
+    if (songModel.isPlaying) {
+      controllerRecord.forward();
+    } else {
+      controllerRecord.stop(canceled: false);
+    }
     //downloadModel.refresh();
     //favoriteModel.refresh();
     debugPrint(
@@ -130,12 +158,59 @@ class _FavoritePageState extends State<FavoritePage>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10.0),
+            child: Row(
+              children: <Widget>[
+                Expanded(
+                  child: Container(
+                      margin: EdgeInsets.symmetric(horizontal: 20.0),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).accentColor.withAlpha(50),
+                        borderRadius: BorderRadius.circular(30.0),
+                      ),
+                      child: TextField(
+                        readOnly: true,
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => HistorySearchPage(),
+                            ),
+                          );
+                        },
+                        style: TextStyle(
+                          fontSize: 15.0,
+                          color: Colors.grey,
+                        ),
+                        decoration: InputDecoration(
+                            border: InputBorder.none,
+                            enabledBorder: InputBorder.none,
+                            focusedBorder: InputBorder.none,
+                            prefixIcon: Icon(
+                              Icons.search,
+                              color: Theme.of(context).accentColor,
+                            ),
+                            hintText: songModel.songs != null
+                                ? songModel.currentSong.title
+                                : S.of(context).searchSuggest),
+                      )),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(right: 20.0),
+                  child: RotateRecord(
+                      animation: _commonTween.animate(controllerRecord)),
+                ),
+              ],
+            ),
+          ),
+          Padding(
             padding: const EdgeInsets.all(20.0),
-            child: Text(S.of(context).favourites,
+            child: Text("My music",
                 style: TextStyle(
                     fontSize: 22.0,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 1.2)),
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 1.2,
+                    color: Theme.of(context).accentColor)),
           ),
           Expanded(
             child: DefaultTabController(
@@ -147,9 +222,18 @@ class _FavoritePageState extends State<FavoritePage>
                   bottom: TabBar(
                     controller: _tab,
                     tabs: [
-                      Tab(text: "Thư viện"),
-                      Tab(text: "Danh sách phát"),
-                      Tab(text: "Đã tải")
+                      Tab(
+                          text: "Thư viện ( " +
+                              favoriteModel.favoriteSong.length.toString() +
+                              " )"),
+                      Tab(
+                          text: "Playlist ( " +
+                              favoriteModel.playlists.length.toString() +
+                              " )"),
+                      Tab(
+                          text: "Đã tải ( " +
+                              downloadModel.downloadSong.length.toString() +
+                              " )")
                     ],
                     labelColor: Theme.of(context).accentColor,
                     indicatorColor: Theme.of(context).accentColor,
@@ -159,8 +243,60 @@ class _FavoritePageState extends State<FavoritePage>
                   controller: _tab,
                   children: <Widget>[
                     ListView.builder(
-                      itemCount: favoriteModel.favoriteSong.length,
+                      itemCount: favoriteModel.favoriteSong.length + 1,
                       itemBuilder: (BuildContext context, int index) {
+                        if (index == 0) {
+                          return Center(
+                            child: Container(
+                              height: 50,
+                              margin: EdgeInsets.only(
+                                  top: 20, bottom: 20, left: 90, right: 90),
+                              decoration: BoxDecoration(
+                                border:
+                                    Border.all(color: Colors.black12, width: 1),
+                                borderRadius: BorderRadius.circular(40.0),
+                              ),
+                              child: GestureDetector(
+                                onTap: () {
+                                  if (null !=
+                                          favoriteModel.favoriteSong[0].link &&
+                                      favoriteModel.favoriteSong.length > 0) {
+                                    SongModel songModel = Provider.of(context);
+                                    songModel
+                                        .setSongs(favoriteModel.favoriteSong);
+                                    songModel.setCurrentIndex(0);
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) => PlayPage(
+                                          nowPlay: true,
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                },
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Icon(
+                                      Icons.play_arrow,
+                                      color: Theme.of(context).accentColor,
+                                    ),
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    Text(
+                                      'Play',
+                                      style: TextStyle(
+                                          color: Theme.of(context).accentColor),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        }
+                        index--;
                         Song data = favoriteModel.favoriteSong[index];
                         return GestureDetector(
                           onTap: () {
@@ -281,8 +417,60 @@ class _FavoritePageState extends State<FavoritePage>
                       },
                     ),
                     ListView.builder(
-                      itemCount: downloadModel.downloadSong.length,
+                      itemCount: downloadModel.downloadSong.length + 1,
                       itemBuilder: (BuildContext context, int index) {
+                        if (index == 0) {
+                          return Center(
+                            child: Container(
+                              height: 50,
+                              margin: EdgeInsets.only(
+                                  top: 20, bottom: 20, left: 90, right: 90),
+                              decoration: BoxDecoration(
+                                border:
+                                    Border.all(color: Colors.black12, width: 1),
+                                borderRadius: BorderRadius.circular(40.0),
+                              ),
+                              child: GestureDetector(
+                                onTap: () {
+                                  if (null !=
+                                          downloadModel.downloadSong[0].link &&
+                                      downloadModel.downloadSong.length > 0) {
+                                    SongModel songModel = Provider.of(context);
+                                    songModel
+                                        .setSongs(downloadModel.downloadSong);
+                                    songModel.setCurrentIndex(0);
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) => PlayPage(
+                                          nowPlay: true,
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                },
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Icon(
+                                      Icons.play_arrow,
+                                      color: Theme.of(context).accentColor,
+                                    ),
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    Text(
+                                      'Play',
+                                      style: TextStyle(
+                                          color: Theme.of(context).accentColor),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        }
+                        index--;
                         Song data = downloadModel.downloadSong[index];
                         return GestureDetector(
                           onTap: () {

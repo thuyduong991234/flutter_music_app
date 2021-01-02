@@ -64,7 +64,7 @@ class S implements WidgetsLocalizations {
   String get retry => "Retry";
   String get searchHistory => "History";
   String get searchHot => "Hot";
-  String get searchSuggest => "Track,album,artist,podcast";
+  String get searchSuggest => "Track, album, artist, podcast";
   String get searchShake => "Shake";
   String get setting => "Setting";
   String get settingFont => "System Font";

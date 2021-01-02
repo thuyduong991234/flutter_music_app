@@ -165,6 +165,9 @@ class NewSongModel extends ViewStateRefreshListModel<Song> {
 class SongModel with ChangeNotifier {
   String _lyric;
   String _url;
+  Duration _timer = Duration(minutes: -1);
+
+  Duration get timer => _timer;
 
   String get url => _url;
 
@@ -173,6 +176,13 @@ class SongModel with ChangeNotifier {
   setUrl(String url) {
     //debugPrint("duration + " + data.duration.toString());
     _url = url;
+    //debugPrint("link + " + _url);
+    notifyListeners();
+  }
+
+  setTimer(Duration timer) {
+    //debugPrint("duration + " + data.duration.toString());
+    _timer = timer;
     //debugPrint("link + " + _url);
     notifyListeners();
   }

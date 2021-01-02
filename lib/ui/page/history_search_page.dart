@@ -40,7 +40,7 @@ class _HistorySearchPageState extends State<HistorySearchPage>
   @override
   void initState() {
     super.initState();
-    tabController = new TabController(length: 5, vsync: this);
+    tabController = new TabController(length: 4, vsync: this);
     controllerRecord = new AnimationController(
         duration: const Duration(milliseconds: 15000), vsync: this);
     animationRecord =
@@ -162,7 +162,7 @@ class _HistorySearchPageState extends State<HistorySearchPage>
                                     focusedBorder: InputBorder.none,
                                     prefixIcon: Icon(
                                       Icons.search,
-                                      color: Colors.grey,
+                                      color: Theme.of(context).accentColor,
                                     ),
                                     hintText: songModel.songs != null
                                         ? songModel.currentSong.title
@@ -191,12 +191,10 @@ class _HistorySearchPageState extends State<HistorySearchPage>
                                   automaticallyImplyLeading: false,
                                   bottom: TabBar(
                                     controller: tabController,
-                                    isScrollable: true,
                                     tabs: [
                                       Tab(text: "Tất cả"),
                                       Tab(text: "Bài hát"),
                                       Tab(text: "Playlist"),
-                                      Tab(text: "MV"),
                                       Tab(text: "Nghệ sĩ"),
                                     ],
                                     labelColor: Theme.of(context).accentColor,
@@ -241,7 +239,6 @@ class _HistorySearchPageState extends State<HistorySearchPage>
                                             input: q,
                                             type: "playlist",
                                             isAlbum: true)),
-                                    Text("4"),
                                     Expanded(
                                         child: SearchArtistCarousel(input: q)),
                                   ],
