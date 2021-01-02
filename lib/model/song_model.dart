@@ -404,6 +404,7 @@ class Song with ChangeNotifier {
     data['listen'] = listen;
     data['duration'] = duration;
     data['isalbum'] = isAlbum;
+    data['hasLyric'] = hasLyric;
     return data;
   }
 }

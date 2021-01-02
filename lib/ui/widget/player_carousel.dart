@@ -165,13 +165,13 @@ class PlayerState extends State<Player> {
         if (s.hasLyric) lyric = await getSongLyric(s);
       }
     } else {
-      debugPrint("2");
+      debugPrint("2 = " + s.hasLyric.toString());
       url = await getSongUrl(s);
       if (s.hasLyric) lyric = await getSongLyric(s);
     }
     if (lyric == _songData.lyric && !widget.isOffline) {
       debugPrint("3");
-      //int result = await _audioPlayer.setUrl(url);
+      int result = await _audioPlayer.setUrl(url);
       int result1 = await _audioPlayer.resume();
       if (result1 == 1) {
         debugPrint("3.1");

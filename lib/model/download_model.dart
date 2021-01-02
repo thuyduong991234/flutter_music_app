@@ -115,4 +115,11 @@ class DownloadModel with ChangeNotifier {
     }
     return isDownload;
   }
+
+  refresh() {
+    _downloadSong = [];
+
+    saveData();
+    notifyListeners();
+  }
 }

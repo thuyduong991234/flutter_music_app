@@ -26,6 +26,8 @@ class _AddPlayListState extends State<AddPlayList> {
                   widget.favoriteModel.isCollect(widget.song)
                       ? ListTile(
                           onTap: () {
+                            debugPrint("ADD THU VIEN = " +
+                                widget.song.hasLyric.toString());
                             Navigator.of(context).pop();
                             widget.favoriteModel.collect(widget.song);
                             final message = SnackBar(

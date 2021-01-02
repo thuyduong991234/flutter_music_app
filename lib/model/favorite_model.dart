@@ -21,6 +21,7 @@ class FavoriteListModel extends ViewStateListModel<Song> {
     await localStorage.ready;
     List<Song> favoriteList =
         (localStorage.getItem(kFavoriteList) ?? []).map<Song>((item) {
+      debugPrint("ITEM LOAD FAVOR = " + item.toString());
       return Song.fromJsonMap(item);
     }).toList();
     Map<String, List<dynamic>> playlist;
@@ -82,6 +83,7 @@ class FavoriteModel with ChangeNotifier {
   }
 
   collect(Song song) {
+    debugPrint("COLLECT THU VIEN + " + song.hasLyric.toString());
     if (_favoriteSong.contains(song)) {
       _favoriteSong.remove(song);
     } else {
@@ -97,7 +99,7 @@ class FavoriteModel with ChangeNotifier {
     }
     Song deletion = isCollect2(song, _playlists[name]);
 
-    if(deletion != null) {
+    if (deletion != null) {
       _playlists[name] = remove2(deletion, _playlists[name]);
     } else {
       _playlists[name].add(song);
@@ -112,6 +114,13 @@ class FavoriteModel with ChangeNotifier {
     await localStorage.ready;
     localStorage.setItem(kFavoriteList, _favoriteSong);
     localStorage.setItem(kPlaylist, _playlists);
+
+    for (int i = 0; i < _favoriteSong.length; i++) {
+      debugPrint("EVERY FAVOURITE SONG = " +
+          i.toString() +
+          " = " +
+          _favoriteSong[i].hasLyric.toString());
+    }
   }
 
   isCollect(Song newSong) {
@@ -130,7 +139,7 @@ class FavoriteModel with ChangeNotifier {
 
     for (int i = 0; i < data.length; i++) {
       var compare = data[i] is Song ? data[i].id : data[i]["id"];
-      if(compare == newSong.id) {
+      if (compare == newSong.id) {
         result = newSong;
       }
     }
@@ -141,7 +150,7 @@ class FavoriteModel with ChangeNotifier {
   remove2(Song newSong, List<dynamic> data) {
     for (int i = 0; i < data.length; i++) {
       var compare = data[i] is Song ? data[i].id : data[i]["id"];
-      if(compare == newSong.id) {
+      if (compare == newSong.id) {
         data.removeAt(i);
       }
     }
@@ -151,6 +160,14 @@ class FavoriteModel with ChangeNotifier {
 
   removePlaylist(String name) {
     _playlists.removeWhere((key, value) => key == name);
+
+    saveData();
+    notifyListeners();
+  }
+
+  refresh() {
+    _playlists = new Map();
+    _favoriteSong = [];
 
     saveData();
     notifyListeners();

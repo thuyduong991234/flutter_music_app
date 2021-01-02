@@ -111,8 +111,10 @@ class _FavoritePageState extends State<FavoritePage>
     super.build(context);
     FavoriteModel favoriteModel = Provider.of(context);
     DownloadModel downloadModel = Provider.of(context);
-    //downloadModel.downloadSong.clear();
-    //debugPrint("DOWNLOAD----------" + downloadModel.downloadSong.toString());
+    //downloadModel.refresh();
+    //favoriteModel.refresh();
+    debugPrint(
+        "DOWNLOAD----------" + downloadModel.downloadSong.length.toString());
     return Scaffold(
         body: SafeArea(
       child: Column(
