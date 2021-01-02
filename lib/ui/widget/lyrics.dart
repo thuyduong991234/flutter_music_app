@@ -27,13 +27,13 @@ class _ForYouCarouselState extends State<SongLyricsCarousel>
       return;
     }
     _countdownTimer = new Timer.periodic(new Duration(seconds: 1), (timer) {
-      if (songModel != null) {
+      if (songModel != null && songModel.lyric != null) {
         //debugPrint("POSITION: " + songModel.position.inSeconds.toString());
         start = new Duration(seconds: 0) +
             new Duration(seconds: songModel.position.inSeconds);
         //debugPrint("DURATION: " + start.toString());
       }
-      if (this.songModel != null && songModel.isPlaying) {
+      if (this.songModel != null && songModel.isPlaying && songModel.lyric != null) {
         setState(() {
           _countdownNum--;
           start = start + new Duration(seconds: 1);

@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_music_app/generated/i18n.dart';
+import 'package:flutter_music_app/model/download_model.dart';
 import 'package:flutter_music_app/model/favorite_model.dart';
 import 'package:flutter_music_app/model/song_model.dart';
 import 'package:flutter_music_app/ui/page/albums_page.dart';
@@ -20,7 +21,7 @@ class _FavoritePageState extends State<FavoritePage>
   @override
   bool get wantKeepAlive => true;
 
-  Widget _buildSongItem(Song data) {
+  Widget _buildSongItem(Song data, {bool isDownload = false}) {
     FavoriteModel favoriteModel = Provider.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
@@ -75,24 +76,25 @@ class _FavoritePageState extends State<FavoritePage>
                   ),
                 ]),
           ),
-          IconButton(
-              onPressed: () => favoriteModel.collect(data),
-              icon: data.link == null
-                  ? Icon(
-                      Icons.favorite_border,
-                      color: Color(0xFFE0E0E0),
-                      size: 20.0,
-                    )
-                  : favoriteModel.isCollect(data)
-                      ? Icon(
-                          Icons.favorite,
-                          color: Theme.of(context).accentColor,
-                          size: 20.0,
-                        )
-                      : Icon(
-                          Icons.favorite_border,
-                          size: 20.0,
-                        ))
+          if (isDownload == false)
+            IconButton(
+                onPressed: () => favoriteModel.collect(data),
+                icon: data.link == null
+                    ? Icon(
+                        Icons.favorite_border,
+                        color: Color(0xFFE0E0E0),
+                        size: 20.0,
+                      )
+                    : favoriteModel.isCollect(data)
+                        ? Icon(
+                            Icons.favorite,
+                            color: Theme.of(context).accentColor,
+                            size: 20.0,
+                          )
+                        : Icon(
+                            Icons.favorite_border,
+                            size: 20.0,
+                          ))
         ],
       ),
     );
@@ -101,13 +103,16 @@ class _FavoritePageState extends State<FavoritePage>
   @override
   void initState() {
     super.initState();
-    _tab = new TabController(length: 2, vsync: this);
+    _tab = new TabController(length: 3, vsync: this);
   }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
     FavoriteModel favoriteModel = Provider.of(context);
+    DownloadModel downloadModel = Provider.of(context);
+    //downloadModel.downloadSong.clear();
+    //debugPrint("DOWNLOAD----------" + downloadModel.downloadSong.toString());
     return Scaffold(
         body: SafeArea(
       child: Column(
@@ -133,6 +138,7 @@ class _FavoritePageState extends State<FavoritePage>
                     tabs: [
                       Tab(text: "Thư viện"),
                       Tab(text: "Danh sách phát"),
+                      Tab(text: "Đã tải")
                     ],
                     labelColor: Theme.of(context).accentColor,
                     indicatorColor: Theme.of(context).accentColor,
@@ -177,7 +183,10 @@ class _FavoritePageState extends State<FavoritePage>
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (_) => AlbumsPage(isPlaylist: true, isAlbum: false, data2: data),
+                                builder: (_) => AlbumsPage(
+                                    isPlaylist: true,
+                                    isAlbum: false,
+                                    data2: data),
                               ),
                             );
                           },
@@ -246,9 +255,41 @@ class _FavoritePageState extends State<FavoritePage>
                                         ),
                                       ]),
                                 ),
+                                IconButton(
+                                    onPressed: () =>
+                                        favoriteModel.removePlaylist(data),
+                                    icon: Icon(
+                                      Icons.delete_outline,
+                                      color: Theme.of(context).accentColor,
+                                      size: 20.0,
+                                    )),
                               ],
                             ),
                           ),
+                        );
+                      },
+                    ),
+                    ListView.builder(
+                      itemCount: downloadModel.downloadSong.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        Song data = downloadModel.downloadSong[index];
+                        return GestureDetector(
+                          onTap: () {
+                            if (null != data.link) {
+                              SongModel songModel = Provider.of(context);
+                              songModel.setSongs(new List<Song>.from(
+                                  downloadModel.downloadSong));
+                              songModel.setCurrentIndex(index);
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) =>
+                                      PlayPage(nowPlay: true, isOffline: true),
+                                ),
+                              );
+                            }
+                          },
+                          child: _buildSongItem(data, isDownload: true),
                         );
                       },
                     )

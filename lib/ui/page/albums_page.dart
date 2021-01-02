@@ -8,6 +8,7 @@ import 'package:flutter_music_app/provider/view_state_widget.dart';
 import 'package:flutter_music_app/ui/page/artist_page.dart';
 import 'package:flutter_music_app/ui/page/player_page.dart';
 import 'package:flutter_music_app/ui/widget/album_carousel.dart';
+import 'package:flutter_music_app/ui/widget/album_playlist_carousel.dart';
 import 'package:flutter_music_app/ui/widget/app_bar.dart';
 import 'package:flutter_music_app/model/song_model.dart';
 import 'package:flutter_music_app/ui/widget/circle_artist_carousel.dart';
@@ -215,7 +216,8 @@ class _AlbumsPageState extends State<AlbumsPage> {
                           error: model.viewStateError,
                           onPressed: model.initData);
                     }
-                    var songs = model.songs;
+                    FavoriteModel f = Provider.of(context);
+                    var songs = f.playlists[model.name];
                     int idx = songs.length;
 
                     return Column(
@@ -256,93 +258,60 @@ class _AlbumsPageState extends State<AlbumsPage> {
                               Center(
                                 child: Text("Author"),
                               ),
-                              Row(
-                                children: <Widget>[
-                                  Expanded(
-                                    flex: 1,
-                                    child: Container(
-                                      height: 70,
-                                      margin: EdgeInsets.only(
-                                          top: 20,
-                                          bottom: 20,
-                                          left: 20,
-                                          right: 10),
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                            color: Colors.black12, width: 1),
-                                        borderRadius:
-                                            BorderRadius.circular(20.0),
-                                      ),
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          if (null != songs[0].link) {
-                                            SongModel songModel =
-                                                Provider.of(context);
-                                            songModel.setSongs(songs);
-                                            songModel.setCurrentIndex(0);
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (_) => PlayPage(
-                                                  nowPlay: true,
-                                                ),
-                                              ),
-                                            );
-                                          }
-                                        },
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: <Widget>[
-                                            Icon(
-                                              Icons.play_arrow,
-                                              color:
-                                                  Theme.of(context).accentColor,
-                                            ),
-                                            SizedBox(
-                                              width: 5,
-                                            ),
-                                            Text(
-                                              'Play',
-                                              style: TextStyle(
-                                                  color: Theme.of(context)
-                                                      .accentColor),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
+                              Center(
+                                child: Container(
+                                  height: 50,
+                                  margin: EdgeInsets.only(
+                                      top: 20, bottom: 20, left: 90, right: 90),
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                        color: Colors.black12, width: 1),
+                                    borderRadius: BorderRadius.circular(40.0),
                                   ),
-                                  Expanded(
-                                    flex: 1,
-                                    child: Container(
-                                      height: 70,
-                                      margin: EdgeInsets.only(
-                                          top: 20,
-                                          bottom: 20,
-                                          left: 10,
-                                          right: 20),
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                            color: Colors.black12, width: 1),
-                                        borderRadius:
-                                            BorderRadius.circular(20.0),
-                                      ),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: <Widget>[
-                                          Icon(Icons.add),
-                                          SizedBox(
-                                            width: 5,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      if (null != songs[0].link) {
+                                        SongModel songModel =
+                                            Provider.of(context);
+                                        Random r = new Random();
+                                        songs = songs is List<dynamic> ? SongCollection.cast(songs) : songs;
+                                        songModel.setSongs(songs);
+                                        songModel.setCurrentIndex(
+                                            r.nextInt(songs.length));
+                                        songModel.setRepeat(false);
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (_) => PlayPage(
+                                              nowPlay: true,
+                                            ),
                                           ),
-                                          Text('Add'),
-                                        ],
-                                      ),
+                                        );
+                                      }
+                                    },
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: <Widget>[
+                                        Icon(
+                                          Icons.play_arrow,
+                                          color: Theme.of(context).accentColor,
+                                        ),
+                                        SizedBox(
+                                          width: 5,
+                                        ),
+                                        Text(
+                                          'Play',
+                                          style: TextStyle(
+                                              color: Theme.of(context)
+                                                  .accentColor),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                ],
+                                ),
                               ),
+                              AlbumPlaylistCarousel(name: widget.data2),
                             ],
                           ),
                         ),

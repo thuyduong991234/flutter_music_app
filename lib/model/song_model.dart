@@ -308,6 +308,22 @@ class SongModel with ChangeNotifier {
   }
 }
 
+class SongCollection {
+  static cast(List<dynamic> data) {
+    List<Song> songs = [];
+
+    data.forEach((element) {
+      if (element is Song) {
+        songs.add(element);
+      } else {
+        songs.add(Song.fromJsonMap(element));
+      }
+    });
+
+    return songs;
+  }
+}
+
 class Song with ChangeNotifier {
   String id;
   String title;

@@ -14,7 +14,6 @@ class Player extends StatefulWidget {
   /// 播放列表
   final SongModel songData;
   final DownloadModel downloadData;
-  final Duration timer;
 
   //是否立即播放
   final bool nowPlay;
@@ -29,15 +28,18 @@ class Player extends StatefulWidget {
   /// 是否是本地资源
   final bool isLocal;
 
-  Player(
-      {@required this.songData,
-      @required this.downloadData,
-      this.nowPlay,
-      this.key,
-      this.volume: 1.0,
-      this.color: Colors.white,
-      this.isLocal: false,
-      this.timer});
+  final bool isOffline;
+
+  Player({
+    @required this.songData,
+    @required this.downloadData,
+    this.nowPlay,
+    this.key,
+    this.volume: 1.0,
+    this.color: Colors.white,
+    this.isLocal: false,
+    this.isOffline: false,
+  });
 
   @override
   State<StatefulWidget> createState() => PlayerState();
@@ -109,7 +111,6 @@ class PlayerState extends State<Player> {
       // });
       next();
     });
-
     _audioPlayer.onSeekComplete.listen((finished) {
       _isSeeking = false;
     });
@@ -150,20 +151,25 @@ class PlayerState extends State<Player> {
     var url = await BaseRepository.fetchLyrics(s.id);
     var lyric = await http.read(url.toString());
     var lyrics = utf8.decode((lyric.toString()).runes.toList());
+    debugPrint("HAHAHA " + lyrics.toString());
     return lyrics.toString();
   }
 
   void play(Song s) async {
     String url, lyric;
     if (_downloadData.isDownload(s)) {
-      debugPrint("1");
+      debugPrint("1" + s.id);
       url = _downloadData.getDirectoryPath + '/${s.id}.mp3';
+      if (!widget.isOffline) {
+        debugPrint("12" + s.hasLyric.toString());
+        if (s.hasLyric) lyric = await getSongLyric(s);
+      }
     } else {
       debugPrint("2");
       url = await getSongUrl(s);
       if (s.hasLyric) lyric = await getSongLyric(s);
     }
-    if (lyric == _songData.lyric) {
+    if (lyric == _songData.lyric && !widget.isOffline) {
       debugPrint("3");
       //int result = await _audioPlayer.setUrl(url);
       int result1 = await _audioPlayer.resume();
@@ -296,6 +302,17 @@ class PlayerState extends State<Player> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           mainAxisSize: MainAxisSize.max,
           children: <Widget>[
+            Visibility(
+              visible: _songData.showList,
+              child: IconButton(
+                onPressed: () => _songData.setShowList(!_songData.showList),
+                icon: Icon(
+                  Icons.timer,
+                  size: 25.0,
+                  color: Colors.grey,
+                ),
+              ),
+            ),
             IconButton(
               onPressed: () => previous(),
               icon: Icon(
@@ -334,13 +351,30 @@ class PlayerState extends State<Player> {
                     : Color(0xFF787878),
               ),
             ),
+            Visibility(
+              visible: _songData.showList,
+              child: IconButton(
+                onPressed: () => _songData.changeRepeat(),
+                icon: _songData.isRepeat == true
+                    ? Icon(
+                        Icons.repeat,
+                        size: 25.0,
+                        color: Colors.grey,
+                      )
+                    : Icon(
+                        Icons.shuffle,
+                        size: 25.0,
+                        color: Colors.grey,
+                      ),
+              ),
+            ),
           ],
         ),
       ),
     ];
   }
 
-  // void _onComplete() {
-  //   setState(() => _songData.setPlayState(PlayState.stopped));
-  // }
+// void _onComplete() {
+//   setState(() => _songData.setPlayState(PlayState.stopped));
+// }
 }

@@ -39,6 +39,8 @@ class _AddPlayListState extends State<AddPlayList> {
                       : ListTile(
                           onTap: () {
                             Navigator.of(context).pop();
+                            debugPrint("HAS LYRIC = " +
+                                widget.song.hasLyric.toString());
                             widget.favoriteModel.collect(widget.song);
                             final message = SnackBar(
                                 content: Text("Đã thêm vào thư viện!"),
@@ -51,7 +53,7 @@ class _AddPlayListState extends State<AddPlayList> {
                   ListTile(
                     onTap: () {
                       Navigator.of(context).pop();
-                      _showPlayListAddOption();
+                      _showPlayListAddOption(context);
                     },
                     leading: Icon(Icons.music_note),
                     title: Text("Thêm vào danh sách phát"),
@@ -61,7 +63,8 @@ class _AddPlayListState extends State<AddPlayList> {
             ));
   }
 
-  _showPlayListAddOption() {
+  _showPlayListAddOption(context) {
+    var context2 = context;
     showModalBottomSheet(
         context: context,
         builder: (_) => Padding(
@@ -100,10 +103,7 @@ class _AddPlayListState extends State<AddPlayList> {
                                             onPressed: () {
                                               Navigator.of(context).pop();
                                             },
-                                            child: Text("Bỏ qua",
-                                                style: TextStyle(
-                                                    color: Theme.of(context)
-                                                        .accentColor))),
+                                            child: Text("Bỏ qua")),
                                         MaterialButton(
                                             onPressed: _playlist.isNotEmpty
                                                 ? () {
@@ -123,14 +123,11 @@ class _AddPlayListState extends State<AddPlayList> {
                                                             const Duration(
                                                                 milliseconds:
                                                                     500));
-                                                    Scaffold.of(context)
+                                                    Scaffold.of(context2)
                                                         .showSnackBar(message);
                                                   }
                                                 : null,
-                                            child: Text("Đồng ý",
-                                                style: TextStyle(
-                                                    color: Theme.of(context)
-                                                        .accentColor)))
+                                            child: Text("Đồng ý"))
                                       ],
                                     ));
                           });
@@ -150,7 +147,7 @@ class _AddPlayListState extends State<AddPlayList> {
                                 content: Text(
                                     "Đã thêm vào danh sách phát " + name + "!"),
                                 duration: const Duration(milliseconds: 500));
-                            Scaffold.of(context).showSnackBar(message);
+                            Scaffold.of(context2).showSnackBar(message);
                           },
                           title: Text(name),
                         );
