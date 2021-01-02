@@ -30,17 +30,6 @@ class _CircleArtistsCarouselState extends State<CircleArtistsCarousel> {
                     fontSize: 22.0,
                     fontWeight: FontWeight.bold,
                     letterSpacing: 1.2)),
-            GestureDetector(
-              onTap: () => {
-                print('View All'),
-              },
-              child: Text(S.of(context).viewAll,
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 12.0,
-                    fontWeight: FontWeight.w600,
-                  )),
-            ),
           ],
         ),
       ),
@@ -101,17 +90,18 @@ class _CircleArtistsCarouselState extends State<CircleArtistsCarousel> {
                           SizedBox(
                             height: 10,
                           ),
-                          Center(
-                            child: Text(
-                              data.follow.toString() + " quan tâm",
-                              style: TextStyle(
-                                fontSize: 10.0,
-                                color: Colors.grey,
+                          if (data.follow != null)
+                            Center(
+                              child: Text(
+                                data.follow.toString() + " quan tâm",
+                                style: TextStyle(
+                                  fontSize: 10.0,
+                                  color: Colors.grey,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
                               ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
                             ),
-                          ),
                           SizedBox(
                             height: 10,
                           ),
@@ -121,8 +111,12 @@ class _CircleArtistsCarouselState extends State<CircleArtistsCarousel> {
                               margin: EdgeInsets.only(
                                   top: 5.0, bottom: 5.0, left: 5.0, right: 5.0),
                               decoration: BoxDecoration(
-                                border:
-                                    Border.all(color: Colors.black12, width: 1),
+                                border: Border.all(
+                                    color: Theme.of(context).brightness ==
+                                            Brightness.light
+                                        ? Colors.black12
+                                        : Colors.grey[500],
+                                    width: 1),
                                 borderRadius: BorderRadius.circular(10.0),
                               ),
                               child: GestureDetector(

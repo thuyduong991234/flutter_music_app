@@ -218,7 +218,7 @@ class _FavoritePageState extends State<FavoritePage>
               child: Scaffold(
                 appBar: AppBar(
                   toolbarHeight: 50,
-                  backgroundColor: Colors.white,
+                  backgroundColor: Colors.transparent,
                   bottom: TabBar(
                     controller: _tab,
                     tabs: [
@@ -252,8 +252,12 @@ class _FavoritePageState extends State<FavoritePage>
                               margin: EdgeInsets.only(
                                   top: 20, bottom: 20, left: 90, right: 90),
                               decoration: BoxDecoration(
-                                border:
-                                    Border.all(color: Colors.black12, width: 1),
+                                border: Border.all(
+                                    color: Theme.of(context).brightness ==
+                                            Brightness.light
+                                        ? Colors.black12
+                                        : Colors.grey[500],
+                                    width: 1),
                                 borderRadius: BorderRadius.circular(40.0),
                               ),
                               child: GestureDetector(
@@ -426,8 +430,12 @@ class _FavoritePageState extends State<FavoritePage>
                               margin: EdgeInsets.only(
                                   top: 20, bottom: 20, left: 90, right: 90),
                               decoration: BoxDecoration(
-                                border:
-                                    Border.all(color: Colors.black12, width: 1),
+                                border: Border.all(
+                                    color: Theme.of(context).brightness ==
+                                            Brightness.light
+                                        ? Colors.black12
+                                        : Colors.grey[500],
+                                    width: 1),
                                 borderRadius: BorderRadius.circular(40.0),
                               ),
                               child: GestureDetector(

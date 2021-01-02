@@ -80,7 +80,11 @@ class _ArtistPageState extends State<ArtistPage> {
                   margin: EdgeInsets.only(
                       top: 5.0, bottom: 5.0, left: 120.0, right: 120.0),
                   decoration: BoxDecoration(
-                    border: Border.all(color: Colors.black12, width: 1),
+                    border: Border.all(
+                        color: Theme.of(context).brightness == Brightness.light
+                            ? Colors.black12
+                            : Colors.grey[500],
+                        width: 1),
                     borderRadius: BorderRadius.circular(10.0),
                   ),
                   child: GestureDetector(
@@ -106,7 +110,8 @@ class _ArtistPageState extends State<ArtistPage> {
               ),
               ShortSongCarousel(this.data.songs, "Top bài hát", true, false,
                   null, this.data.id),
-              AlbumsCarousel(this.data.albums, false, false, false, null),
+              AlbumsCarousel(
+                  this.data.albums, false, false, false, false, null),
               CircleArtistsCarousel(this.data.relatedArtists)
             ],
           )),

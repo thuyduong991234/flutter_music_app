@@ -136,7 +136,11 @@ class _AlbumsPageState extends State<AlbumsPage> {
                                       top: 20, bottom: 20, left: 90, right: 90),
                                   decoration: BoxDecoration(
                                     border: Border.all(
-                                        color: Colors.black12, width: 1),
+                                        color: Theme.of(context).brightness ==
+                                                Brightness.light
+                                            ? Colors.black12
+                                            : Colors.grey[500],
+                                        width: 1),
                                     borderRadius: BorderRadius.circular(40.0),
                                   ),
                                   child: GestureDetector(
@@ -274,7 +278,9 @@ class _AlbumsPageState extends State<AlbumsPage> {
                                         SongModel songModel =
                                             Provider.of(context);
                                         Random r = new Random();
-                                        songs = songs is List<dynamic> ? SongCollection.cast(songs) : songs;
+                                        songs = songs is List<dynamic>
+                                            ? SongCollection.cast(songs)
+                                            : songs;
                                         songModel.setSongs(songs);
                                         songModel.setCurrentIndex(
                                             r.nextInt(songs.length));

@@ -227,7 +227,7 @@ class _InfoPageState extends State<InfoPage> {
           height: MediaQuery.of(context).size.width * 0.25,
           child: CircleAvatar(
               backgroundImage: CachedNetworkImageProvider(
-                  "https://ui-avatars.com/api/?name=John+Doe&size=128"))),
+                  "https://ui-avatars.com/api/?name=John+Doe&size=128&background=random"))),
     );
   }
 

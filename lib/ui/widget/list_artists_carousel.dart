@@ -86,7 +86,7 @@ class _ListArtistsCarouselState extends State<ListArtistsCarousel> {
                     letterSpacing: 1.2)),
             widget.viewAll == true
                 ? GestureDetector(
-                    onTap: () => {widget.callback(4)},
+                    onTap: () => {widget.callback(3)},
                     child: Text(S.of(context).viewAll,
                         style: TextStyle(
                           color: Colors.grey,

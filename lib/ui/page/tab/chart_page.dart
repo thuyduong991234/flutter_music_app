@@ -415,7 +415,11 @@ class _ChartPageState extends State<ChartPage>
                                                 right: 90),
                                             decoration: BoxDecoration(
                                               border: Border.all(
-                                                  color: Colors.black12,
+                                                  color: Theme.of(context)
+                                                              .brightness ==
+                                                          Brightness.light
+                                                      ? Colors.black12
+                                                      : Colors.grey[500],
                                                   width: 1),
                                               borderRadius:
                                                   BorderRadius.circular(40.0),

@@ -11,10 +11,11 @@ class AlbumsCarousel extends StatefulWidget {
   final bool isSearch;
   final bool isPlaylist;
   final bool isTop100;
+  final bool isViewAll;
   final Function(int) callback;
 
   AlbumsCarousel(this.alubums, this.isSearch, this.isPlaylist, this.isTop100,
-      this.callback);
+      this.isViewAll, this.callback);
   @override
   _AlbumsCarouselState createState() => _AlbumsCarouselState();
 }
@@ -33,27 +34,28 @@ class _AlbumsCarouselState extends State<AlbumsCarousel> {
                     fontSize: 22.0,
                     fontWeight: FontWeight.bold,
                     letterSpacing: 1.2)),
-            GestureDetector(
-              onTap: () => {
-                if (widget.isSearch)
-                  {widget.callback(2)}
-                else if (widget.isTop100)
-                  {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => AllTop100Carousel(title: "Top 100"),
+            if (widget.isViewAll == true)
+              GestureDetector(
+                onTap: () => {
+                  if (widget.isSearch)
+                    {widget.callback(2)}
+                  else if (widget.isTop100)
+                    {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => AllTop100Carousel(title: "Top 100"),
+                        ),
                       ),
-                    ),
-                  }
-              },
-              child: Text(S.of(context).viewAll,
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 12.0,
-                    fontWeight: FontWeight.w600,
-                  )),
-            ),
+                    }
+                },
+                child: Text(S.of(context).viewAll,
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 12.0,
+                      fontWeight: FontWeight.w600,
+                    )),
+              ),
           ],
         ),
       ),

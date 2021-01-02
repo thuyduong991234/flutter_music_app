@@ -185,7 +185,7 @@ class _HistorySearchPageState extends State<HistorySearchPage>
                               child: Scaffold(
                                 appBar: AppBar(
                                   //textTheme: Theme.of(context).appBarTheme.color,
-                                  backgroundColor: Colors.white,
+                                  backgroundColor: Colors.transparent,
                                   //shadowColor: Theme.of(context).accentColor,
                                   toolbarHeight: 50,
                                   automaticallyImplyLeading: false,
@@ -222,7 +222,7 @@ class _HistorySearchPageState extends State<HistorySearchPage>
                                             height: 40,
                                           ),
                                           AlbumsCarousel(playlists, true, false,
-                                              false, changeTabBarView),
+                                              false, true, changeTabBarView),
                                           ListArtistsCarousel(
                                               artists, true, changeTabBarView),
                                         ]),
