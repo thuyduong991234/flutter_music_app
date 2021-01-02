@@ -188,6 +188,11 @@ class SongModel with ChangeNotifier {
 
   AudioPlayer get audioPlayer => _audioPlayer;
 
+  pause() {
+    audioPlayer.pause();
+    notifyListeners();
+  }
+
   List<Song> _songs;
 
   bool _isPlaying = false;

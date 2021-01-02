@@ -77,7 +77,7 @@ class _ListSongCarouselState extends State<ListSongCarousel> {
                   ),
                 ]),
           ),
-          AddPlayList(data, favoriteModel)
+          widget.isAlbum == true ? Text("") : AddPlayList(data, favoriteModel)
         ],
       ),
     );
@@ -138,6 +138,7 @@ class _ListSongCarouselState extends State<ListSongCarousel> {
                         MaterialPageRoute(
                           builder: (_) => AlbumsPage(
                             data: data,
+                            isAlbum: true,
                           ),
                         ),
                       );

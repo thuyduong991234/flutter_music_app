@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
+import 'package:cron/cron.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_music_app/anims/player_anim.dart';
 import 'package:flutter_music_app/model/artist_model.dart';
@@ -31,7 +32,7 @@ class _PlayPageState extends State<PlayPage> with TickerProviderStateMixin {
   AnimationController controllerPlayer;
   Animation<double> animationPlayer;
   final _commonTween = new Tween<double>(begin: 0.0, end: 1.0);
-  Duration timer;
+  Duration timer = Duration(minutes: 0);
   bool isSwitched = false;
   enumTimer _timer = enumTimer.ZERO;
 
@@ -55,6 +56,21 @@ class _PlayPageState extends State<PlayPage> with TickerProviderStateMixin {
   void dispose() {
     controllerPlayer.dispose();
     super.dispose();
+  }
+
+  setTimerCountDown() {
+    final cron = Cron();
+    cron.schedule(Schedule.parse('*/1 * * * *'), () async {
+      if (timer.inMinutes <= 0) {
+        SongModel songs = Provider.of(context);
+        songs.pause();
+        isSwitched = false;
+        await cron.close();
+      } else {
+        timer = timer - Duration(minutes: 1);
+        debugPrint("TIMER = " + timer.inMinutes.toString());
+      }
+    });
   }
 
   _showTimerOption() {
@@ -81,13 +97,26 @@ class _PlayPageState extends State<PlayPage> with TickerProviderStateMixin {
                                           fontSize: 18.0,
                                           fontWeight: FontWeight.w600),
                                     )),
+                                Container(
+                                    padding: EdgeInsets.only(top: 12),
+                                    child: Text(
+                                      timer.inHours.toString() +
+                                          " : " +
+                                          timer.inMinutes.toString() +
+                                          "'",
+                                      style: TextStyle(
+                                          fontSize: 18.0,
+                                          color: Theme.of(context).accentColor),
+                                    )),
                                 Switch(
                                   value: isSwitched,
                                   activeColor: Theme.of(context).accentColor,
                                   onChanged: (value) {
                                     setState(() {
                                       isSwitched = value;
-                                      debugPrint("BOOL" + value.toString());
+                                      if (isSwitched == false) {
+                                        timer = Duration(minutes: 0);
+                                      }
                                     });
                                   },
                                 )
@@ -106,9 +135,9 @@ class _PlayPageState extends State<PlayPage> with TickerProviderStateMixin {
                                         _timer = enumTimer.ZERO;
                                         timer = Duration(minutes: 15);
                                         isSwitched = true;
+                                        setTimerCountDown();
                                       });
-                                      debugPrint("TIMER = " +
-                                          timer.inSeconds.toString());
+
                                       Navigator.of(context).pop();
                                     }),
                                 Radio(
@@ -120,6 +149,7 @@ class _PlayPageState extends State<PlayPage> with TickerProviderStateMixin {
                                         _timer = enumTimer.ZERO;
                                         timer = Duration(minutes: 30);
                                         isSwitched = true;
+                                        setTimerCountDown();
                                       });
                                       Navigator.of(context).pop();
                                     }),
@@ -132,6 +162,7 @@ class _PlayPageState extends State<PlayPage> with TickerProviderStateMixin {
                                         _timer = enumTimer.ZERO;
                                         timer = Duration(minutes: 60);
                                         isSwitched = true;
+                                        setTimerCountDown();
                                       });
                                       Navigator.of(context).pop();
                                     }),
@@ -144,6 +175,7 @@ class _PlayPageState extends State<PlayPage> with TickerProviderStateMixin {
                                         _timer = enumTimer.ZERO;
                                         timer = Duration(minutes: 120);
                                         isSwitched = true;
+                                        setTimerCountDown();
                                       });
                                       Navigator.of(context).pop();
                                     }),
@@ -229,7 +261,6 @@ class _PlayPageState extends State<PlayPage> with TickerProviderStateMixin {
                                   onChanged: (value) {
                                     setState(() {
                                       isSwitched = value;
-                                      debugPrint("BOOL" + value.toString());
                                     });
                                   },
                                 )
@@ -274,8 +305,7 @@ class _PlayPageState extends State<PlayPage> with TickerProviderStateMixin {
                             setState(() {
                               timer = Duration(minutes: _minutes);
                               isSwitched = true;
-                              debugPrint(
-                                  "TIME = " + timer.inSeconds.toString());
+                              setTimerCountDown();
                             });
                             Navigator.of(context).pop();
                           },
@@ -361,11 +391,17 @@ class _PlayPageState extends State<PlayPage> with TickerProviderStateMixin {
                   children: <Widget>[
                     IconButton(
                       onPressed: () => _showTimerOption(),
-                      icon: Icon(
-                        Icons.timer,
-                        size: 25.0,
-                        color: Colors.grey,
-                      ),
+                      icon: isSwitched == false
+                          ? Icon(
+                              Icons.timer,
+                              size: 25.0,
+                              color: Colors.grey,
+                            )
+                          : Icon(
+                              Icons.timer,
+                              size: 25.0,
+                              color: Theme.of(context).accentColor,
+                            ),
                     ),
                     IconButton(
                       onPressed: () => songModel.changeRepeat(),
@@ -378,7 +414,7 @@ class _PlayPageState extends State<PlayPage> with TickerProviderStateMixin {
                           : Icon(
                               Icons.shuffle,
                               size: 25.0,
-                              color: Colors.grey,
+                              color: Theme.of(context).accentColor,
                             ),
                     ),
                     AddPlayList(songModel.currentSong, favouriteModel),

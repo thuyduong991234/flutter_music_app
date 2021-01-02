@@ -3,6 +3,7 @@
 import 'dart:convert';
 
 import 'package:audioplayers/audioplayers.dart';
+import 'package:cron/cron.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_music_app/model/download_model.dart';
 import 'package:flutter_music_app/model/song_model.dart';
@@ -30,16 +31,15 @@ class Player extends StatefulWidget {
 
   final bool isOffline;
 
-  Player({
-    @required this.songData,
-    @required this.downloadData,
-    this.nowPlay,
-    this.key,
-    this.volume: 1.0,
-    this.color: Colors.white,
-    this.isLocal: false,
-    this.isOffline: false,
-  });
+  Player(
+      {@required this.songData,
+      @required this.downloadData,
+      this.nowPlay,
+      this.key,
+      this.volume: 1.0,
+      this.color: Colors.white,
+      this.isLocal: false,
+      this.isOffline: false});
 
   @override
   State<StatefulWidget> createState() => PlayerState();
