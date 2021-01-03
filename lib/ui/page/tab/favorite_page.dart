@@ -4,6 +4,7 @@ import 'package:flutter_music_app/anims/record_anim.dart';
 import 'package:flutter_music_app/generated/i18n.dart';
 import 'package:flutter_music_app/model/download_model.dart';
 import 'package:flutter_music_app/model/favorite_model.dart';
+import 'package:flutter_music_app/model/login_model.dart';
 import 'package:flutter_music_app/model/song_model.dart';
 import 'package:flutter_music_app/ui/page/albums_page.dart';
 import 'package:provider/provider.dart';

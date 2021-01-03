@@ -52,6 +52,71 @@ class _ProviderWidgetState<T extends ChangeNotifier>
   }
 }
 
+class ProviderWidget3<A extends ChangeNotifier, B extends ChangeNotifier, C extends ChangeNotifier>
+    extends StatefulWidget {
+  final Widget Function(BuildContext context, A model1, B model2, C model3, Widget child)
+  builder;
+  final A model1;
+  final B model2;
+  final C model3;
+  final Widget child;
+  final Function(A model1, B model2, C model3) onModelReady;
+  final bool autoDispose;
+
+  ProviderWidget3({
+    Key key,
+    @required this.builder,
+    @required this.model1,
+    @required this.model2,
+    @required this.model3,
+    this.child,
+    this.onModelReady,
+    this.autoDispose,
+  }) : super(key: key);
+
+  _ProviderWidgetState3<A, B, C> createState() => _ProviderWidgetState3<A, B, C>();
+}
+
+class _ProviderWidgetState3<A extends ChangeNotifier, B extends ChangeNotifier, C extends ChangeNotifier>
+    extends State<ProviderWidget3<A, B, C>> {
+  A model1;
+  B model2;
+  C model3;
+
+  @override
+  void initState() {
+    model1 = widget.model1;
+    model2 = widget.model2;
+    model3 = widget.model3;
+    widget.onModelReady?.call(model1, model2, model3);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    if (widget.autoDispose) {
+      model1.dispose();
+      model2.dispose();
+      model3.dispose();
+    }
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiProvider(
+        providers: [
+          ChangeNotifierProvider<A>.value(value: model1),
+          ChangeNotifierProvider<B>.value(value: model2),
+          ChangeNotifierProvider<C>.value(value: model3),
+        ],
+        child: Consumer3<A, B, C>(
+          builder: widget.builder,
+          child: widget.child,
+        ));
+  }
+}
+
 class ProviderWidget2<A extends ChangeNotifier, B extends ChangeNotifier>
     extends StatefulWidget {
   final Widget Function(BuildContext context, A model1, B model2, Widget child)

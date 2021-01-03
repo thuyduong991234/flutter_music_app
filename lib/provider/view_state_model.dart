@@ -6,6 +6,33 @@ import 'package:oktoast/oktoast.dart';
 
 import 'view_state.dart';
 
+abstract class ViewStateSingleModel<T> extends ViewStateModel {
+  T data;
+
+  initData() async {
+    setBusy();
+    await refresh(init: true);
+  }
+
+  // 下拉刷新
+  refresh({bool init = false}) async {
+    try {
+      T fb = await loadData();
+      if (fb == null) {
+        setEmpty();
+      } else {
+        data = fb;
+        setIdle();
+      }
+    } catch (e, s) {
+      setError(e, s);
+    }
+  }
+  Future<T> loadData();
+
+
+}
+
 class ViewStateModel with ChangeNotifier {
   /// 防止页面销毁后,异步任务才完成,导致报错
   bool _disposed = false;

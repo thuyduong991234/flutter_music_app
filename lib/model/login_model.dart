@@ -1,5 +1,18 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_music_app/provider/view_state_model.dart';
+
+class LoginStateModel extends ViewStateSingleModel<LoginFirebase> {
+  LoginFirebase fb;
+
+  LoginStateModel({this.fb});
+
+  Future<LoginFirebase> loadData() async {
+    fb.reload();
+    setIdle();
+    return fb;
+  }
+}
 
 class LoginFirebase with ChangeNotifier {
   String email;
@@ -21,6 +34,8 @@ class LoginFirebase with ChangeNotifier {
       if (user == null) {
         print('User is currently signed out!');
       } else {
+        //   this.curUser = user;
+        reload();
         print('User is signed in!');
       }
     });
@@ -28,17 +43,14 @@ class LoginFirebase with ChangeNotifier {
 
   login() async {
     try {
-      debugPrint("vô la" + this.email.trim());
       UserCredential userCredential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(
               email: this.email.trim(), password: this.pwd.trim());
       if (userCredential != null) {
-        debugPrint("vô la");
-        this.user = userCredential;
-        print("LOGINIIGIGIG" + this.user.toString());
+        debugPrint("LOG: Login success!");
+        refresh(userCredential);
         return "ok";
-      } else
-        debugPrint("cre" + userCredential.toString());
+      }
     } on FirebaseAuthException catch (e) {
       debugPrint("cre" + e.toString());
       if (e.code == 'user-not-found') {
@@ -50,37 +62,16 @@ class LoginFirebase with ChangeNotifier {
   }
 
   reauth(String pwd) async {
-    /*AuthCredential authCredential = EmailAuthProvider.credential(
-      email: user.user.email,
-      password: pwd.trim(),
-    );
+    debugPrint("LOG: REAUTHING");
     try {
-      UserCredential userCredential =
-          await user.user.reauthenticateWithCredential(authCredential);
-      if (userCredential != null) {
-        debugPrint("vô la");
-        this.user = userCredential;
-        print("LOGINIIGIGIG" + this.user.toString());
-        return "ok";
-      } else
-        debugPrint("cre" + userCredential.toString());
-    } on FirebaseAuthException catch (e) {
-      return e.code;
-    }*/
-    try {
-      debugPrint("vô la" + this.email.trim());
       UserCredential userCredential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(
-              email: this.email.trim(), password: pwd.trim());
+              email: curUser.email, password: pwd.trim());
       if (userCredential != null) {
-        debugPrint("vô la");
-        this.user = userCredential;
-        print("LOGINIIGIGIG" + this.user.toString());
+        refresh(userCredential);
         return "ok";
-      } else
-        debugPrint("cre" + userCredential.toString());
+      }
     } on FirebaseAuthException catch (e) {
-      debugPrint("cre" + e.toString());
       if (e.code == 'user-not-found') {
         return "No user found for that email.";
       } else if (e.code == 'wrong-password') {
@@ -89,17 +80,24 @@ class LoginFirebase with ChangeNotifier {
     }
   }
 
+  /*
+   *
+   */
+  reload() async {
+    await FirebaseAuth.instance.currentUser.reload();
+    this.curUser = FirebaseAuth.instance.currentUser;
+  }
+
+  refresh(UserCredential newUserCre) {
+    this.user = newUserCre;
+    this.curUser = newUserCre.user;
+  }
+
   update({String email, String name, String pwd}) async {
-    debugPrint(email);
-    debugPrint(user.user.email);
-    debugPrint(pwd);
+    debugPrint("LOG: UPDATING");
     if (email != null && email != user.user.email && email.isNotEmpty) {
       try {
         await user.user.updateEmail(email);
-        FirebaseAuth.instance.currentUser.reload();
-        curUser = FirebaseAuth.instance.currentUser;
-        debugPrint("email update" + FirebaseAuth.instance.currentUser.email);
-        debugPrint("email update" + curUser.email);
       } on FirebaseAuthException catch (e) {
         debugPrint(e.toString());
         if (e.code == 'invalid-emai') {
@@ -119,9 +117,7 @@ class LoginFirebase with ChangeNotifier {
       await user.user.updatePassword(pwd);
     }
 
-    await user.user.reload();
-    debugPrint("email" + user.user.email);
-    debugPrint("password" + user.user.email);
+    reload();
 
     notifyListeners();
 

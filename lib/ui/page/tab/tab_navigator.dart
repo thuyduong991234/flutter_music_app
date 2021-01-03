@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_music_app/generated/i18n.dart';
 import 'package:flutter_music_app/model/download_model.dart';
 import 'package:flutter_music_app/model/favorite_model.dart';
+import 'package:flutter_music_app/model/login_model.dart';
 import 'package:flutter_music_app/provider/provider_widget.dart';
 import 'package:flutter_music_app/ui/page/tab/favorite_page.dart';
 import 'package:flutter_music_app/ui/page/tab/home_page.dart';
@@ -13,13 +14,23 @@ import 'package:flutter_music_app/ui/page/tab/chart_page.dart';
 import 'package:provider/provider.dart';
 
 class TabNavigator extends StatefulWidget {
+  final int index;
+
+  const TabNavigator({Key key, this.index}) : super(key: key);
+
   @override
   _TabNavigatorState createState() => _TabNavigatorState();
 }
 
 class _TabNavigatorState extends State<TabNavigator> {
-  var _pageController = PageController();
+  var _pageController;
   int _selectedIndex = 0;
+
+  initState() {
+    super.initState();
+    _selectedIndex = widget.index ?? 0;
+    _pageController = PageController(initialPage: _selectedIndex);
+  }
 
   List<Widget> pages = <Widget>[
     HomePage(),
@@ -30,6 +41,8 @@ class _TabNavigatorState extends State<TabNavigator> {
 
   @override
   Widget build(BuildContext context) {
+    LoginFirebase fb = Provider.of(context);
+    debugPrint("LOG: fb = " + fb.curUser.toString());
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
         statusBarBrightness: Theme.of(context).brightness == Brightness.dark
@@ -37,15 +50,18 @@ class _TabNavigatorState extends State<TabNavigator> {
             : Brightness.light));
     FavoriteModel favoriteModel = Provider.of(context);
     DownloadModel downloadModel = Provider.of(context);
+    LoginFirebase firebaseModel = Provider.of(context);
     return Scaffold(
-      body: ProviderWidget2<FavoriteListModel, DownloadListModel>(
-          onModelReady: (favoriteListModel, downloadListModel) async {
+      body: ProviderWidget3<FavoriteListModel, DownloadListModel, LoginStateModel>(
+          onModelReady: (favoriteListModel, downloadListModel, loginModel) async {
             await favoriteListModel.initData();
             await downloadListModel.initData();
+            await loginModel.initData();
           },
           model1: FavoriteListModel(favoriteModel: favoriteModel),
           model2: DownloadListModel(downloadModel: downloadModel),
-          builder: (context, model1, model2, child) {
+          model3: LoginStateModel(fb: firebaseModel),
+          builder: (context, model1, model2, model3, child) {
             return PageView.builder(
               itemBuilder: (ctx, index) => pages[index],
               itemCount: pages.length,

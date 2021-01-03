@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_music_app/model/login_model.dart';
 import 'package:flutter_music_app/model/song_model.dart';
 import 'package:flutter_music_app/ui/page/tab/mine_page.dart';
+import 'package:flutter_music_app/ui/page/tab/tab_navigator.dart';
 import 'package:flutter_music_app/ui/widget/bezierContainer.dart';
 import 'package:provider/provider.dart';
 
@@ -114,7 +115,7 @@ class _InfoPageState extends State<InfoPage> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => MinePage()));
+                                        builder: (context) => TabNavigator(index: 3,)));
                               }
                             }
                           },
@@ -246,9 +247,10 @@ class _InfoPageState extends State<InfoPage> {
   @override
   Widget build(BuildContext context) {
     LoginFirebase fb = Provider.of(context);
+    debugPrint("LOG: INFO= name= " + fb.curUser.toString());
     setState(() {
-      oldEmail = fb.user.user.email;
-      oldName = fb.user.user.displayName;
+      oldEmail = fb.curUser.email;
+      oldName = fb.curUser.displayName;
       oldPwd = "";
     });
 

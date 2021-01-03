@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_music_app/generated/i18n.dart';
+import 'package:flutter_music_app/model/favorite_model.dart';
 import 'package:flutter_music_app/model/local_view_model.dart';
 import 'package:flutter_music_app/model/login_model.dart';
 import 'package:flutter_music_app/model/theme_model.dart';
@@ -17,14 +18,25 @@ class MinePage extends StatefulWidget {
 }
 
 class _MinePageState extends State<MinePage>
-    with AutomaticKeepAliveClientMixin {
+    with TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
     LoginFirebase fb = Provider.of(context);
+    FavoriteModel f = Provider.of(context);
     return Scaffold(
         body: SafeArea(
       child: Column(
@@ -44,9 +56,9 @@ class _MinePageState extends State<MinePage>
               Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: Text(
-                    fb.user != null
-                        ? (fb.user.user.displayName != null
-                            ? fb.user.user.displayName
+                    fb.curUser != null
+                        ? (fb.curUser.displayName != null
+                            ? fb.curUser.displayName
                             : "")
                         : "",
                     style: TextStyle(
