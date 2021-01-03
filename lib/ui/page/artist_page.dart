@@ -2,13 +2,16 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_music_app/generated/i18n.dart';
 import 'package:flutter_music_app/model/artist_model.dart';
+import 'package:flutter_music_app/model/favorite_model.dart';
 import 'package:flutter_music_app/service/base_repository.dart';
 import 'package:flutter_music_app/ui/widget/albums_carousel.dart';
 import 'package:flutter_music_app/ui/widget/app_bar.dart';
 import 'package:flutter_music_app/ui/widget/circle_artist_carousel.dart';
 import 'package:flutter_music_app/ui/widget/list_artists_carousel.dart';
 import 'package:flutter_music_app/ui/widget/short_song_carousel.dart';
+import 'package:provider/provider.dart';
 
 class ArtistPage extends StatefulWidget {
   final String artistAlias;
@@ -37,7 +40,17 @@ class _ArtistPageState extends State<ArtistPage> {
 
   @override
   Widget build(BuildContext context) {
+    FavoriteModel favoriteModel = Provider.of(context);
+    bool isFollowed = false;
     if (this.data != null) {
+      if (favoriteModel.followArtists != null) {
+        for (int i = 0; i < favoriteModel.followArtists.length; i++) {
+          if (favoriteModel.followArtists[i].id == data.id) {
+            isFollowed = true;
+            break;
+          }
+        }
+      }
       return Scaffold(
           body: SafeArea(
         child: Column(children: <Widget>[
@@ -88,31 +101,49 @@ class _ArtistPageState extends State<ArtistPage> {
                     borderRadius: BorderRadius.circular(10.0),
                   ),
                   child: GestureDetector(
-                    onTap: () {},
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Icon(Icons.person_add,
-                            color: Theme.of(context).accentColor, size: 20),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        Text(
-                          'Quan tâm',
-                          style: TextStyle(
-                              fontSize: 14.0,
-                              color: Theme.of(context).accentColor),
-                        ),
-                      ],
-                    ),
+                    onTap: () {
+                      if (isFollowed == false)
+                        favoriteModel.addArtist(data);
+                      else
+                        favoriteModel.removeArtist(data);
+                    },
+                    child: isFollowed == false
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Icon(Icons.person_add,
+                                  color: Theme.of(context).accentColor,
+                                  size: 20),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text(
+                                "Quan tâm",
+                                style: TextStyle(
+                                    fontSize: 12.0,
+                                    color: Theme.of(context).accentColor),
+                              ),
+                            ],
+                          )
+                        : Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Text(
+                                "Đã quan tâm",
+                                style: TextStyle(
+                                    fontSize: 12.0,
+                                    color: Theme.of(context).accentColor),
+                              ),
+                            ],
+                          ),
                   ),
                 ),
               ),
               ShortSongCarousel(this.data.songs, "Top bài hát", true, false,
                   null, this.data.id),
               AlbumsCarousel(
-                  this.data.albums, false, false, false, false, null),
-              CircleArtistsCarousel(this.data.relatedArtists)
+                  this.data.albums, "Albums", false, false, false, false, null),
+              CircleArtistsCarousel(this.data.relatedArtists, "Can like")
             ],
           )),
         ]),
@@ -121,7 +152,7 @@ class _ArtistPageState extends State<ArtistPage> {
 
     return Scaffold(
       body: SafeArea(
-        child: Center(child: Text("đang tải...")),
+        child: Center(child: Text("Đang tải....")),
       ),
     );
   }

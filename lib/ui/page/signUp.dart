@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_music_app/generated/i18n.dart';
+import 'package:flutter_music_app/model/login_model.dart';
 import 'package:flutter_music_app/ui/widget/bezierContainer.dart';
+import 'package:provider/provider.dart';
 import 'loginPage.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -12,6 +15,11 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
+  String email = "";
+  String pwd = "";
+  String name = "";
+  String err = null;
+
   Widget _backButton() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10.0),
@@ -33,7 +41,8 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  Widget _entryField(String title, {bool isPassword = false}) {
+  Widget _entryField(String title,
+      {bool isPassword = false, bool isEmail = false}) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10),
       child: Column(
@@ -46,7 +55,22 @@ class _SignUpPageState extends State<SignUpPage> {
           SizedBox(
             height: 10,
           ),
-          TextField(
+          TextFormField(
+              onChanged: (value) {
+                if (isPassword) {
+                  setState(() {
+                    pwd = value;
+                  });
+                } else if (isEmail) {
+                  setState(() {
+                    email = value;
+                  });
+                } else {
+                  setState(() {
+                    name = value;
+                  });
+                }
+              },
               obscureText: isPassword,
               decoration: InputDecoration(
                 border: InputBorder.none,
@@ -58,25 +82,63 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   Widget _submitButton() {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      padding: EdgeInsets.symmetric(vertical: 15),
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(5)),
-          boxShadow: <BoxShadow>[
-            BoxShadow(
-                color: Colors.grey.shade200,
-                offset: Offset(2, 4),
-                blurRadius: 5,
-                spreadRadius: 2)
-          ],
-          color: Theme.of(context).accentColor),
-      child: Text(
-        'Register Now',
-        style: TextStyle(fontSize: 20, color: Colors.white),
-      ),
-    );
+    return GestureDetector(
+        onTap: () async {
+          LoginFirebase fb = Provider.of(context);
+          var res = await fb.register(name, email, pwd);
+          if (res == "ok") {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text('Thông báo'),
+                  content: SingleChildScrollView(
+                    child: ListBody(
+                      children: <Widget>[
+                        Text('Đăng ký tài khoản thành công!'),
+                      ],
+                    ),
+                  ),
+                  actions: <Widget>[
+                    MaterialButton(
+                      child: Text("ĐỒNG Ý",
+                          style:
+                              TextStyle(color: Theme.of(context).accentColor)),
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => LoginPage()));
+                      },
+                    ),
+                  ],
+                );
+              },
+            );
+          }
+          setState(() {
+            err = res;
+          });
+        },
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          padding: EdgeInsets.symmetric(vertical: 15),
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(5)),
+              boxShadow: <BoxShadow>[
+                BoxShadow(
+                    color: Colors.grey.shade200,
+                    offset: Offset(2, 4),
+                    blurRadius: 5,
+                    spreadRadius: 2)
+              ],
+              color: Theme.of(context).accentColor),
+          child: Text(
+            'Register Now',
+            style: TextStyle(fontSize: 20, color: Colors.white),
+          ),
+        ));
   }
 
   Widget _loginAccountLabel() {
@@ -93,7 +155,7 @@ class _SignUpPageState extends State<SignUpPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              'Already have an account ?',
+              "Bạn đã có tài khoản?",
               style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
@@ -103,7 +165,7 @@ class _SignUpPageState extends State<SignUpPage> {
               width: 10,
             ),
             Text(
-              'Login',
+              "Đăng nhập",
               style: TextStyle(
                   color: Theme.of(context).accentColor,
                   fontSize: 13,
@@ -143,7 +205,7 @@ class _SignUpPageState extends State<SignUpPage> {
     return Column(
       children: <Widget>[
         _entryField("Username"),
-        _entryField("Email id"),
+        _entryField("Email id", isEmail: true),
         _entryField("Password", isPassword: true),
       ],
     );
@@ -176,9 +238,25 @@ class _SignUpPageState extends State<SignUpPage> {
                       height: 50,
                     ),
                     _emailPasswordWidget(),
-                    SizedBox(
-                      height: 20,
-                    ),
+                    SizedBox(height: 15),
+                    if (this.err != null && this.err != "ok")
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Icon(
+                            Icons.warning,
+                            color: Colors.red,
+                          ),
+                          Container(
+                            padding: EdgeInsets.only(left: 10),
+                            child: Text(
+                              this.err ?? "",
+                              style: TextStyle(color: Colors.red),
+                            ),
+                          ),
+                        ],
+                      ),
+                    SizedBox(height: 30),
                     _submitButton(),
                     SizedBox(height: height * .14),
                     _loginAccountLabel(),

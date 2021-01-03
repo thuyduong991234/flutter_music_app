@@ -100,9 +100,6 @@ class S implements WidgetsLocalizations {
   String get viewStateMessageUnAuth => "Not sign in yet";
   String get wechatAccount => "Wechat";
   String appUpdateFoundNewVersion(String version) => "New version $version";
-
-  //add
-  String get weekChart => "#WEEK CHART";
 }
 
 class $en extends S {

@@ -2,30 +2,40 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_music_app/generated/i18n.dart';
 import 'package:flutter_music_app/model/artist_model.dart';
+import 'package:flutter_music_app/model/favorite_model.dart';
 import 'package:flutter_music_app/model/song_model.dart';
 import 'package:flutter_music_app/ui/page/albums_page.dart';
 import 'package:flutter_music_app/ui/page/artist_page.dart';
+import 'package:provider/provider.dart';
 
 class CircleArtistsCarousel extends StatefulWidget {
   final List<Artist> artists;
+  final String title;
 
-  CircleArtistsCarousel(this.artists);
+  CircleArtistsCarousel(this.artists, this.title);
   @override
   _CircleArtistsCarouselState createState() => _CircleArtistsCarouselState();
 }
 
 class _CircleArtistsCarouselState extends State<CircleArtistsCarousel> {
   String alias;
+  String isFollowed;
 
   @override
   Widget build(BuildContext context) {
+    FavoriteModel favoriteModel = Provider.of(context);
     return Column(children: <Widget>[
       Padding(
         padding: const EdgeInsets.only(left: 20.0, right: 20.0, bottom: 20.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Text(S.of(context).artists,
+            Text(
+                widget.title == "Spotlight"
+                    ? "Spotlight"
+                    : (widget.title == "Nghe si cong hien"
+                        ? "Nghệ sĩ đóng góp"
+                        : "Bạn có thể thích"),
                 style: TextStyle(
                     fontSize: 22.0,
                     fontWeight: FontWeight.bold,
@@ -120,25 +130,71 @@ class _CircleArtistsCarouselState extends State<CircleArtistsCarousel> {
                                 borderRadius: BorderRadius.circular(10.0),
                               ),
                               child: GestureDetector(
-                                onTap: () {},
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Icon(Icons.person_add,
-                                        color: Theme.of(context).accentColor,
-                                        size: 20),
-                                    SizedBox(
-                                      width: 5,
-                                    ),
-                                    Text(
-                                      'Quan tâm',
-                                      style: TextStyle(
-                                          fontSize: 12.0,
-                                          color: Theme.of(context).accentColor),
-                                    ),
-                                  ],
-                                ),
-                              ),
+                                  onTap: () {
+                                    if (favoriteModel.followArtists
+                                            .contains(data) ==
+                                        false)
+                                      favoriteModel.addArtist(data);
+                                    else
+                                      favoriteModel.removeArtist(data);
+                                  },
+                                  child: favoriteModel.followArtists != null
+                                      ? (favoriteModel.followArtists
+                                                  .contains(data) ==
+                                              false
+                                          ? Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: <Widget>[
+                                                Icon(Icons.person_add,
+                                                    color: Theme.of(context)
+                                                        .accentColor,
+                                                    size: 20),
+                                                SizedBox(
+                                                  width: 5,
+                                                ),
+                                                Text(
+                                                  "Quan tâm",
+                                                  style: TextStyle(
+                                                      fontSize: 12.0,
+                                                      color: Theme.of(context)
+                                                          .accentColor),
+                                                ),
+                                              ],
+                                            )
+                                          : Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: <Widget>[
+                                                Text(
+                                                  "Đã quan tâm",
+                                                  style: TextStyle(
+                                                      fontSize: 12.0,
+                                                      color: Theme.of(context)
+                                                          .accentColor),
+                                                ),
+                                              ],
+                                            ))
+                                      : Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: <Widget>[
+                                            Icon(Icons.person_add,
+                                                color: Theme.of(context)
+                                                    .accentColor,
+                                                size: 20),
+                                            SizedBox(
+                                              width: 5,
+                                            ),
+                                            Text(
+                                              "Quan tâm",
+                                              style: TextStyle(
+                                                  fontSize: 12.0,
+                                                  color: Theme.of(context)
+                                                      .accentColor),
+                                            ),
+                                          ],
+                                        )),
                             ),
                           ),
                         ],

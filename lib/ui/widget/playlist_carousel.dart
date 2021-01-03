@@ -60,7 +60,7 @@ class _PlaylistsCarouselState extends State<PlaylistsCarousel> {
                                   mainAxisSpacing: 5.0),
                           itemBuilder: (BuildContext context, int index) {
                             Song data = playlists[index];
-                            data.isAlbum = false;
+                            data.isAlbum = true;
                             return GestureDetector(
                               onTap: () => {
                                 Navigator.push(

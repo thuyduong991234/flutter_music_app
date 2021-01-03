@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_music_app/generated/i18n.dart';
 import 'package:flutter_music_app/model/login_model.dart';
 import 'package:flutter_music_app/ui/page/signUp.dart';
 import 'package:flutter_music_app/ui/page/tab/info_page.dart';
@@ -85,9 +86,7 @@ class _LoginPageState extends State<LoginPage> {
           LoginFirebase fb = Provider.of(context);
           fb.initData(email, pwd);
           String result = await fb.login();
-          debugPrint("NAME + " + pwd);
           if (result == "ok") {
-            debugPrint("NAME OK+ " + fb.email);
             Navigator.push(
                 context, MaterialPageRoute(builder: (context) => InfoPage()));
           }
@@ -110,7 +109,7 @@ class _LoginPageState extends State<LoginPage> {
               ],
               color: Theme.of(context).accentColor),
           child: Text(
-            'Login',
+            "Đăng nhập",
             style: TextStyle(fontSize: 20, color: Colors.white),
           ),
         ));
@@ -132,7 +131,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
           ),
-          Text('or'),
+          Text("Hoặc"),
           Expanded(
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 10),
@@ -185,7 +184,7 @@ class _LoginPageState extends State<LoginPage> {
                     topRight: Radius.circular(5)),
               ),
               alignment: Alignment.center,
-              child: Text('Log in with Facebook',
+              child: Text("Đăng nhập",
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: 18,
@@ -211,14 +210,14 @@ class _LoginPageState extends State<LoginPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              'Don\'t have an account ?',
+              "Bạn chưa có tài khoản?",
               style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
             ),
             SizedBox(
               width: 10,
             ),
             Text(
-              'Register',
+              "Đăng ký",
               style: TextStyle(
                   color: Theme.of(context).accentColor,
                   fontSize: 13,
@@ -310,7 +309,7 @@ class _LoginPageState extends State<LoginPage> {
                           Container(
                             padding: EdgeInsets.symmetric(vertical: 10),
                             alignment: Alignment.centerRight,
-                            child: Text('Forgot Password ?',
+                            child: Text("Quên mật khẩu",
                                 style: TextStyle(
                                     fontSize: 14, fontWeight: FontWeight.w500)),
                           ),

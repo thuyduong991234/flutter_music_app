@@ -22,6 +22,15 @@ class SearchArtistCarousel extends StatefulWidget {
 class _SearchArtistCarouselState extends State<SearchArtistCarousel> {
   Widget _buildSongItem(Artist data) {
     FavoriteModel favoriteModel = Provider.of(context);
+    bool isFollowed = false;
+    if (favoriteModel.followArtists != null) {
+      for (int i = 0; i < favoriteModel.followArtists.length; i++) {
+        if (favoriteModel.followArtists[i].id == data.id) {
+          isFollowed = true;
+          break;
+        }
+      }
+    }
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
       child: Row(
@@ -59,10 +68,16 @@ class _SearchArtistCarouselState extends State<SearchArtistCarousel> {
                 ]),
           ),
           IconButton(
-              onPressed: () => {},
+              onPressed: () {
+                isFollowed == false
+                    ? favoriteModel.addArtist(data)
+                    : favoriteModel.removeArtist(data);
+              },
               icon: Icon(
                 Icons.person_add,
-                color: Colors.grey,
+                color: isFollowed == true
+                    ? Theme.of(context).accentColor
+                    : Colors.grey,
                 size: 20.0,
               ))
         ],

@@ -1,9 +1,15 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_music_app/model/login_model.dart';
 import 'package:flutter_music_app/model/song_model.dart';
 import 'package:flutter_music_app/provider/view_state_list_model.dart';
 import 'package:flutter_music_app/provider/view_state_refresh_list_model.dart';
+import 'package:flutter_music_app/service/base_repository.dart';
 import 'package:localstorage/localstorage.dart';
+import 'package:provider/provider.dart';
+
+import 'artist_model.dart';
 
 const String kLocalStorageSearch = 'kLocalStorageSearch';
 const String kFavoriteList = 'kFavoriteList';
@@ -32,6 +38,7 @@ class FavoriteListModel extends ViewStateListModel<Song> {
     }
     favoriteModel.setFavorites(favoriteList);
     favoriteModel.setPlaylists(playlist);
+    favoriteModel.setFollowArtists(FirebaseAuth.instance.currentUser.uid);
     setIdle();
     return favoriteList;
   }
@@ -67,8 +74,11 @@ class PlaylistSongModel extends ViewStateRefreshListModel<dynamic> {
 class FavoriteModel with ChangeNotifier {
   List<Song> _favoriteSong;
   Map<String, List<dynamic>> _playlists;
+  List<Artist> _followArtists;
 
   List<Song> get favoriteSong => _favoriteSong;
+
+  List<Artist> get followArtists => _followArtists;
 
   Map<String, List<dynamic>> get playlists => _playlists;
 
@@ -79,6 +89,16 @@ class FavoriteModel with ChangeNotifier {
 
   setPlaylists(Map<String, List<dynamic>> playlist) {
     _playlists = playlist;
+    notifyListeners();
+  }
+
+  setFollowArtists(String idUser) async {
+    List<Future> futures = [];
+    futures.add(BaseRepository.fetchFollowArtist(idUser));
+
+    var result = await Future.wait(futures);
+    _followArtists = result[0];
+
     notifyListeners();
   }
 
@@ -156,6 +176,23 @@ class FavoriteModel with ChangeNotifier {
     }
 
     return data;
+  }
+
+  addArtist(Artist artist) {
+    BaseRepository.addFollowArtist(
+        FirebaseAuth.instance.currentUser.uid, (artist.link.split("/")).last);
+    _followArtists.add(artist);
+
+    notifyListeners();
+  }
+
+  removeArtist(Artist artist) {
+    BaseRepository.deleteFollowArtist(
+        FirebaseAuth.instance.currentUser.uid, (artist.link.split("/")).last);
+    for (int i = 0; i < _followArtists.length; i++) {
+      if (_followArtists[i].id == artist.id) _followArtists.removeAt(i);
+    }
+    notifyListeners();
   }
 
   removePlaylist(String name) {

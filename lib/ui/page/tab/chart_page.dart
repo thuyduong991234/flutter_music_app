@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_music_app/generated/i18n.dart';
 import 'package:flutter_music_app/model/favorite_model.dart';
 import 'package:flutter_music_app/provider/provider_widget.dart';
 import 'package:flutter_music_app/provider/view_state_widget.dart';
@@ -143,7 +144,7 @@ class _ChartPageState extends State<ChartPage>
                       var chartKPOP = model?.chartKPOP ?? [];
                       int _week = week;
                       int _year = year;
-                      debugPrint("WEEEK" + week.toString());
+                      //debugPrint("WEEEK" + week.toString());
                       return StatefulBuilder(builder: (context, setState) {
                         return DefaultTabController(
                             length: 3,
@@ -297,7 +298,10 @@ class _ChartPageState extends State<ChartPage>
                                                                           .pop();
                                                                     },
                                                                     child: Text(
-                                                                        "HỦY",
+                                                                        S
+                                                                            .of(
+                                                                                context)
+                                                                            .actionCancel,
                                                                         style: TextStyle(
                                                                             color:
                                                                                 Theme.of(context).accentColor))),
@@ -315,7 +319,10 @@ class _ChartPageState extends State<ChartPage>
                                                                           .pop();
                                                                     },
                                                                     child: Text(
-                                                                        "ĐỒNG Ý",
+                                                                        S
+                                                                            .of(
+                                                                                context)
+                                                                            .actionConfirm,
                                                                         style: TextStyle(
                                                                             color:
                                                                                 Theme.of(context).accentColor)))
@@ -454,7 +461,7 @@ class _ChartPageState extends State<ChartPage>
                                                     width: 5,
                                                   ),
                                                   Text(
-                                                    'Play',
+                                                    "Phát ngẫu nhiên",
                                                     style: TextStyle(
                                                         color: Theme.of(context)
                                                             .accentColor),
@@ -504,7 +511,11 @@ class _ChartPageState extends State<ChartPage>
                                                 right: 90),
                                             decoration: BoxDecoration(
                                               border: Border.all(
-                                                  color: Colors.black12,
+                                                  color: Theme.of(context)
+                                                              .brightness ==
+                                                          Brightness.light
+                                                      ? Colors.black12
+                                                      : Colors.grey[500],
                                                   width: 1),
                                               borderRadius:
                                                   BorderRadius.circular(40.0),
@@ -539,7 +550,7 @@ class _ChartPageState extends State<ChartPage>
                                                     width: 5,
                                                   ),
                                                   Text(
-                                                    'Play',
+                                                    "Phát ngẫu nhiên",
                                                     style: TextStyle(
                                                         color: Theme.of(context)
                                                             .accentColor),
@@ -589,7 +600,11 @@ class _ChartPageState extends State<ChartPage>
                                                 right: 90),
                                             decoration: BoxDecoration(
                                               border: Border.all(
-                                                  color: Colors.black12,
+                                                  color: Theme.of(context)
+                                                              .brightness ==
+                                                          Brightness.light
+                                                      ? Colors.black12
+                                                      : Colors.grey[500],
                                                   width: 1),
                                               borderRadius:
                                                   BorderRadius.circular(40.0),
@@ -624,7 +639,7 @@ class _ChartPageState extends State<ChartPage>
                                                     width: 5,
                                                   ),
                                                   Text(
-                                                    'Play',
+                                                    "Phát ngẫu nhiên",
                                                     style: TextStyle(
                                                         color: Theme.of(context)
                                                             .accentColor),

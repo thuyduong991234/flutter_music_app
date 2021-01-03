@@ -216,15 +216,21 @@ class _HistorySearchPageState extends State<HistorySearchPage>
                                           SizedBox(
                                             height: 10,
                                           ),
-                                          ForYouCarousel(listSongs, "song new",
+                                          ForYouCarousel(listSongs, "songs",
                                               true, true, changeTabBarView),
                                           SizedBox(
                                             height: 40,
                                           ),
-                                          AlbumsCarousel(playlists, true, false,
-                                              false, true, changeTabBarView),
-                                          ListArtistsCarousel(
-                                              artists, true, changeTabBarView),
+                                          AlbumsCarousel(
+                                              playlists,
+                                              "Albums",
+                                              true,
+                                              false,
+                                              false,
+                                              true,
+                                              changeTabBarView),
+                                          ListArtistsCarousel(artists, true,
+                                              true, false, changeTabBarView),
                                         ]),
                                       ),
                                     ),
@@ -245,7 +251,7 @@ class _HistorySearchPageState extends State<HistorySearchPage>
                                 ),
                               )))
                       : Expanded(
-                          child: Center(child: Text("Đang tải...")),
+                          child: Center(child: Text("Đang tải")),
                         )
                 ]);
               }),

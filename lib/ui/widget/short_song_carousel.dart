@@ -17,8 +17,8 @@ class ShortSongCarousel extends StatefulWidget {
   final Function(int) callback;
   final String parent;
 
-  ShortSongCarousel(
-      this.songs, this.title, this.viewAll, this.isSearch, this.callback, this.parent);
+  ShortSongCarousel(this.songs, this.title, this.viewAll, this.isSearch,
+      this.callback, this.parent);
   @override
   _ShortSongCarouselState createState() => _ShortSongCarouselState();
 }
@@ -36,7 +36,7 @@ class _ShortSongCarouselState extends State<ShortSongCarousel> {
                 width: 50,
                 height: 50,
                 child:
-                Image(image: CachedNetworkImageProvider(data.thumbnail))),
+                    Image(image: CachedNetworkImageProvider(data.thumbnail))),
           ),
           SizedBox(
             width: 20.0,
@@ -49,14 +49,14 @@ class _ShortSongCarouselState extends State<ShortSongCarousel> {
                     data.title,
                     style: data.link == null
                         ? TextStyle(
-                      fontSize: 12.0,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.grey,
-                    )
+                            fontSize: 12.0,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.grey,
+                          )
                         : TextStyle(
-                      fontSize: 12.0,
-                      fontWeight: FontWeight.w600,
-                    ),
+                            fontSize: 12.0,
+                            fontWeight: FontWeight.w600,
+                          ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -67,13 +67,13 @@ class _ShortSongCarouselState extends State<ShortSongCarousel> {
                     data.artistName,
                     style: data.link == null
                         ? TextStyle(
-                      fontSize: 10.0,
-                      color: Colors.grey,
-                    )
+                            fontSize: 10.0,
+                            color: Colors.grey,
+                          )
                         : TextStyle(
-                      fontSize: 10.0,
-                      color: Colors.grey,
-                    ),
+                            fontSize: 10.0,
+                            color: Colors.grey,
+                          ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -100,41 +100,44 @@ class _ShortSongCarouselState extends State<ShortSongCarousel> {
                     letterSpacing: 1.2)),
             widget.viewAll == true
                 ? GestureDetector(
-              onTap: () => {
-                if (widget.isSearch)
-                  {widget.callback(1)}
-                else
-                  {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) =>
-                            SongCarousel(title: widget.title, type: 2, parent: widget.parent,),
-                      ),
-                    )
-                  }
-              },
-              child: Text(S.of(context).viewAll,
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 12.0,
-                    fontWeight: FontWeight.w600,
-                  )),
-            )
+                    onTap: () => {
+                      if (widget.isSearch)
+                        {widget.callback(1)}
+                      else
+                        {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => SongCarousel(
+                                title: widget.title,
+                                type: 2,
+                                parent: widget.parent,
+                              ),
+                            ),
+                          )
+                        }
+                    },
+                    child: Text(S.of(context).viewAll,
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 12.0,
+                          fontWeight: FontWeight.w600,
+                        )),
+                  )
                 : GestureDetector(
-              onTap: () => {},
-              child: Text("",
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 12.0,
-                    fontWeight: FontWeight.w600,
-                  )),
-            ),
+                    onTap: () => {},
+                    child: Text("",
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 12.0,
+                          fontWeight: FontWeight.w600,
+                        )),
+                  ),
           ],
         ),
       ),
       ListView.builder(
-        shrinkWrap: true, //解决无限高度问题
+        shrinkWrap: true,
         physics: new NeverScrollableScrollPhysics(),
         scrollDirection: Axis.vertical,
         itemCount: widget.songs.length,

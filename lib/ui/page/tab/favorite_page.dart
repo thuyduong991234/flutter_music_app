@@ -7,6 +7,7 @@ import 'package:flutter_music_app/model/favorite_model.dart';
 import 'package:flutter_music_app/model/login_model.dart';
 import 'package:flutter_music_app/model/song_model.dart';
 import 'package:flutter_music_app/ui/page/albums_page.dart';
+import 'package:flutter_music_app/ui/widget/list_artists_carousel.dart';
 import 'package:provider/provider.dart';
 
 import '../history_search_page.dart';
@@ -30,7 +31,7 @@ class _FavoritePageState extends State<FavoritePage>
   @override
   void initState() {
     super.initState();
-    _tab = new TabController(length: 3, vsync: this);
+    _tab = new TabController(length: 4, vsync: this);
     controllerRecord = new AnimationController(
         duration: const Duration(milliseconds: 15000), vsync: this);
     animationRecord =
@@ -144,6 +145,7 @@ class _FavoritePageState extends State<FavoritePage>
     FavoriteModel favoriteModel = Provider.of(context);
     DownloadModel downloadModel = Provider.of(context);
     SongModel songModel = Provider.of(context);
+
     if (songModel.isPlaying) {
       controllerRecord.forward();
     } else {
@@ -151,8 +153,8 @@ class _FavoritePageState extends State<FavoritePage>
     }
     //downloadModel.refresh();
     //favoriteModel.refresh();
-    debugPrint(
-        "DOWNLOAD----------" + downloadModel.downloadSong.length.toString());
+    //debugPrint(
+    //"DOWNLOAD----------" + downloadModel.downloadSong.length.toString());
     return Scaffold(
         body: SafeArea(
       child: Column(
@@ -206,7 +208,7 @@ class _FavoritePageState extends State<FavoritePage>
           ),
           Padding(
             padding: const EdgeInsets.all(20.0),
-            child: Text("My music",
+            child: Text("Nhạc của tôi",
                 style: TextStyle(
                     fontSize: 22.0,
                     fontWeight: FontWeight.w600,
@@ -223,18 +225,10 @@ class _FavoritePageState extends State<FavoritePage>
                   bottom: TabBar(
                     controller: _tab,
                     tabs: [
-                      Tab(
-                          text: "Thư viện ( " +
-                              favoriteModel.favoriteSong.length.toString() +
-                              " )"),
-                      Tab(
-                          text: "Playlist ( " +
-                              favoriteModel.playlists.length.toString() +
-                              " )"),
-                      Tab(
-                          text: "Đã tải ( " +
-                              downloadModel.downloadSong.length.toString() +
-                              " )")
+                      Tab(text: "Thư viện"),
+                      Tab(text: "Playlist"),
+                      Tab(text: "Đã tải"),
+                      Tab(text: "Nghệ sĩ")
                     ],
                     labelColor: Theme.of(context).accentColor,
                     indicatorColor: Theme.of(context).accentColor,
@@ -291,7 +285,11 @@ class _FavoritePageState extends State<FavoritePage>
                                       width: 5,
                                     ),
                                     Text(
-                                      'Play',
+                                      "Phát ngẫu nhiên" +
+                                          ' ( ' +
+                                          favoriteModel.favoriteSong.length
+                                              .toString() +
+                                          ' )',
                                       style: TextStyle(
                                           color: Theme.of(context).accentColor),
                                     ),
@@ -469,7 +467,11 @@ class _FavoritePageState extends State<FavoritePage>
                                       width: 5,
                                     ),
                                     Text(
-                                      'Play',
+                                      "Phát ngẫu nhiên" +
+                                          ' ( ' +
+                                          downloadModel.downloadSong.length
+                                              .toString() +
+                                          ' )',
                                       style: TextStyle(
                                           color: Theme.of(context).accentColor),
                                     ),
@@ -500,7 +502,15 @@ class _FavoritePageState extends State<FavoritePage>
                           child: _buildSongItem(data, isDownload: true),
                         );
                       },
-                    )
+                    ),
+                    ListArtistsCarousel(
+                        favoriteModel.followArtists != null
+                            ? favoriteModel.followArtists
+                            : [],
+                        false,
+                        false,
+                        true,
+                        null)
                   ],
                 ),
               ),

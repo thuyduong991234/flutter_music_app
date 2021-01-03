@@ -63,15 +63,18 @@ class Artist {
     if (map["sections"] != null) {
       //get correct list for each section by sectionType
       map["sections"].forEach((section) {
-        switch(section["sectionType"]) {
+        switch (section["sectionType"]) {
           case "song":
-            section["items"].forEach((song) => songs.add(Song.fromJsonMap(song)));
+            section["items"]
+                .forEach((song) => songs.add(Song.fromJsonMap(song)));
             break;
           case "playlist":
-            section["items"].forEach((album) => albums.add(Song.fromJsonMap(album)));
+            section["items"]
+                .forEach((album) => albums.add(Song.fromJsonMap(album)));
             break;
           case "artist":
-            section["items"].forEach((artist) => artists.add(Artist.fromJsonMap(artist)));
+            section["items"]
+                .forEach((artist) => artists.add(Artist.fromJsonMap(artist)));
             break;
           default:
             break;

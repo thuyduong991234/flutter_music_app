@@ -59,7 +59,7 @@ class _AllTop100CarouselState extends State<AllTop100Carousel> {
                           Padding(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 20.0, vertical: 20.0),
-                            child: Text(S.of(context).forYou,
+                            child: Text("Nổi bật",
                                 style: TextStyle(
                                     fontSize: 22.0,
                                     fontWeight: FontWeight.bold,
@@ -83,7 +83,10 @@ class _AllTop100CarouselState extends State<AllTop100Carousel> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (_) => AlbumsPage(data: data),
+                                      builder: (_) => AlbumsPage(
+                                        data: data,
+                                        isAlbum: true,
+                                      ),
                                     ),
                                   ),
                                 },
@@ -132,7 +135,7 @@ class _AllTop100CarouselState extends State<AllTop100Carousel> {
                           Padding(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 20.0, vertical: 20.0),
-                            child: Text(S.of(context).forYou,
+                            child: Text("Top 100 Việt Nam",
                                 style: TextStyle(
                                     fontSize: 22.0,
                                     fontWeight: FontWeight.bold,
@@ -156,7 +159,10 @@ class _AllTop100CarouselState extends State<AllTop100Carousel> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (_) => AlbumsPage(data: data),
+                                      builder: (_) => AlbumsPage(
+                                        data: data,
+                                        isAlbum: true,
+                                      ),
                                     ),
                                   ),
                                 },
@@ -205,7 +211,7 @@ class _AllTop100CarouselState extends State<AllTop100Carousel> {
                           Padding(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 20.0, vertical: 20.0),
-                            child: Text(S.of(context).forYou,
+                            child: Text("Top 100 Âu - Mỹ",
                                 style: TextStyle(
                                     fontSize: 22.0,
                                     fontWeight: FontWeight.bold,
@@ -229,7 +235,10 @@ class _AllTop100CarouselState extends State<AllTop100Carousel> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (_) => AlbumsPage(data: data),
+                                      builder: (_) => AlbumsPage(
+                                        data: data,
+                                        isAlbum: true,
+                                      ),
                                     ),
                                   ),
                                 },
@@ -278,7 +287,7 @@ class _AllTop100CarouselState extends State<AllTop100Carousel> {
                           Padding(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 20.0, vertical: 20.0),
-                            child: Text(S.of(context).forYou,
+                            child: Text("Top 100 Châu Á",
                                 style: TextStyle(
                                     fontSize: 22.0,
                                     fontWeight: FontWeight.bold,
@@ -302,7 +311,10 @@ class _AllTop100CarouselState extends State<AllTop100Carousel> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (_) => AlbumsPage(data: data),
+                                      builder: (_) => AlbumsPage(
+                                        data: data,
+                                        isAlbum: true,
+                                      ),
                                     ),
                                   ),
                                 },
@@ -351,7 +363,7 @@ class _AllTop100CarouselState extends State<AllTop100Carousel> {
                           Padding(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 20.0, vertical: 20.0),
-                            child: Text(S.of(context).forYou,
+                            child: Text("Top 100 Hòa tấu",
                                 style: TextStyle(
                                     fontSize: 22.0,
                                     fontWeight: FontWeight.bold,
@@ -375,7 +387,10 @@ class _AllTop100CarouselState extends State<AllTop100Carousel> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (_) => AlbumsPage(data: data),
+                                      builder: (_) => AlbumsPage(
+                                        data: data,
+                                        isAlbum: true,
+                                      ),
                                     ),
                                   ),
                                 },

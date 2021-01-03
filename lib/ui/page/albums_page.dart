@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_music_app/generated/i18n.dart';
 import 'package:flutter_music_app/model/artist_model.dart';
 import 'package:flutter_music_app/model/favorite_model.dart';
 import 'package:flutter_music_app/provider/provider_widget.dart';
@@ -81,6 +82,7 @@ class _AlbumsPageState extends State<AlbumsPage> {
   @override
   Widget build(BuildContext context) {
     if (widget.isAlbum) {
+      debugPrint("VÔ ALBUM PAGE");
       return Scaffold(
           body: SafeArea(
               child: ProviderWidget<SongListModel>(
@@ -175,7 +177,7 @@ class _AlbumsPageState extends State<AlbumsPage> {
                                           width: 5,
                                         ),
                                         Text(
-                                          'Play',
+                                          "Phát ngẫu nhiên",
                                           style: TextStyle(
                                               color: Theme.of(context)
                                                   .accentColor),
@@ -194,7 +196,8 @@ class _AlbumsPageState extends State<AlbumsPage> {
                                       sections, "take care", false, false, null)
                                   : Text(""),
                               participants.length > 0
-                                  ? CircleArtistsCarousel(participants)
+                                  ? CircleArtistsCarousel(
+                                      participants, "Nghe si cong hien")
                                   : Text("")
                             ],
                           ),
@@ -307,7 +310,7 @@ class _AlbumsPageState extends State<AlbumsPage> {
                                           width: 5,
                                         ),
                                         Text(
-                                          'Play',
+                                          'Phát ngẫu nhiên',
                                           style: TextStyle(
                                               color: Theme.of(context)
                                                   .accentColor),

@@ -123,4 +123,30 @@ class LoginFirebase with ChangeNotifier {
 
     return "ok";
   }
+
+  register(String name, String email, String pwd) async {
+    try {
+      debugPrint("VOOOOOOOO" + email.toString());
+      UserCredential userCredential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
+              email: email.trim(), password: pwd.trim());
+      await userCredential.user.updateProfile(displayName: name);
+      return 'ok';
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        return 'The password provided is too weak.';
+      } else if (e.code == 'email-already-in-use') {
+        return 'The account already exists for that email.';
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  logout() async {
+    await FirebaseAuth.instance.signOut();
+
+    this.user = null;
+    this.curUser = null;
+  }
 }

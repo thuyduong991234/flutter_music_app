@@ -1,9 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_music_app/generated/i18n.dart';
 import 'package:flutter_music_app/model/artist_model.dart';
 import 'package:flutter_music_app/model/favorite_model.dart';
+import 'package:flutter_music_app/model/login_model.dart';
 import 'package:flutter_music_app/model/song_model.dart';
+import 'package:flutter_music_app/service/base_repository.dart';
 import 'package:flutter_music_app/ui/page/albums_page.dart';
 import 'package:flutter_music_app/ui/page/artist_page.dart';
 import 'package:flutter_music_app/ui/page/history_search_page.dart';
@@ -13,9 +16,12 @@ import 'package:provider/provider.dart';
 class ListArtistsCarousel extends StatefulWidget {
   final List<Artist> artists;
   final bool viewAll;
+  final bool isShowTitle;
+  final bool isFollow;
   final Function(int) callback;
 
-  ListArtistsCarousel(this.artists, this.viewAll, this.callback);
+  ListArtistsCarousel(this.artists, this.viewAll, this.isShowTitle,
+      this.isFollow, this.callback);
   @override
   _ListArtistsCarouselState createState() => _ListArtistsCarouselState();
 }
@@ -23,6 +29,15 @@ class ListArtistsCarousel extends StatefulWidget {
 class _ListArtistsCarouselState extends State<ListArtistsCarousel> {
   Widget _buildSongItem(Artist data) {
     FavoriteModel favoriteModel = Provider.of(context);
+    bool isFollowed = false;
+    if (favoriteModel.followArtists != null) {
+      for (int i = 0; i < favoriteModel.followArtists.length; i++) {
+        if (favoriteModel.followArtists[i].id == data.id) {
+          isFollowed = true;
+          break;
+        }
+      }
+    }
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
       child: Row(
@@ -59,13 +74,29 @@ class _ListArtistsCarouselState extends State<ListArtistsCarousel> {
                   ),
                 ]),
           ),
-          IconButton(
-              onPressed: () => {},
-              icon: Icon(
-                Icons.person_add,
-                color: Colors.grey,
-                size: 20.0,
-              ))
+          widget.isFollow == false
+              ? IconButton(
+                  onPressed: () {
+                    isFollowed == false
+                        ? favoriteModel.addArtist(data)
+                        : favoriteModel.removeArtist(data);
+                  },
+                  icon: Icon(
+                    Icons.person_add,
+                    color: isFollowed == true
+                        ? Theme.of(context).accentColor
+                        : Colors.grey,
+                    size: 20.0,
+                  ))
+              : IconButton(
+                  onPressed: () {
+                    favoriteModel.removeArtist(data);
+                  },
+                  icon: Icon(
+                    Icons.delete_outline,
+                    color: Theme.of(context).accentColor,
+                    size: 20.0,
+                  ))
         ],
       ),
     );
@@ -79,11 +110,12 @@ class _ListArtistsCarouselState extends State<ListArtistsCarousel> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Text(S.of(context).artists,
-                style: TextStyle(
-                    fontSize: 22.0,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 1.2)),
+            if (widget.isShowTitle == true)
+              Text("Nghệ sĩ",
+                  style: TextStyle(
+                      fontSize: 22.0,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1.2)),
             widget.viewAll == true
                 ? GestureDetector(
                     onTap: () => {widget.callback(3)},

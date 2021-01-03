@@ -42,8 +42,8 @@ class _AddPlayListState extends State<AddPlayList> {
                       : ListTile(
                           onTap: () {
                             Navigator.of(context).pop();
-                            debugPrint("HAS LYRIC = " +
-                                widget.song.hasLyric.toString());
+                            //debugPrint("HAS LYRIC = " +
+                            //widget.song.hasLyric.toString());
                             widget.favoriteModel.collect(widget.song);
                             final message = SnackBar(
                                 content: Text("Đã thêm vào thư viện!"),
@@ -119,7 +119,7 @@ class _AddPlayListState extends State<AddPlayList> {
                                             onPressed: () {
                                               Navigator.of(context).pop();
                                             },
-                                            child: Text("Bỏ qua")),
+                                            child: Text("HỦY")),
                                         MaterialButton(
                                             onPressed: _playlist.isNotEmpty
                                                 ? () {
@@ -143,7 +143,12 @@ class _AddPlayListState extends State<AddPlayList> {
                                                         .showSnackBar(message);
                                                   }
                                                 : null,
-                                            child: Text("Đồng ý"))
+                                            child: Text(
+                                              "ĐỒNG Ý",
+                                              style: TextStyle(
+                                                  color: Theme.of(context)
+                                                      .accentColor),
+                                            ))
                                       ],
                                     ));
                           });

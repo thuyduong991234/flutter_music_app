@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_lyric/lyric_util.dart';
 import 'package:flutter_lyric/lyric_widget.dart';
+import 'package:flutter_music_app/generated/i18n.dart';
 import 'package:flutter_music_app/model/song_model.dart';
 import 'package:provider/provider.dart';
 

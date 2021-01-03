@@ -8,14 +8,15 @@ import 'package:flutter_music_app/ui/widget/playlist_carousel.dart';
 
 class AlbumsCarousel extends StatefulWidget {
   final List<Song> alubums;
+  final String title;
   final bool isSearch;
   final bool isPlaylist;
   final bool isTop100;
   final bool isViewAll;
   final Function(int) callback;
 
-  AlbumsCarousel(this.alubums, this.isSearch, this.isPlaylist, this.isTop100,
-      this.isViewAll, this.callback);
+  AlbumsCarousel(this.alubums, this.title, this.isSearch, this.isPlaylist,
+      this.isTop100, this.isViewAll, this.callback);
   @override
   _AlbumsCarouselState createState() => _AlbumsCarouselState();
 }
@@ -29,7 +30,7 @@ class _AlbumsCarouselState extends State<AlbumsCarousel> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Text(S.of(context).albums,
+            Text(widget.title,
                 style: TextStyle(
                     fontSize: 22.0,
                     fontWeight: FontWeight.bold,

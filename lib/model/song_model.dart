@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_music_app/model/artist_model.dart';
 import 'package:flutter_music_app/provider/view_state_refresh_list_model.dart';
@@ -166,6 +167,7 @@ class SongModel with ChangeNotifier {
   String _lyric;
   String _url;
   Duration _timer = Duration(minutes: -1);
+  List<Comment> _comments;
 
   Duration get timer => _timer;
 
@@ -173,9 +175,12 @@ class SongModel with ChangeNotifier {
 
   String get lyric => _lyric;
 
+  List<Comment> get comments => _comments;
+
   setUrl(String url) {
     //debugPrint("duration + " + data.duration.toString());
     _url = url;
+    setComments();
     //debugPrint("link + " + _url);
     notifyListeners();
   }
@@ -321,6 +326,19 @@ class SongModel with ChangeNotifier {
     _duration = duration;
     notifyListeners();
   }
+
+  setComments() async {
+    _comments = await BaseRepository.fetchCommentSong(currentSong.id);
+    debugPrint("NÂNNA" + _comments.toString());
+    notifyListeners();
+  }
+
+  addComments(String username, String content) async {
+    await BaseRepository.addCommentSong(currentSong.id,
+        FirebaseAuth.instance.currentUser.uid + ".." + username, content);
+    setComments();
+    notifyListeners();
+  }
 }
 
 class SongCollection {
@@ -336,6 +354,25 @@ class SongCollection {
     });
 
     return songs;
+  }
+}
+
+class Comment {
+  int id;
+  String user_id;
+  String content;
+  String music_id;
+  String user_name;
+
+  Comment({this.id, this.user_id, this.content, this.music_id, this.user_name});
+
+  factory Comment.fromJsonMap(Map<String, dynamic> map) {
+    return Comment(
+        content: map["content"],
+        id: map["id"],
+        user_id: (map["user_id"].split("..")).first,
+        user_name: (map["user_id"].split("..")).last,
+        music_id: map["music_id"]);
   }
 }
 

@@ -42,7 +42,7 @@ class _TabNavigatorState extends State<TabNavigator> {
   @override
   Widget build(BuildContext context) {
     LoginFirebase fb = Provider.of(context);
-    debugPrint("LOG: fb = " + fb.curUser.toString());
+    //debugPrint("LOG: fb = " + fb.curUser.toString());
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
         statusBarBrightness: Theme.of(context).brightness == Brightness.dark
@@ -52,8 +52,10 @@ class _TabNavigatorState extends State<TabNavigator> {
     DownloadModel downloadModel = Provider.of(context);
     LoginFirebase firebaseModel = Provider.of(context);
     return Scaffold(
-      body: ProviderWidget3<FavoriteListModel, DownloadListModel, LoginStateModel>(
-          onModelReady: (favoriteListModel, downloadListModel, loginModel) async {
+      body: ProviderWidget3<FavoriteListModel, DownloadListModel,
+              LoginStateModel>(
+          onModelReady:
+              (favoriteListModel, downloadListModel, loginModel) async {
             await favoriteListModel.initData();
             await downloadListModel.initData();
             await loginModel.initData();

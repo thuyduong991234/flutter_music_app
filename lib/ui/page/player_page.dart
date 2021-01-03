@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:cron/cron.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_music_app/anims/player_anim.dart';
+import 'package:flutter_music_app/generated/i18n.dart';
 import 'package:flutter_music_app/model/artist_model.dart';
 import 'package:flutter_music_app/model/download_model.dart';
 import 'package:flutter_music_app/model/favorite_model.dart';
@@ -60,12 +61,12 @@ class _PlayPageState extends State<PlayPage> with TickerProviderStateMixin {
   setTimerCountDown() {
     final cron = Cron();
     SongModel songs = Provider.of(context);
-    debugPrint("SONG TIMER2 = " + songs.timer.inMinutes.toString());
+    //debugPrint("SONG TIMER2 = " + songs.timer.inMinutes.toString());
     cron.schedule(Schedule.parse('*/1 * * * *'), () async {
       songs.setTimer(songs.timer - Duration(minutes: 1));
-      debugPrint("SONG TIMER = " + songs.timer.inMinutes.toString());
+      //debugPrint("SONG TIMER = " + songs.timer.inMinutes.toString());
       if (songs.timer.inMinutes < 0 && songs.timer.inMinutes != -2) {
-        debugPrint("SONG TIMER <= " + songs.timer.inMinutes.toString());
+        //debugPrint("SONG TIMER <= " + songs.timer.inMinutes.toString());
         songs.setTimer(Duration(minutes: -1));
         songs.pause();
         await cron.close();
@@ -400,6 +401,8 @@ class _PlayPageState extends State<PlayPage> with TickerProviderStateMixin {
     } else {
       controllerPlayer.stop(canceled: false);
     }
+
+    //songModel.setComments();
 
     List<Widget> pages = [
       SongListCarousel(),

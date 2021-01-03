@@ -9,6 +9,7 @@ import 'package:flutter_music_app/model/login_model.dart';
 import 'package:flutter_music_app/model/theme_model.dart';
 import 'package:flutter_music_app/ui/page/loginPage.dart';
 import 'package:flutter_music_app/ui/page/tab/info_page.dart';
+import 'package:flutter_music_app/ui/page/tab/tab_navigator.dart';
 import 'package:oktoast/oktoast.dart';
 import 'package:provider/provider.dart';
 
@@ -36,7 +37,6 @@ class _MinePageState extends State<MinePage>
   Widget build(BuildContext context) {
     super.build(context);
     LoginFirebase fb = Provider.of(context);
-    FavoriteModel f = Provider.of(context);
     return Scaffold(
         body: SafeArea(
       child: Column(
@@ -84,6 +84,7 @@ class _MinePageState extends State<MinePage>
 class UserListWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    LoginFirebase fb = Provider.of(context);
     var iconColor = Theme.of(context).accentColor;
     var localModel = Provider.of<LocaleModel>(context);
     return ListTileTheme(
@@ -129,54 +130,84 @@ class UserListWidget extends StatelessWidget {
                   localModel.switchLocale();
                 }),
           ),
-          ListTile(
-              title: Text("Info"),
-              onTap: () {},
-              leading: Icon(
-                Icons.face,
-                color: iconColor,
-              ),
-              trailing: Container(
-                child: MaterialButton(
-                  padding: EdgeInsets.only(left: 70),
-                  child: Icon(
-                    Icons.navigate_next,
-                    color: Colors.grey[700],
-                  ),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => InfoPage(),
-                      ),
-                    );
-                  },
+          if (fb.curUser != null)
+            ListTile(
+                title: Text("Thông tin tài khoản"),
+                onTap: () {},
+                leading: Icon(
+                  Icons.face,
+                  color: iconColor,
                 ),
-              )),
-          ListTile(
-              title: Text("Login"),
-              onTap: () {},
-              leading: Icon(
-                Icons.person,
-                color: iconColor,
-              ),
-              trailing: Container(
-                child: MaterialButton(
-                  padding: EdgeInsets.only(left: 70),
-                  child: Icon(
-                    Icons.navigate_next,
-                    color: Colors.grey[700],
+                trailing: Container(
+                  child: MaterialButton(
+                    padding: EdgeInsets.only(left: 70),
+                    child: Icon(
+                      Icons.navigate_next,
+                      color: Colors.grey[700],
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => InfoPage(),
+                        ),
+                      );
+                    },
                   ),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => LoginPage(),
-                      ),
-                    );
-                  },
+                )),
+          if (fb.curUser == null)
+            ListTile(
+                title: Text("Đăng nhập"),
+                onTap: () {},
+                leading: Icon(
+                  Icons.person,
+                  color: iconColor,
                 ),
-              )),
+                trailing: Container(
+                  child: MaterialButton(
+                    padding: EdgeInsets.only(left: 70),
+                    child: Icon(
+                      Icons.navigate_next,
+                      color: Colors.grey[700],
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => LoginPage(),
+                        ),
+                      );
+                    },
+                  ),
+                )),
+          if (fb.curUser != null)
+            ListTile(
+                title: Text("Đăng xuất"),
+                onTap: () {},
+                leading: Icon(
+                  Icons.person,
+                  color: iconColor,
+                ),
+                trailing: Container(
+                  child: MaterialButton(
+                    padding: EdgeInsets.only(left: 70),
+                    child: Icon(
+                      Icons.navigate_next,
+                      color: Colors.grey[700],
+                    ),
+                    onPressed: () async {
+                      await fb.logout();
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => TabNavigator(
+                            index: 0,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                )),
         ]),
       ),
     );

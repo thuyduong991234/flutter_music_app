@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_music_app/config/net/base_api.dart';
@@ -686,5 +685,87 @@ class BaseRepository {
     response.data['items'].forEach((item) => songs.add(Song.fromJsonMap(item)));
 
     return songs;
+  }
+
+  static Future fetchFollowArtist(String idUser) async {
+    final body = {
+      'user_id': idUser,
+    };
+    var response = await htp
+        .post('https://music-server-ryo.herokuapp.com/follows/ls', body: body);
+
+    debugPrint("FOLLOW + " + response.body.toString());
+
+    var res = json.decode(response.body.toString());
+
+    List<Artist> artists = [];
+
+    Artist one;
+    res.forEach((item) async {
+      one = await fetchArtist(item["artist_id"]);
+      artists.add(one);
+      debugPrint("GJKDNSDFKSF = " + one.toString());
+    });
+    debugPrint("GJKDNSDFKSF LENG = " + artists.length.toString());
+    return artists;
+  }
+
+  static Future deleteFollowArtist(String idUser, String alias) async {
+    final body = {
+      'user_id': idUser,
+      'artist_id': alias,
+    };
+    var response = await htp
+        .post('https://music-server-ryo.herokuapp.com/follows/rm', body: body);
+
+    debugPrint("REMOVE + " + response.body.toString());
+
+    return response.body.toString();
+  }
+
+  static Future addFollowArtist(String idUser, String alias) async {
+    final body = {
+      'user_id': idUser,
+      'artist_id': alias,
+    };
+    var response = await htp
+        .post('https://music-server-ryo.herokuapp.com/follows/', body: body);
+
+    debugPrint("REMOVE + " + response.body.toString());
+
+    return response.body.toString();
+  }
+
+  static Future fetchCommentSong(String idSong) async {
+    final body = {
+      'music_id': idSong,
+    };
+    var response = await htp
+        .post('https://music-server-ryo.herokuapp.com/comments/ls', body: body);
+
+    debugPrint("COMMENT            + " + response.body.toString());
+
+    var res = json.decode(response.body.toString());
+
+    List<Comment> comments = [];
+
+    res.forEach((item) {
+      comments.add(Comment.fromJsonMap(item));
+    });
+
+    return comments;
+  }
+
+  static Future addCommentSong(
+      String idSong, String username, String content) async {
+    final body = {
+      'music_id': idSong,
+      'user_id': username,
+      'content': content,
+    };
+    var response = await htp
+        .post('https://music-server-ryo.herokuapp.com/comments/', body: body);
+
+    return response.body.toString();
   }
 }

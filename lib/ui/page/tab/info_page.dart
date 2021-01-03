@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_music_app/generated/i18n.dart';
 import 'package:flutter_music_app/model/login_model.dart';
 import 'package:flutter_music_app/model/song_model.dart';
 import 'package:flutter_music_app/ui/page/tab/mine_page.dart';
@@ -102,7 +103,7 @@ class _InfoPageState extends State<InfoPage> {
                             LoginFirebase fb = Provider.of(context);
                             var ret = await fb.reauth(pass);
                             if (ret == "ok") {
-                              debugPrint("PASS = " + ret);
+                              //debugPrint("PASS = " + ret);
                               var ret1 = await fb.update(
                                   email: this.email,
                                   pwd: this.pwd,
@@ -115,7 +116,9 @@ class _InfoPageState extends State<InfoPage> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => TabNavigator(index: 3,)));
+                                        builder: (context) => TabNavigator(
+                                              index: 3,
+                                            )));
                               }
                             }
                           },
@@ -140,7 +143,12 @@ class _InfoPageState extends State<InfoPage> {
               color: Colors.grey,
             ),
             onPressed: () => {
-              Navigator.pop(context),
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => TabNavigator(
+                            index: 3,
+                          )))
             },
           ),
           Text(
@@ -217,7 +225,7 @@ class _InfoPageState extends State<InfoPage> {
               ],
               color: Theme.of(context).accentColor),
           child: Text(
-            'Update',
+            "Cập nhật",
             style: TextStyle(fontSize: 20, color: Colors.white),
           ),
         ));
@@ -247,7 +255,7 @@ class _InfoPageState extends State<InfoPage> {
   @override
   Widget build(BuildContext context) {
     LoginFirebase fb = Provider.of(context);
-    debugPrint("LOG: INFO= name= " + fb.curUser.toString());
+    //debugPrint("LOG: INFO= name= " + fb.curUser.toString());
     setState(() {
       oldEmail = fb.curUser.email;
       oldName = fb.curUser.displayName;

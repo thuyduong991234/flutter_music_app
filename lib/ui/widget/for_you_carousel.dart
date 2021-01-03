@@ -94,16 +94,22 @@ class _ForYouCarouselState extends State<ForYouCarousel> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             widget.title == "song new"
-                ? Text(S.of(context).forYou,
+                ? Text("Mới phát hành",
                     style: TextStyle(
                         fontSize: 22.0,
                         fontWeight: FontWeight.bold,
                         letterSpacing: 1.2))
-                : Text(S.of(context).takeCare,
-                    style: TextStyle(
-                        fontSize: 22.0,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 1.2)),
+                : (widget.title == "songs"
+                    ? Text("Bài hát",
+                        style: TextStyle(
+                            fontSize: 22.0,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 1.2))
+                    : Text("Gợi ý cho bạn",
+                        style: TextStyle(
+                            fontSize: 22.0,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 1.2))),
             widget.viewAll == true
                 ? GestureDetector(
                     onTap: () => {
