@@ -91,17 +91,17 @@ class _SignUpPageState extends State<SignUpPage> {
               context: context,
               builder: (BuildContext context) {
                 return AlertDialog(
-                  title: Text('Thông báo'),
+                  title: Text(S.of(context).titleNoti),
                   content: SingleChildScrollView(
                     child: ListBody(
                       children: <Widget>[
-                        Text('Đăng ký tài khoản thành công!'),
+                        Text(S.of(context).successRegister),
                       ],
                     ),
                   ),
                   actions: <Widget>[
                     MaterialButton(
-                      child: Text("ĐỒNG Ý",
+                      child: Text(S.of(context).actionConfirm,
                           style:
                               TextStyle(color: Theme.of(context).accentColor)),
                       onPressed: () {
@@ -135,7 +135,7 @@ class _SignUpPageState extends State<SignUpPage> {
               ],
               color: Theme.of(context).accentColor),
           child: Text(
-            'Register Now',
+            S.of(context).titleRegister,
             style: TextStyle(fontSize: 20, color: Colors.white),
           ),
         ));
@@ -155,7 +155,7 @@ class _SignUpPageState extends State<SignUpPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              "Bạn đã có tài khoản?",
+              S.of(context).titleHaveAccount,
               style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
@@ -165,7 +165,7 @@ class _SignUpPageState extends State<SignUpPage> {
               width: 10,
             ),
             Text(
-              "Đăng nhập",
+              S.of(context).titleLogin,
               style: TextStyle(
                   color: Theme.of(context).accentColor,
                   fontSize: 13,

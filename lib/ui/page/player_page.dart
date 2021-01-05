@@ -97,7 +97,7 @@ class _PlayPageState extends State<PlayPage> with TickerProviderStateMixin {
                                 Container(
                                     padding: EdgeInsets.only(top: 12),
                                     child: Text(
-                                      "Hẹn giờ tắt",
+                                      S.of(context).scheduler,
                                       style: TextStyle(
                                           fontSize: 18.0,
                                           fontWeight: FontWeight.w600),
@@ -231,7 +231,7 @@ class _PlayPageState extends State<PlayPage> with TickerProviderStateMixin {
                                         Navigator.of(context).pop();
                                         _showEnterTimer();
                                       },
-                                      child: Text("Nhập số phút",
+                                      child: Text(S.of(context).enterMinutes,
                                           style: TextStyle(fontSize: 14))),
                                 )
                               ],
@@ -261,7 +261,7 @@ class _PlayPageState extends State<PlayPage> with TickerProviderStateMixin {
                                 Container(
                                     padding: EdgeInsets.only(top: 12),
                                     child: Text(
-                                      "Hẹn giờ tắt",
+                                      S.of(context).scheduler,
                                       style: TextStyle(
                                           fontSize: 18.0,
                                           fontWeight: FontWeight.w600),
@@ -311,7 +311,7 @@ class _PlayPageState extends State<PlayPage> with TickerProviderStateMixin {
                                   padding: EdgeInsets.only(top: 5),
                                   child: GestureDetector(
                                       onTap: () {},
-                                      child: Text("Nhập số phút",
+                                      child: Text(S.of(context).enterMinutes,
                                           style: TextStyle(fontSize: 14))),
                                 ),
                               ],
@@ -335,7 +335,7 @@ class _PlayPageState extends State<PlayPage> with TickerProviderStateMixin {
                             });
                             Navigator.of(context).pop();
                           },
-                          child: Text("ĐỒNG Ý",
+                          child: Text(S.of(context).actionConfirm,
                               style: TextStyle(
                                   color: Theme.of(context).accentColor)))
                     ],

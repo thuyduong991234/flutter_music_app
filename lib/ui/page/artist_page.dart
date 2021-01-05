@@ -75,7 +75,7 @@ class _ArtistPageState extends State<ArtistPage> {
               ),
               Center(
                 child: Text(
-                  data.follow.toString() + " quan tâm",
+                  data.follow.toString() + " " + S.of(context).numFollow,
                   style: TextStyle(
                     fontSize: 14.0,
                     color: Colors.grey,
@@ -118,7 +118,7 @@ class _ArtistPageState extends State<ArtistPage> {
                                 width: 5,
                               ),
                               Text(
-                                "Quan tâm",
+                                S.of(context).follow,
                                 style: TextStyle(
                                     fontSize: 12.0,
                                     color: Theme.of(context).accentColor),
@@ -129,7 +129,7 @@ class _ArtistPageState extends State<ArtistPage> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
                               Text(
-                                "Đã quan tâm",
+                                S.of(context).followed,
                                 style: TextStyle(
                                     fontSize: 12.0,
                                     color: Theme.of(context).accentColor),
@@ -139,10 +139,10 @@ class _ArtistPageState extends State<ArtistPage> {
                   ),
                 ),
               ),
-              ShortSongCarousel(this.data.songs, "Top bài hát", true, false,
-                  null, this.data.id),
-              AlbumsCarousel(
-                  this.data.albums, "Albums", false, false, false, false, null),
+              ShortSongCarousel(this.data.songs, S.of(context).topSong, true,
+                  false, null, this.data.id),
+              AlbumsCarousel(this.data.albums, S.of(context).albums, false,
+                  false, false, false, null),
               CircleArtistsCarousel(this.data.relatedArtists, "Can like")
             ],
           )),
@@ -152,7 +152,7 @@ class _ArtistPageState extends State<ArtistPage> {
 
     return Scaffold(
       body: SafeArea(
-        child: Center(child: Text("Đang tải....")),
+        child: Center(child: Text(S.of(context).loading)),
       ),
     );
   }

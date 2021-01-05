@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_music_app/config/storage_manager.dart';
 
 class LocaleModel extends ChangeNotifier {
-  static const localeValueList = ['vn', 'en'];
+  static const localeValueList = ['zh-CN', 'en'];
 
   //
   static const kLocaleIndex = 'kLocaleIndex';
@@ -29,7 +29,7 @@ class LocaleModel extends ChangeNotifier {
   static String localeName(index, context) {
     switch (index) {
       case 0:
-        return 'Việt Nam';
+        return '中文';
       case 1:
         return 'English';
       default:

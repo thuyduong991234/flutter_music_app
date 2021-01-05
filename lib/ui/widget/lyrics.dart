@@ -63,7 +63,7 @@ class _ForYouCarouselState extends State<SongLyricsCarousel>
                       color: Theme.of(context).accentColor, fontSize: 20),
                   currentProgress: start.inMilliseconds.toDouble(),
                 )
-              : Text("Chưa có lời bài hát!")),
+              : Text(S.of(context).noLyric)),
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_music_app/generated/i18n.dart';
 import 'package:flutter_music_app/model/download_model.dart';
 import 'package:flutter_music_app/model/favorite_model.dart';
 import 'package:flutter_music_app/model/song_model.dart';
@@ -32,12 +33,12 @@ class _AddPlayListState extends State<AddPlayList> {
                             Navigator.of(context).pop();
                             widget.favoriteModel.collect(widget.song);
                             final message = SnackBar(
-                                content: Text("Đã xóa khỏi thư viện!"),
+                                content: Text(S.of(context).successDelete),
                                 duration: const Duration(milliseconds: 500));
                             Scaffold.of(context).showSnackBar(message);
                           },
                           leading: Icon(Icons.favorite_border),
-                          title: Text("Xóa khỏi thư viện"),
+                          title: Text(S.of(context).deleteFavorite),
                         )
                       : ListTile(
                           onTap: () {
@@ -46,12 +47,12 @@ class _AddPlayListState extends State<AddPlayList> {
                             //widget.song.hasLyric.toString());
                             widget.favoriteModel.collect(widget.song);
                             final message = SnackBar(
-                                content: Text("Đã thêm vào thư viện!"),
+                                content: Text(S.of(context).successAddFavorite),
                                 duration: const Duration(milliseconds: 500));
                             Scaffold.of(context).showSnackBar(message);
                           },
                           leading: Icon(Icons.favorite_border),
-                          title: Text("Thêm vào thư viện"),
+                          title: Text(S.of(context).titleAddToFavorite),
                         ),
                   ListTile(
                     onTap: () {
@@ -59,7 +60,7 @@ class _AddPlayListState extends State<AddPlayList> {
                       _showPlayListAddOption(context);
                     },
                     leading: Icon(Icons.music_note),
-                    title: Text("Thêm vào danh sách phát"),
+                    title: Text(S.of(context).titleAddToPlaylist),
                   ),
                   if (downloadModel.isDownload(widget.song) == false)
                     ListTile(
@@ -67,12 +68,12 @@ class _AddPlayListState extends State<AddPlayList> {
                         downloadModel.download(widget.song);
                         Navigator.of(context).pop();
                         final message = SnackBar(
-                            content: Text("Đã thêm vào hàng chờ tải về!"),
+                            content: Text(S.of(context).successAddToDownload),
                             duration: const Duration(milliseconds: 500));
                         Scaffold.of(context).showSnackBar(message);
                       },
                       leading: Icon(Icons.cloud_download),
-                      title: Text("Tải về"),
+                      title: Text(S.of(context).download),
                     )
                 ],
               ),
@@ -90,7 +91,7 @@ class _AddPlayListState extends State<AddPlayList> {
                 children: <Widget>[
                   ListTile(
                     leading: Icon(Icons.add),
-                    title: Text("Tạo danh sách phát"),
+                    title: Text(S.of(context).createPlaylist),
                     onTap: () {
                       Navigator.of(context).pop();
                       showDialog(
@@ -100,7 +101,7 @@ class _AddPlayListState extends State<AddPlayList> {
                             return StatefulBuilder(
                                 builder: (BuildContext context, setState) =>
                                     AlertDialog(
-                                      title: Text("Tạo danh sách phát"),
+                                      title: Text(S.of(context).createPlaylist),
                                       content: Wrap(
                                         children: <Widget>[
                                           TextFormField(
@@ -111,7 +112,9 @@ class _AddPlayListState extends State<AddPlayList> {
                                               },
                                               controller: playlistController,
                                               decoration: InputDecoration(
-                                                  hintText: "Danh sách #1"))
+                                                  hintText: S
+                                                      .of(context)
+                                                      .hintPlaylist))
                                         ],
                                       ),
                                       actions: [
@@ -119,7 +122,8 @@ class _AddPlayListState extends State<AddPlayList> {
                                             onPressed: () {
                                               Navigator.of(context).pop();
                                             },
-                                            child: Text("HỦY")),
+                                            child: Text(
+                                                S.of(context).actionCancel)),
                                         MaterialButton(
                                             onPressed: _playlist.isNotEmpty
                                                 ? () {
@@ -130,11 +134,12 @@ class _AddPlayListState extends State<AddPlayList> {
                                                             widget.song);
                                                     Navigator.of(context).pop();
                                                     final message = SnackBar(
-                                                        content: Text(
-                                                            "Đã tạo danh sách phát " +
-                                                                playlistController
-                                                                    .text +
-                                                                "!"),
+                                                        content: Text(S
+                                                                .of(context)
+                                                                .successCreatePlaylist +
+                                                            playlistController
+                                                                .text +
+                                                            "!"),
                                                         duration:
                                                             const Duration(
                                                                 milliseconds:
@@ -144,7 +149,7 @@ class _AddPlayListState extends State<AddPlayList> {
                                                   }
                                                 : null,
                                             child: Text(
-                                              "ĐỒNG Ý",
+                                              S.of(context).actionConfirm,
                                               style: TextStyle(
                                                   color: Theme.of(context)
                                                       .accentColor),
@@ -166,7 +171,9 @@ class _AddPlayListState extends State<AddPlayList> {
                             widget.favoriteModel.collect2(name, widget.song);
                             final message = SnackBar(
                                 content: Text(
-                                    "Đã thêm vào danh sách phát " + name + "!"),
+                                    S.of(context).successAddToPlaylist +
+                                        name +
+                                        "!"),
                                 duration: const Duration(milliseconds: 500));
                             Scaffold.of(context2).showSnackBar(message);
                           },

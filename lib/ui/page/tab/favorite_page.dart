@@ -208,7 +208,7 @@ class _FavoritePageState extends State<FavoritePage>
           ),
           Padding(
             padding: const EdgeInsets.all(20.0),
-            child: Text("Nhạc của tôi",
+            child: Text(S.of(context).tabFavorite,
                 style: TextStyle(
                     fontSize: 22.0,
                     fontWeight: FontWeight.w600,
@@ -225,10 +225,10 @@ class _FavoritePageState extends State<FavoritePage>
                   bottom: TabBar(
                     controller: _tab,
                     tabs: [
-                      Tab(text: "Thư viện"),
+                      Tab(text: S.of(context).tabFavorite),
                       Tab(text: "Playlist"),
-                      Tab(text: "Đã tải"),
-                      Tab(text: "Nghệ sĩ")
+                      Tab(text: S.of(context).download),
+                      Tab(text: S.of(context).artists)
                     ],
                     labelColor: Theme.of(context).accentColor,
                     indicatorColor: Theme.of(context).accentColor,
@@ -285,7 +285,7 @@ class _FavoritePageState extends State<FavoritePage>
                                       width: 5,
                                     ),
                                     Text(
-                                      "Phát ngẫu nhiên" +
+                                      S.of(context).btnRandomPlay +
                                           ' ( ' +
                                           favoriteModel.favoriteSong.length
                                               .toString() +
@@ -467,7 +467,7 @@ class _FavoritePageState extends State<FavoritePage>
                                       width: 5,
                                     ),
                                     Text(
-                                      "Phát ngẫu nhiên" +
+                                      S.of(context).btnRandomPlay +
                                           ' ( ' +
                                           downloadModel.downloadSong.length
                                               .toString() +

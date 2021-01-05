@@ -94,18 +94,18 @@ class _ForYouCarouselState extends State<ForYouCarousel> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             widget.title == "song new"
-                ? Text("Mới phát hành",
+                ? Text(S.of(context).songNew,
                     style: TextStyle(
                         fontSize: 22.0,
                         fontWeight: FontWeight.bold,
                         letterSpacing: 1.2))
                 : (widget.title == "songs"
-                    ? Text("Bài hát",
+                    ? Text(S.of(context).songs,
                         style: TextStyle(
                             fontSize: 22.0,
                             fontWeight: FontWeight.bold,
                             letterSpacing: 1.2))
-                    : Text("Gợi ý cho bạn",
+                    : Text(S.of(context).takeCare,
                         style: TextStyle(
                             fontSize: 22.0,
                             fontWeight: FontWeight.bold,
@@ -121,7 +121,7 @@ class _ForYouCarouselState extends State<ForYouCarousel> {
                             context,
                             MaterialPageRoute(
                               builder: (_) =>
-                                  SongCarousel(title: "Mới phát hành"),
+                                  SongCarousel(title: S.of(context).songNew),
                             ),
                           )
                         }

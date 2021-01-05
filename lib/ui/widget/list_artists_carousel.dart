@@ -106,12 +106,14 @@ class _ListArtistsCarouselState extends State<ListArtistsCarousel> {
   Widget build(BuildContext context) {
     return Column(children: <Widget>[
       Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+        padding: widget.isShowTitle == true
+            ? const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0)
+            : const EdgeInsets.symmetric(horizontal: 20.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             if (widget.isShowTitle == true)
-              Text("Nghệ sĩ",
+              Text(S.of(context).artists,
                   style: TextStyle(
                       fontSize: 22.0,
                       fontWeight: FontWeight.bold,

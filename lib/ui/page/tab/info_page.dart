@@ -53,7 +53,7 @@ class _InfoPageState extends State<InfoPage> {
                                 Container(
                                     padding: EdgeInsets.only(top: 12),
                                     child: Text(
-                                      "Xác minh mật khẩu",
+                                      S.of(context).titleConfirmPassword,
                                       style: TextStyle(
                                           fontSize: 18.0,
                                           fontWeight: FontWeight.w600),
@@ -122,7 +122,7 @@ class _InfoPageState extends State<InfoPage> {
                               }
                             }
                           },
-                          child: Text("ĐỒNG Ý",
+                          child: Text(S.of(context).actionConfirm,
                               style: TextStyle(
                                   color: Theme.of(context).accentColor)))
                     ],
@@ -152,7 +152,7 @@ class _InfoPageState extends State<InfoPage> {
             },
           ),
           Text(
-            "Thông tin tài khoản",
+            S.of(context).titleInfo,
             style: TextStyle(
               fontWeight: FontWeight.w600,
               fontSize: 16.0,
@@ -225,7 +225,7 @@ class _InfoPageState extends State<InfoPage> {
               ],
               color: Theme.of(context).accentColor),
           child: Text(
-            "Cập nhật",
+            S.of(context).btnUpdate,
             style: TextStyle(fontSize: 20, color: Colors.white),
           ),
         ));

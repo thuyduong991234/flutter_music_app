@@ -177,7 +177,7 @@ class _AlbumsPageState extends State<AlbumsPage> {
                                           width: 5,
                                         ),
                                         Text(
-                                          "Phát ngẫu nhiên",
+                                          S.of(context).btnRandomPlay,
                                           style: TextStyle(
                                               color: Theme.of(context)
                                                   .accentColor),
@@ -310,7 +310,7 @@ class _AlbumsPageState extends State<AlbumsPage> {
                                           width: 5,
                                         ),
                                         Text(
-                                          'Phát ngẫu nhiên',
+                                          S.of(context).btnRandomPlay,
                                           style: TextStyle(
                                               color: Theme.of(context)
                                                   .accentColor),

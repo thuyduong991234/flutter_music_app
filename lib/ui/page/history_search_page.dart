@@ -192,10 +192,10 @@ class _HistorySearchPageState extends State<HistorySearchPage>
                                   bottom: TabBar(
                                     controller: tabController,
                                     tabs: [
-                                      Tab(text: "Tất cả"),
-                                      Tab(text: "Bài hát"),
-                                      Tab(text: "Playlist"),
-                                      Tab(text: "Nghệ sĩ"),
+                                      Tab(text: S.of(context).all),
+                                      Tab(text: S.of(context).songs),
+                                      Tab(text: "Playlists"),
+                                      Tab(text: S.of(context).artists),
                                     ],
                                     labelColor: Theme.of(context).accentColor,
                                     indicatorColor:
@@ -223,7 +223,7 @@ class _HistorySearchPageState extends State<HistorySearchPage>
                                           ),
                                           AlbumsCarousel(
                                               playlists,
-                                              "Albums",
+                                              S.of(context).albums,
                                               true,
                                               false,
                                               false,
@@ -251,7 +251,7 @@ class _HistorySearchPageState extends State<HistorySearchPage>
                                 ),
                               )))
                       : Expanded(
-                          child: Center(child: Text("Đang tải")),
+                          child: Center(child: Text(S.of(context).loading)),
                         )
                 ]);
               }),

@@ -23,7 +23,6 @@ class _CircleArtistsCarouselState extends State<CircleArtistsCarousel> {
 
   @override
   Widget build(BuildContext context) {
-    FavoriteModel favoriteModel = Provider.of(context);
     return Column(children: <Widget>[
       Padding(
         padding: const EdgeInsets.only(left: 20.0, right: 20.0, bottom: 20.0),
@@ -34,8 +33,8 @@ class _CircleArtistsCarouselState extends State<CircleArtistsCarousel> {
                 widget.title == "Spotlight"
                     ? "Spotlight"
                     : (widget.title == "Nghe si cong hien"
-                        ? "Nghệ sĩ đóng góp"
-                        : "Bạn có thể thích"),
+                        ? S.of(context).contributionArtists
+                        : S.of(context).canLike),
                 style: TextStyle(
                     fontSize: 22.0,
                     fontWeight: FontWeight.bold,
@@ -52,7 +51,17 @@ class _CircleArtistsCarouselState extends State<CircleArtistsCarousel> {
               scrollDirection: Axis.horizontal,
               itemCount: widget.artists.length,
               itemBuilder: (BuildContext context, int index) {
+                FavoriteModel favoriteModel = Provider.of(context);
                 Artist data = widget.artists[index];
+                bool isFollowed = false;
+                if (favoriteModel.followArtists != null) {
+                  for (int i = 0; i < favoriteModel.followArtists.length; i++) {
+                    if (favoriteModel.followArtists[i].id == data.id) {
+                      isFollowed = true;
+                      break;
+                    }
+                  }
+                }
                 return GestureDetector(
                   onTap: () => {
                     Navigator.push(
@@ -103,7 +112,9 @@ class _CircleArtistsCarouselState extends State<CircleArtistsCarousel> {
                           if (data.follow != null)
                             Center(
                               child: Text(
-                                data.follow.toString() + " quan tâm",
+                                data.follow.toString() +
+                                    " " +
+                                    S.of(context).numFollow,
                                 style: TextStyle(
                                   fontSize: 10.0,
                                   color: Colors.grey,
@@ -117,85 +128,61 @@ class _CircleArtistsCarouselState extends State<CircleArtistsCarousel> {
                           ),
                           Center(
                             child: Container(
-                              height: 30,
-                              margin: EdgeInsets.only(
-                                  top: 5.0, bottom: 5.0, left: 5.0, right: 5.0),
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                    color: Theme.of(context).brightness ==
-                                            Brightness.light
-                                        ? Colors.black12
-                                        : Colors.grey[500],
-                                    width: 1),
-                                borderRadius: BorderRadius.circular(10.0),
-                              ),
-                              child: GestureDetector(
-                                  onTap: () {
-                                    if (favoriteModel.followArtists
-                                            .contains(data) ==
-                                        false)
-                                      favoriteModel.addArtist(data);
-                                    else
-                                      favoriteModel.removeArtist(data);
-                                  },
-                                  child: favoriteModel.followArtists != null
-                                      ? (favoriteModel.followArtists
-                                                  .contains(data) ==
-                                              false
-                                          ? Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: <Widget>[
-                                                Icon(Icons.person_add,
-                                                    color: Theme.of(context)
-                                                        .accentColor,
-                                                    size: 20),
-                                                SizedBox(
-                                                  width: 5,
-                                                ),
-                                                Text(
-                                                  "Quan tâm",
-                                                  style: TextStyle(
-                                                      fontSize: 12.0,
-                                                      color: Theme.of(context)
-                                                          .accentColor),
-                                                ),
-                                              ],
-                                            )
-                                          : Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: <Widget>[
-                                                Text(
-                                                  "Đã quan tâm",
-                                                  style: TextStyle(
-                                                      fontSize: 12.0,
-                                                      color: Theme.of(context)
-                                                          .accentColor),
-                                                ),
-                                              ],
-                                            ))
-                                      : Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: <Widget>[
-                                            Icon(Icons.person_add,
-                                                color: Theme.of(context)
-                                                    .accentColor,
-                                                size: 20),
-                                            SizedBox(
-                                              width: 5,
-                                            ),
-                                            Text(
-                                              "Quan tâm",
-                                              style: TextStyle(
-                                                  fontSize: 12.0,
+                                height: 30,
+                                margin: EdgeInsets.only(
+                                    top: 5.0,
+                                    bottom: 5.0,
+                                    left: 5.0,
+                                    right: 5.0),
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                      color: Theme.of(context).brightness ==
+                                              Brightness.light
+                                          ? Colors.black12
+                                          : Colors.grey[500],
+                                      width: 1),
+                                  borderRadius: BorderRadius.circular(10.0),
+                                ),
+                                child: GestureDetector(
+                                    onTap: () {
+                                      isFollowed == false
+                                          ? favoriteModel.addArtist(data)
+                                          : favoriteModel.removeArtist(data);
+                                    },
+                                    child: isFollowed == false
+                                        ? Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: <Widget>[
+                                              Icon(Icons.person_add,
                                                   color: Theme.of(context)
-                                                      .accentColor),
-                                            ),
-                                          ],
-                                        )),
-                            ),
+                                                      .accentColor,
+                                                  size: 20),
+                                              SizedBox(
+                                                width: 5,
+                                              ),
+                                              Text(
+                                                S.of(context).follow,
+                                                style: TextStyle(
+                                                    fontSize: 12.0,
+                                                    color: Theme.of(context)
+                                                        .accentColor),
+                                              ),
+                                            ],
+                                          )
+                                        : Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: <Widget>[
+                                              Text(
+                                                S.of(context).followed,
+                                                style: TextStyle(
+                                                    fontSize: 12.0,
+                                                    color: Theme.of(context)
+                                                        .accentColor),
+                                              ),
+                                            ],
+                                          ))),
                           ),
                         ],
                       ),

@@ -132,7 +132,7 @@ class UserListWidget extends StatelessWidget {
           ),
           if (fb.curUser != null)
             ListTile(
-                title: Text("Thông tin tài khoản"),
+                title: Text(S.of(context).titleInfo),
                 onTap: () {},
                 leading: Icon(
                   Icons.face,
@@ -157,7 +157,7 @@ class UserListWidget extends StatelessWidget {
                 )),
           if (fb.curUser == null)
             ListTile(
-                title: Text("Đăng nhập"),
+                title: Text(S.of(context).titleLogin),
                 onTap: () {},
                 leading: Icon(
                   Icons.person,
@@ -182,7 +182,7 @@ class UserListWidget extends StatelessWidget {
                 )),
           if (fb.curUser != null)
             ListTile(
-                title: Text("Đăng xuất"),
+                title: Text(S.of(context).titleLogout),
                 onTap: () {},
                 leading: Icon(
                   Icons.person,

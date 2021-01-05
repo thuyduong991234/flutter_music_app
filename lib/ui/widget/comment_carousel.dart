@@ -148,7 +148,7 @@ class _CommentCarouselState extends State<CommentCarousel> {
                       Container(
                           padding: EdgeInsets.only(top: 12),
                           child: Text(
-                            "Bình luận",
+                            S.of(context).titleComment,
                             style: TextStyle(
                                 fontSize: 18.0, fontWeight: FontWeight.w600),
                           )),
@@ -157,8 +157,9 @@ class _CommentCarouselState extends State<CommentCarousel> {
                           child: Text(
                             songModel.comments != null
                                 ? songModel.comments.length.toString() +
-                                    " bình luận"
-                                : "0 bình luận",
+                                    " " +
+                                    S.of(context).titleComment
+                                : "0 " + S.of(context).titleComment,
                             style:
                                 TextStyle(fontSize: 14.0, color: Colors.grey),
                           )),
@@ -212,7 +213,7 @@ class _CommentCarouselState extends State<CommentCarousel> {
                                       border: InputBorder.none,
                                       enabledBorder: InputBorder.none,
                                       focusedBorder: InputBorder.none,
-                                      hintText: "Bình luận ... "),
+                                      hintText: S.of(context).enterComment),
                                 ))),
                       ),
                       SizedBox(width: 10),

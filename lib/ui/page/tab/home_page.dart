@@ -148,20 +148,20 @@ class _HomePageState extends State<HomePage>
                         SizedBox(
                           height: 10,
                         ),
-                        AlbumsCarousel(albums, "Albums hot", false, false,
-                            false, false, null),
+                        AlbumsCarousel(albums, S.of(context).ablumsHot, false,
+                            false, false, false, null),
                         ForYouCarousel(forYou, "song new", true, false, null),
                         SizedBox(
                           height: 20,
                         ),
                         AlbumsCarousel(
                             top100, "Top 100", false, false, true, true, null),
-                        AlbumsCarousel(
-                            genre, "Thể loại", false, true, false, false, null),
-                        AlbumsCarousel(
-                            topic, "Chủ đề", false, true, false, false, null),
-                        AlbumsCarousel(nations, "Quốc gia", false, true, false,
-                            false, null),
+                        AlbumsCarousel(genre, S.of(context).genres, false, true,
+                            false, false, null),
+                        AlbumsCarousel(topic, S.of(context).motions, false,
+                            true, false, false, null),
+                        AlbumsCarousel(nations, S.of(context).nations, false,
+                            true, false, false, null),
                         CircleArtistsCarousel(spotlight, "Spotlight"),
                       ]),
                     ),

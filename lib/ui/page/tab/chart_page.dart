@@ -158,7 +158,7 @@ class _ChartPageState extends State<ChartPage>
                                     collapsedHeight: 60,
                                     pinned: true,
                                     title: Text(
-                                      "#CHART TUẦN",
+                                      S.of(context).weekChart,
                                       style: TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w600,
@@ -352,7 +352,8 @@ class _ChartPageState extends State<ChartPage>
                                                               .center,
                                                       children: <Widget>[
                                                         Text(
-                                                          "Tuần " +
+                                                          S.of(context).week +
+                                                              " " +
                                                               model.week
                                                                   .toString() +
                                                               " - " +
@@ -396,9 +397,9 @@ class _ChartPageState extends State<ChartPage>
                                     bottom: TabBar(
                                       isScrollable: false,
                                       tabs: [
-                                        Tab(text: "VIỆT NAM"),
-                                        Tab(text: "US-UK"),
-                                        Tab(text: "K-POP"),
+                                        Tab(text: S.of(context).tabbarVietNam),
+                                        Tab(text: "US - UK"),
+                                        Tab(text: "K - POP"),
                                       ],
                                     ),
                                   ),
@@ -461,7 +462,7 @@ class _ChartPageState extends State<ChartPage>
                                                     width: 5,
                                                   ),
                                                   Text(
-                                                    "Phát ngẫu nhiên",
+                                                    S.of(context).btnRandomPlay,
                                                     style: TextStyle(
                                                         color: Theme.of(context)
                                                             .accentColor),
@@ -550,7 +551,7 @@ class _ChartPageState extends State<ChartPage>
                                                     width: 5,
                                                   ),
                                                   Text(
-                                                    "Phát ngẫu nhiên",
+                                                    S.of(context).btnRandomPlay,
                                                     style: TextStyle(
                                                         color: Theme.of(context)
                                                             .accentColor),
@@ -639,7 +640,7 @@ class _ChartPageState extends State<ChartPage>
                                                     width: 5,
                                                   ),
                                                   Text(
-                                                    "Phát ngẫu nhiên",
+                                                    S.of(context).btnRandomPlay,
                                                     style: TextStyle(
                                                         color: Theme.of(context)
                                                             .accentColor),

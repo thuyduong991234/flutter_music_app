@@ -64,26 +64,20 @@ class S implements WidgetsLocalizations {
   String get retry => "Retry";
   String get searchHistory => "History";
   String get searchHot => "Hot";
-  String get searchSuggest => "Track, album, artist, podcast";
   String get searchShake => "Shake";
   String get setting => "Setting";
   String get settingFont => "System Font";
-  String get settingLanguage => "Language";
   String get share => "Share";
   String get signIn => "Sign In";
   String get signIn3thd => "More";
   String get welcome => "Welcome";
   String get signUp => "Sign Up";
   String get splashSkip => "Skip";
-  String get tabSearch => "Search";
   String get searchResult => "Search Result:";
-  String get tabMusic => "Music";
-  String get tabFavorite => "Favorite";
+  String get tabFavorite => "Favorites";
   String get tabUser => "Me";
   String get theme => "Theme";
   String get toSignIn => "Sign In";
-  String get albums => "Albums hot";
-  String get artists => "Artists";
   String get viewAll => "View All";
   String get forYou => "Song new";
   String get takeCare => "Recommend for you";
@@ -100,6 +94,72 @@ class S implements WidgetsLocalizations {
   String get viewStateMessageUnAuth => "Not sign in yet";
   String get wechatAccount => "Wechat";
   String appUpdateFoundNewVersion(String version) => "New version $version";
+
+  String get weekChart => "#WEEK CHART";
+  String get week => "Week";
+  String get ablumsHot => "Albums hot";
+  String get songNew => "New songs";
+  String get top100 => "Top 100";
+  String get genres => "Genres";
+  String get motions => "Topics";
+  String get nations => "Nations";
+  String get artistsTop => "Spotlight";
+  String get numFollow => "follow";
+  String get follow => "Follow";
+  String get followed => "Followed";
+  String get tabSearch => "Search";
+  String get tabMusic => "Chart";
+  String get titleLogin => "Login";
+  String get titleInfo => "Info";
+  String get titleLogout => "Logout";
+  String get btnRandomPlay => "Random play";
+  String get tabbarPlaylist => "Playlist";
+  String get download => "Download";
+  String get tabbarVietNam => "VIET NAM";
+  String get titleAddToFavorite => "Add to Favorite";
+  String get titleAddToPlaylist => "Add to My Playlist";
+  String get createPlaylist => "Create new playlist";
+  String get hintPlaylist => "Playlist #1";
+  String get titleComment => "Comments";
+  String get enterComment => "Enter your comments...";
+  String get scheduler => "Scheduler";
+  String get enterMinutes => "Enter minutes";
+  String get loading => "Loading...";
+  String get songs => "Songs";
+  String get albums => "Albums";
+  String get artists => "Artists";
+  String get all => "All";
+  String get canLike => "Can you like!";
+  String get topSong => "Top songs";
+  String get contributionArtists => "Contribution Artists";
+  String get btnUpdate => "Update";
+  String get titleConfirmPassword => "Confirm password";
+  String get titleForgotPass => "Forgot Password?";
+  String get btnLoginFB => "Login with Facebook";
+  String get titleNoAccount => "Don't have an account?";
+  String get titleHaveAccount => "Already have an account?";
+  String get titleRegister => "Register Now";
+  String get or => "or";
+  String get warnLogin => "You need login for this action!";
+  String get downloaded => "Downloaded";
+  String get successCreatePlaylist => "Already created playlist ";
+  String get successAddToDownload => "Already added to list downloading!";
+  String get successAddFavorite => "Already added Favorite!";
+  String get deleteFavorite => "Delete from Favorite";
+  String get successDelete => "Already deleted from Favorite!";
+  String get successAddToPlaylist => "Already add to playlist ";
+  String get myMusic => "My music";
+  String get hotTop100 => "Hot";
+  String get top100VN => "Top 100 Viet Nam";
+  String get top100AuMy => "Top 100 US - UK";
+  String get top100Asia => "Top 100 Asia";
+  String get top100Concert => "Top 100 Concert";
+  String get noLyric => "Don't have lyric!";
+  String get settingLanguage => "Language";
+  String get searchSuggest => "Track, album, artist, podcast";
+  String get titleNoti => "Notify";
+  String get successRegister =>
+      "You have successfully registered for an account!";
 }
 
 class $en extends S {
@@ -112,158 +172,279 @@ class $zh_CN extends S {
   @override
   TextDirection get textDirection => TextDirection.ltr;
 
+  String get Like => "Like";
   @override
-  String get favourites => "收藏";
+  String get about => "About";
   @override
-  String get appUpdateLeastVersion => "已是最新版本";
+  String get appName => "Love Music";
   @override
-  String get twoPwdDifferent => "两次密码不一致";
+  String get appUpdateActionDownloadAgain => "Download";
   @override
-  String get viewStateButtonRetry => "重试";
+  String get appUpdateActionInstallApk => "Install";
   @override
-  String get about => "关于";
+  String get appUpdateActionUpdate => "Update";
   @override
-  String get unLike => "取消收藏";
+  String get appUpdateCheckUpdate => "Check Update";
   @override
-  String get signUp => "注册";
+  String get appUpdateDoubleBackTips => "Press back again, cancel download";
   @override
-  String get viewStateMessageEmpty => "空空如也";
+  String get appUpdateDownloadCanceled => "Download canceled";
   @override
-  String get appUpdateActionInstallApk => "直接安装";
+  String get appUpdateDownloadFailed => "Download failed";
   @override
-  String get viewStateMessageUnAuth => "未登录";
+  String get appUpdateDownloading => "Downloading...";
   @override
-  String get setting => "设置";
+  String get appUpdateLeastVersion => "Least version now ";
   @override
-  String get settingFont => "字体";
+  String get appUpdateReDownloadContent =>
+      "It has been detected that it has been downloaded, whether it is installed?";
   @override
-  String get feedback => "意见反馈";
+  String get appUpdateUpdate => "Version Update";
   @override
-  String get logout => "退出登录";
+  String get article_tag_top => "Top";
   @override
-  String get password => "请输入密码";
+  String get autoBySystem => "Auto";
   @override
-  String get searchShake => "换一换";
+  String get clear => "Clear";
   @override
-  String get Like => "收藏";
+  String get close => "Close";
   @override
-  String get viewStateMessageNetworkError => "网络连接异常,请检查网络或稍后重试";
+  String get coin => "Coin";
   @override
-  String get appUpdateActionDownloadAgain => "重新下载";
+  String get collectionRemove => "Remove";
   @override
-  String get autoBySystem => "跟随系统";
+  String get favourites => "Favorites";
   @override
-  String get viewStateButtonRefresh => "刷新一下";
+  String get feedback => "FeedBack";
   @override
-  String get appUpdateDoubleBackTips => "再次点击返回键,取消下载";
+  String get fieldNotNull => "not empty";
   @override
-  String get loadFailed => "加载失败,请稍后重试";
+  String get fontKuaiLe => "ZCOOL KuaiLe";
   @override
-  String get refreshTwoLevel => "欢迎光临,我的空中楼阁";
+  String get githubIssue => "Can't find mail app,please github issues";
   @override
-  String get article_tag_top => "置顶";
+  String get loadFailed => "Load failed,retry later";
   @override
-  String get appUpdateDownloadFailed => "下载失败";
+  String get logout => "Sign Out";
   @override
-  String get appUpdateReDownloadContent => "检测到本地已下载过该版本,是否直接安装?";
+  String get myFavourites => "My favourites";
   @override
-  String get noAccount => "还没账号? ";
+  String get needLogin => "Go to Sign In";
   @override
-  String get openBrowser => "浏览器打开";
+  String get noAccount => "No Account ? ";
   @override
-  String get appUpdateActionUpdate => "更新";
+  String get openBrowser => "Open Browser";
   @override
-  String get coin => "积分";
+  String get password => "Please input Password";
   @override
-  String get splashSkip => "跳过";
+  String get rate => "Rate";
   @override
-  String get collectionRemove => "移除收藏";
+  String get rePassword => "Confirm Password";
   @override
-  String get actionConfirm => "确认";
+  String get refresh => "Refresh";
   @override
-  String get fontKuaiLe => "快乐字体";
+  String get refreshTwoLevel => "release to enter second floor";
   @override
-  String get appUpdateCheckUpdate => "检查更新";
+  String get retry => "Retry";
   @override
-  String get settingLanguage => "多语言";
+  String get searchHistory => "History";
   @override
-  String get myFavourites => "我的收藏";
+  String get searchHot => "Hot";
   @override
-  String get signIn3thd => "第三方登录";
+  String get searchShake => "Shake";
   @override
-  String get welcome => "欢迎登录小寓优品";
+  String get setting => "Setting";
   @override
-  String get viewStateMessageError => "加载失败";
+  String get settingFont => "System Font";
   @override
-  String get rate => "评分";
+  String get share => "Share";
   @override
-  String get actionCancel => "取消";
+  String get signIn => "Sign In";
   @override
-  String get theme => "色彩主题";
+  String get signIn3thd => "More";
   @override
-  String get share => "分享";
+  String get welcome => "Welcome";
   @override
-  String get appUpdateUpdate => "版本更新";
+  String get signUp => "Sign Up";
   @override
-  String get fieldNotNull => "不能为空";
+  String get splashSkip => "Skip";
   @override
-  String get close => "关闭";
+  String get searchResult => "Search Result:";
   @override
-  String get retry => "重试";
+  String get toSignIn => "Sign In";
   @override
-  String get wechatAccount => "公众号";
+  String get forYou => "Song new";
   @override
-  String get toSignUp => "去注册";
+  String get toSignUp => "Sign Up";
   @override
-  String get appUpdateDownloading => "下载中,请稍后...";
+  String get twoPwdDifferent => "The two passwords differ";
   @override
-  String get appName => "爱Music";
+  String get unLike => "UnLike";
   @override
-  String get tabUser => "我的";
+  String get userName => "Please input Username";
   @override
-  String get clear => "清空";
+  String get viewStateButtonLogin => "Sign In";
   @override
-  String get needLogin => "请先登录";
+  String get viewStateButtonRefresh => "Refresh";
   @override
-  String get refresh => "刷新";
+  String get viewStateMessageEmpty => "Nothing Found";
   @override
-  String get toSignIn => "点我登录";
+  String get viewStateMessageError => "Load Failed";
   @override
-  String get albums => "歌集";
+  String get viewStateMessageUnAuth => "Not sign in yet";
   @override
-  String get viewAll => "查看所有";
+  String get wechatAccount => "Wechat";
   @override
-  String get forYou => "推荐";
+  String appUpdateFoundNewVersion(String version) => "New version $version";
   @override
-  String get userName => "请输入账户名";
   @override
-  String get appUpdateDownloadCanceled => "下载已取消";
+  String get weekChart => "#CHART TUẦN";
   @override
-  String get tabSearch => "搜索";
+  String get week => "Tuần";
   @override
-  String get searchResult => "搜索结果：";
+  String get ablumsHot => "Albums hot";
   @override
-  String get tabMusic => "音乐";
+  String get songNew => "Mới phát hành";
   @override
-  String get tabFavorite => "收藏";
+  String get viewAll => "Xem tất cả";
   @override
-  String get rePassword => "确认密码";
+  String get takeCare => "Gợi ý cho bạn";
   @override
-  String get signIn => "登录";
+  String get top100 => "Top 100";
   @override
-  String get githubIssue => "未找到邮件客户端,请前往github,提issue";
+  String get genres => "Thể loại";
   @override
-  String get viewStateButtonLogin => "登录";
+  String get motions => "Chủ đề";
   @override
-  String get searchHot => "热门搜索";
+  String get nations => "Quốc gia";
   @override
-  String get searchSuggest => "歌名 歌手名 专辑名";
+  String get artistsTop => "Nghệ sĩ nổi bật";
   @override
-  String get darkMode => "黑夜模式";
+  String get numFollow => "quan tâm";
   @override
-  String get searchHistory => "历史搜索";
+  String get follow => "Quan tâm";
   @override
-  String appUpdateFoundNewVersion(String version) => "发现新版本$version,是否更新?";
+  String get followed => "Đã quan tâm";
+  @override
+  String get tabSearch => "Tìm kiếm";
+  @override
+  String get tabMusic => "BXH";
+  @override
+  String get tabFavorite => "Thư viện";
+  @override
+  String get tabUser => "Tôi";
+  @override
+  String get theme => "Chủ đề";
+  @override
+  String get darkMode => "Chế độ tối";
+  @override
+  String get viewStateMessageNetworkError => "Thất bại, kiểm tra network!";
+  @override
+  String get viewStateButtonRetry => "Thử lại";
+  @override
+  String get settingLanguage => "Ngôn ngữ";
+  @override
+  String get searchSuggest => "Track, album, artist, podcast";
+  @override
+  String get actionCancel => "Hủy";
+  @override
+  String get actionConfirm => "OK";
+  @override
+  String get titleLogin => "Đăng nhập";
+  @override
+  String get titleInfo => "Thông tin tài khoản";
+  @override
+  String get titleNoti => "Thông báo";
+  @override
+  String get successRegister => "Bạn đã đăng ký tài khoản thành công!";
+  @override
+  String get titleLogout => "Đăng xuất";
+  @override
+  String get btnRandomPlay => "Phát ngẫu nhiên";
+  @override
+  String get tabbarPlaylist => "Playlist";
+  @override
+  String get download => "Tải về";
+  @override
+  String get downloaded => "Đã tải";
+  @override
+  String get tabbarVietNam => "VIỆT NAM";
+  @override
+  String get titleAddToFavorite => "Thêm vào thư viện";
+  @override
+  String get titleAddToPlaylist => "Thêm vào danh sách phát";
+  @override
+  String get createPlaylist => "Tạo danh sách phát";
+  @override
+  String get hintPlaylist => "Danh sách #1";
+  @override
+  String get titleComment => "Bình luận";
+  @override
+  String get enterComment => "Bình luận...";
+  @override
+  String get scheduler => "Hẹn giờ tắt";
+  @override
+  String get enterMinutes => "Nhập số phút";
+  @override
+  String get loading => "Đang tải...";
+  @override
+  String get songs => "Bài hát";
+  @override
+  String get albums => "Albums";
+  @override
+  String get artists => "Nghệ sĩ";
+  @override
+  String get all => "Tất cả";
+  @override
+  String get canLike => "Có thể bạn quan tâm";
+  @override
+  String get topSong => "Top bài hát";
+  @override
+  String get contributionArtists => "Nghệ sĩ đóng góp";
+  @override
+  String get btnUpdate => "Cập nhật";
+  @override
+  String get titleConfirmPassword => "Xác minh mật khẩu";
+  @override
+  String get titleForgotPass => "Quên mật khẩu?";
+  @override
+  String get btnLoginFB => "Đăng nhập với Facebook";
+  @override
+  String get titleNoAccount => "Bạn chưa có tài khoản?";
+  @override
+  String get titleHaveAccount => "Bạn đã có tài khoản?";
+  @override
+  String get titleRegister => "Đăng ký ngay";
+  @override
+  String get or => "hoặc";
+  @override
+  String get warnLogin => "Bạn cần đăng nhập để thực hiện hành động này!";
+  @override
+  String get successCreatePlaylist => "Đã tạo danh sách phát ";
+  @override
+  String get successAddToPlaylist => "Đã thêm vào sách phát ";
+  @override
+  String get successAddToDownload => "Đã thêm vào hàng chờ tải về! ";
+  @override
+  String get successAddFavorite => "Đã thêm vào thư viện!";
+  @override
+  String get deleteFavorite => "Xóa khỏi thư viện";
+  @override
+  String get successDelete => "Đã xóa khỏi thư viện!";
+  @override
+  String get myMusic => "Thư viện của tôi";
+  @override
+  String get hotTop100 => "Nổi bật";
+  @override
+  String get top100VN => "Top 100 Việt Nam";
+  @override
+  String get top100AuMy => "Top 100 US - UK";
+  @override
+  String get top100Asia => "Top 100 Châu Á";
+  @override
+  String get top100Concert => "Top 100 Hòa tấu";
+  @override
+  String get noLyric => "Chưa có lời bài hát!";
 }
 
 class GeneratedLocalizationsDelegate extends LocalizationsDelegate<S> {

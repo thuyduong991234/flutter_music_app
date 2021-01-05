@@ -109,7 +109,7 @@ class _LoginPageState extends State<LoginPage> {
               ],
               color: Theme.of(context).accentColor),
           child: Text(
-            "Đăng nhập",
+            S.of(context).titleLogin,
             style: TextStyle(fontSize: 20, color: Colors.white),
           ),
         ));
@@ -131,7 +131,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
           ),
-          Text("Hoặc"),
+          Text(S.of(context).or),
           Expanded(
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 10),
@@ -184,7 +184,7 @@ class _LoginPageState extends State<LoginPage> {
                     topRight: Radius.circular(5)),
               ),
               alignment: Alignment.center,
-              child: Text("Đăng nhập",
+              child: Text(S.of(context).btnLoginFB,
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: 18,
@@ -210,14 +210,14 @@ class _LoginPageState extends State<LoginPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              "Bạn chưa có tài khoản?",
+              S.of(context).titleNoAccount,
               style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
             ),
             SizedBox(
               width: 10,
             ),
             Text(
-              "Đăng ký",
+              S.of(context).titleRegister,
               style: TextStyle(
                   color: Theme.of(context).accentColor,
                   fontSize: 13,
@@ -309,7 +309,7 @@ class _LoginPageState extends State<LoginPage> {
                           Container(
                             padding: EdgeInsets.symmetric(vertical: 10),
                             alignment: Alignment.centerRight,
-                            child: Text("Quên mật khẩu",
+                            child: Text(S.of(context).titleForgotPass,
                                 style: TextStyle(
                                     fontSize: 14, fontWeight: FontWeight.w500)),
                           ),

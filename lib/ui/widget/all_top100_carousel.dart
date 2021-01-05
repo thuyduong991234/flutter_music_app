@@ -59,7 +59,7 @@ class _AllTop100CarouselState extends State<AllTop100Carousel> {
                           Padding(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 20.0, vertical: 20.0),
-                            child: Text("Nổi bật",
+                            child: Text(S.of(context).hotTop100,
                                 style: TextStyle(
                                     fontSize: 22.0,
                                     fontWeight: FontWeight.bold,
@@ -135,7 +135,7 @@ class _AllTop100CarouselState extends State<AllTop100Carousel> {
                           Padding(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 20.0, vertical: 20.0),
-                            child: Text("Top 100 Việt Nam",
+                            child: Text(S.of(context).top100VN,
                                 style: TextStyle(
                                     fontSize: 22.0,
                                     fontWeight: FontWeight.bold,
@@ -211,7 +211,7 @@ class _AllTop100CarouselState extends State<AllTop100Carousel> {
                           Padding(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 20.0, vertical: 20.0),
-                            child: Text("Top 100 Âu - Mỹ",
+                            child: Text(S.of(context).top100AuMy,
                                 style: TextStyle(
                                     fontSize: 22.0,
                                     fontWeight: FontWeight.bold,
@@ -287,7 +287,7 @@ class _AllTop100CarouselState extends State<AllTop100Carousel> {
                           Padding(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 20.0, vertical: 20.0),
-                            child: Text("Top 100 Châu Á",
+                            child: Text(S.of(context).top100Asia,
                                 style: TextStyle(
                                     fontSize: 22.0,
                                     fontWeight: FontWeight.bold,
@@ -363,7 +363,7 @@ class _AllTop100CarouselState extends State<AllTop100Carousel> {
                           Padding(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 20.0, vertical: 20.0),
-                            child: Text("Top 100 Hòa tấu",
+                            child: Text(S.of(context).top100Concert,
                                 style: TextStyle(
                                     fontSize: 22.0,
                                     fontWeight: FontWeight.bold,

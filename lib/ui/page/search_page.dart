@@ -103,7 +103,7 @@ class _SearchPageState extends State<SearchPage> {
                   // return SkeletonList(
                   //   builder: (context, index) => ArticleSkeletonItem(),
                   // );
-                  return Center(child: Text('Đang tải...'));
+                  return Center(child: Text(S.of(context).loading));
                 } else if (model.error && model.list.isEmpty) {
                   return ViewStateErrorWidget(
                       error: model.viewStateError, onPressed: model.initData);
