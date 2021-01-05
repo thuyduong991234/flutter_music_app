@@ -7,10 +7,10 @@ import 'add_to_playlist.dart';
 
 class SongListCarousel extends StatefulWidget {
   @override
-  _ForYouCarouselState createState() => _ForYouCarouselState();
+  _SongListCarouselState createState() => _SongListCarouselState();
 }
 
-class _ForYouCarouselState extends State<SongListCarousel> {
+class _SongListCarouselState extends State<SongListCarousel> {
   Widget _buildSongItem(Song data) {
     FavoriteModel favoriteModel = Provider.of(context);
     SongModel songModel = Provider.of(context);
@@ -143,10 +143,10 @@ class _ForYouCarouselState extends State<SongListCarousel> {
   @override
   Widget build(BuildContext context) {
     SongModel songModel = Provider.of(context);
-    return Expanded(
-      child: ListView.builder(
+    return Scaffold(
+      body: ListView.builder(
         scrollDirection: Axis.vertical,
-        itemCount: songModel.songs.length,
+        itemCount: songModel.songs != null ? songModel.songs.length : 0,
         itemBuilder: (BuildContext context, int index) {
           Song data = songModel.songs[index];
           return GestureDetector(

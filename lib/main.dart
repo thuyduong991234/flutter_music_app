@@ -17,7 +17,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await StorageManager.init();
   var x = await Firebase.initializeApp();
-  print("XXXX + " + x.toString());
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]).then((_) {
     runApp(MyApp());
@@ -32,7 +31,7 @@ class MyApp extends StatelessWidget {
         child: Consumer2<ThemeModel, LocaleModel>(
             builder: (context, themeModel, localeModel, child) {
           return RefreshConfiguration(
-            hideFooterWhenNotFull: true, //列表数据不满一页,不触发加载更多
+            hideFooterWhenNotFull: true,
             child: MaterialApp(
               debugShowCheckedModeBanner: false,
               theme: themeModel.themeData(),
@@ -40,7 +39,7 @@ class MyApp extends StatelessWidget {
               locale: localeModel.locale,
               localizationsDelegates: const [
                 S.delegate,
-                RefreshLocalizations.delegate, //下拉刷新
+                RefreshLocalizations.delegate,
                 GlobalCupertinoLocalizations.delegate,
                 GlobalMaterialLocalizations.delegate,
                 GlobalWidgetsLocalizations.delegate
