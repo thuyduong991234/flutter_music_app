@@ -72,10 +72,6 @@ class _CommentCarouselState extends State<CommentCarousel> {
         children: <Widget>[
           Expanded(
             child: Container(
-              decoration: BoxDecoration(
-                color: Theme.of(context).accentColor.withAlpha(50),
-                borderRadius: BorderRadius.circular(30.0),
-              ),
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   mainAxisAlignment: MainAxisAlignment.end,
