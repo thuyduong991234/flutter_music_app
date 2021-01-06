@@ -205,48 +205,43 @@ class _HistorySearchPageState extends State<HistorySearchPage>
                                 body: TabBarView(
                                   controller: tabController,
                                   children: <Widget>[
-                                    Expanded(
-                                      child: SmartRefresher(
-                                        controller: homeModel.refreshController,
-                                        onRefresh: () async {
-                                          await homeModel.refresh();
-                                          homeModel.showErrorMessage(context);
-                                        },
-                                        child: ListView(children: <Widget>[
-                                          SizedBox(
-                                            height: 10,
-                                          ),
-                                          ForYouCarousel(listSongs, "songs",
-                                              true, true, changeTabBarView),
-                                          SizedBox(
-                                            height: 40,
-                                          ),
-                                          AlbumsCarousel(
-                                              playlists,
-                                              S.of(context).albums,
-                                              true,
-                                              false,
-                                              false,
-                                              true,
-                                              changeTabBarView),
-                                          ListArtistsCarousel(artists, true,
-                                              true, false, changeTabBarView),
-                                        ]),
-                                      ),
+                                    SmartRefresher(
+                                      controller: homeModel.refreshController,
+                                      onRefresh: () async {
+                                        await homeModel.refresh();
+                                        homeModel.showErrorMessage(context);
+                                      },
+                                      child: ListView(children: <Widget>[
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        ForYouCarousel(listSongs, "songs", true,
+                                            true, changeTabBarView),
+                                        SizedBox(
+                                          height: 40,
+                                        ),
+                                        AlbumsCarousel(
+                                            playlists,
+                                            S.of(context).albums,
+                                            true,
+                                            false,
+                                            false,
+                                            true,
+                                            changeTabBarView),
+                                        ListArtistsCarousel(artists, true, true,
+                                            false, changeTabBarView),
+                                      ]),
                                     ),
-                                    Expanded(
-                                        child: ListSongCarousel(
+                                    ListSongCarousel(
                                       input: q,
                                       type: "song",
                                       isAlbum: false,
-                                    )),
-                                    Expanded(
-                                        child: ListSongCarousel(
-                                            input: q,
-                                            type: "playlist",
-                                            isAlbum: true)),
-                                    Expanded(
-                                        child: SearchArtistCarousel(input: q)),
+                                    ),
+                                    ListSongCarousel(
+                                        input: q,
+                                        type: "playlist",
+                                        isAlbum: true),
+                                    SearchArtistCarousel(input: q),
                                   ],
                                 ),
                               )))
